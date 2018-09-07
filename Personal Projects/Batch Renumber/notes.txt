@@ -1,0 +1,27 @@
+PROJECT COMPLETED
+
+
+
+
+List files in directory **COMPLETED
+ 
+Check for spaces in folder names then rename appropriately **COMPLETED
+
+Spit out file names and have either DONE or FAILED after conversion is finished **COMPLETED
+
+Comment everything **COMPLETED
+
+"N" for parent_child still not working. Null pointer resolved, not accepting valid dir names. **COMPLETED
+
+Fix bug where only folders get renamed not the actual files. **COMPLETED.
+   Issue: Wasn't assigning parent/child folders to strings. Changed folder names in ~/.../Photography/
+
+Program is intermittently not going beyond the for loop at line 39. **COMPLETED
+   Issue: the .delete() wasn't working properly.
+
+After incorrectly inputting a folder name 1x times, inputting a correct file name registers as incorrect. **COMPLETED
+   Issue: Within the while loop, the scanner was adding to the parent_folder not the child_folder
+
+
+Work on creating a .jar or some other executable icon for this program. Last step once completely debugged.
+
