@@ -65,8 +65,8 @@ public class Lattice {
     {
       try
         {
-          String[] id_info = new String[5];
-          int counter = 0;
+	    String[] id_info = new String[5];                                           // Creating an array 5 units long
+	    int counter = 0;                                                            //  
           Scanner sc = new Scanner(new File(latticeFileName));
           String line;
           for(int i = 0; i < 5; i++)
@@ -372,7 +372,7 @@ public class Lattice {
         {
           for(int j = 0; j < numNodes; j++)
             {
-              if((adjMatrix[i][j] != null) && (adjMatrix[i][j].getLabel() != "-silence-") && (adjMatrix[i][j].getLabel() != "@reject"))
+              if((adjMatrix[i][j] != null) && (adjMatrix[i][j].getLabel().equals("-silence-")) && (adjMatrix[i][j].getLabel().equals("@reject")))
                 {
                   nonSilence +=1;
                 }
