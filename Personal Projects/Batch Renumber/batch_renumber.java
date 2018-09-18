@@ -11,44 +11,55 @@ public class batch_renumber {
         try {
             boolean done = false;
             while (done == false) {
-              FileFilter filter
+              FileFilter filter{
                   public boolean accept(File file) {
                       if (file.getName().equals(".DS_Store")) {
                           file.delete();
                       }
-                      return file.isFile();
+                     else if(file.isFile())
+                     {
+                        return file.isFile();
+                     }
+                  return file.isDirectory();
+                  }
                   };
                 int n = 1;
-                Scanner scanner = new Scanner(System.in);
+                Scanner sc = new Scanner(System.in);
                 System.out.print("Is this a subpath in Photography? [Y || N]: ");
-                String string = scanner.nextLine();
-                while (!string.equals("Y") && !string.equals("N")) {
-                    System.out.println("That isn't a valid input. Try again");
-                    System.out.print("Is this a subpath in Pictures? [Y || N]: ");
-                    string = scanner.nextLine();
-                }
-                String string2 = batch_renumber.parent_child(string);
-                File file = new File("/Users/michaelkennedy/Pictures/Photography/" + string2 + "/");
-                Object[] arrobject = file.listFiles(FileFilter);
-                Arrays.sort(arrobject);
-                if (arrobject.length == 0) {
-                    System.out.println();
-                    System.out.println("This directory contains zero files. Please try again.");
-                }
-                for (int i = 0; i < arrobject.length; ++i) {
-                    Object object = arrobject[i];
-                    File file2 = new File("/Users/michaelkennedy/Pictures/Photography/" + string2 + "/img_" + n + ".jpg");
-                    ++n;
-                    if (object.getName().equals(file2.getName())) {
-                        System.out.println("***This Folder has already been converted***");
-                        break;
-                    }
-                    if (object.renameTo(file2)) {
-                        System.out.println(object.getName() + " ---> " + file2.getName() + "     Done");
-                        continue;
-                    }
-                    System.out.println(object.getName() + " ---> " + file2.getName() + "     Conversion Failed");
-                }
+                String answer= sc.nextLine();
+
+                while (!answer.equals("Y") && !answer.equals("N")) 
+                  {
+                       System.out.println("That isn't a valid input. Try again");
+                       System.out.print("Is this a subpath in Pictures? [Y || N]: ");
+                       answer = sc.nextLine();
+                  }
+                String path = parent_child(string);
+                File file = new File("/Users/michaelkennedy/Pictures/Photography/" + path + "/");
+                File[] fileList = file.listFiles(Filter);
+                Arrays.sort(fileList);
+
+                if (fileList.length == 0) 
+                  {
+                       System.out.println();
+                       System.out.println("This directory contains zero files. Please try again.");
+                  }
+
+                for (int i = 0; i < fileList.length; ++i) 
+                   {
+                       File oldFile = arrobject[i];
+                       File  newFile= new File("/Users/michaelkennedy/Pictures/Photography/" + path + "/img_" + n + ".jpg");
+                       ++n;
+                       if (oldFile.getName().equals(newFile().getName())) {
+                           System.out.println("***This Folder has already been converted***");
+                           break;
+                       }
+                       if (object.renameTo(file2)) {
+                           System.out.println(object.getName() + " ---> " + file2.getName() + "     Done");
+                           continue;
+                       }
+                       System.out.println(object.getName() + " ---> " + file2.getName() + "     Conversion Failed");
+                   }
                 System.out.println();
                 System.out.print("Would you like to convert another folder? [Y || N]: ");
                 string = scanner.nextLine();
@@ -67,7 +78,7 @@ public class batch_renumber {
         Object object = "";
         Scanner scanner = new Scanner(System.in);
         StringBuilder stringBuilder = new StringBuilder();
-         var4_4 = new /* Unavailable Anonymous Inner Class!! */;
+         v
         if (string.equals("Y")) {
             File[] arrfile;
             void var10_21;
