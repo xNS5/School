@@ -84,10 +84,11 @@ public class batch_renumber {
       
       Scanner sc = new Scanner(System.in);
       StringBuilder sb = new StringBuilder();
+      String path;
 
          if (answer.equals("Y"))
-            File fileParent = new File("/Users/michaelkennedy/Pictures/Photography");
-            File[] fileList_1 = file.listFiles(filter);
+            File fileParent = 
+            File[] fileList_1 = fileParent.listFiles(filter);
 
             for (File f  : fileParent) {
                System.out.print(" | " + f.getName());
@@ -123,9 +124,9 @@ public class batch_renumber {
                child = sc.nextLine();
             }
             System.out.println();
-            object = (String)object3 + "/" + (String)var10_21;
+            path = parent + "/" + child;
 
-         } else if (string.equals("N")) {
+         } else if (answer.equals("N")) {
             System.out.println("Please note that selecting this means that this is a folder within /Pictures/Photography");
             File file = new File("/Users/michaelkennedy/Pictures/Photography");
             Object[] arrobject = file.listFiles();
@@ -155,8 +156,13 @@ public class batch_renumber {
       return file.exists();
    }
    
-   private static getDir()
+   private static String getDir()
       {
-         return 
+         return "/Users/michaelkennedy/Pictures/Photography";
+      }
+   
+   private static File getParentFile(String path)
+      {
+         return new File("/Users/michaelKennedy/Pictures/Photography/"+path);
       }
 }
