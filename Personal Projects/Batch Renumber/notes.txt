@@ -1,7 +1,3 @@
-PROJECT COMPLETED
-
-
-
 
 List files in directory **COMPLETED
  
@@ -27,4 +23,10 @@ Work on creating a .jar or some other executable icon for this program. Last ste
 
 NEED TO FIX VARIABLE NAMES.
    Failing to convert to .jar resulted in all variable names getting fucked up. Fml. parent_child() is the issue right now. Fuck my life.
+
+Add the following:
+   * Method that lists files in a folder instead of creating a bunch of file objects
+   * Method that validates the existence of folders and loops until completed
+   * Some sort of sorting algorithm so I can go through and re-name files that have been renamed. 
+         * Issue with Arrays.sort() is that if the files have already been sorted, it re-sorts in a weird way.
 

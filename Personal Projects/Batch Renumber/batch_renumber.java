@@ -127,8 +127,8 @@ public class batch_renumber {
             path = parent + "/" + child;
 
          } else if (answer.equals("N")) {
-            System.out.println("Please note that selecting this means that this is a folder within /Pictures/Photography");
-            File file = new File("/Users/michaelkennedy/Pictures/Photography");
+            System.out.println("Please note that selecting this means that this is a folder within /Photography");
+            File  = new File("/Users/michaelkennedy/Pictures/Photography");
             Object[] arrobject = file.listFiles();
             Arrays.sort(arrobject);
             for (Object object3 : arrobject) {
@@ -161,8 +161,10 @@ public class batch_renumber {
          return "/Users/michaelkennedy/Pictures/Photography";
       }
    
-   private static File getParentFile(String path)
+   private static void listFiles(String path)
       {
-         return new File("/Users/michaelKennedy/Pictures/Photography/"+path);
+         File path = new File("/users/michaelkennedy/Pictures/Photography/" + path);
+         File[] arrList = path.listFiles(fileFilter);
+        
       }
 }
