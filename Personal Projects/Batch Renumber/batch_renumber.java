@@ -87,16 +87,8 @@ public class batch_renumber {
       String path;
 
          if (answer.equals("Y"))
-            File fileParent = 
-            File[] fileList_1 = fileParent.listFiles(filter);
 
-            for (File f  : fileParent) {
-               System.out.print(" | " + f.getName());
-            }
-
-            System.out.println(" | ");
-            System.out.print("Parent Name: ");
-            String parent= sc.nextLine();
+            listFiles(path);
 
             while (!verify(parent)) {
                System.out.println("This isn't a valid directory. Try again");
@@ -151,8 +143,9 @@ public class batch_renumber {
       return object;
    }
 
-   private static boolean verify(String string) {
+   private static String  verify(String string) {
       File file = new File("/Users/michaelkennedy/Pictures/Photography/" + string);
+
       return file.exists();
    }
    
@@ -165,6 +158,10 @@ public class batch_renumber {
       {
          File path = new File("/users/michaelkennedy/Pictures/Photography/" + path);
          File[] arrList = path.listFiles(fileFilter);
+         Arrays.sort(arrList);
+         for(File f L arrList)
+            System.out.print("| "+f);
+         System.out.print("|");
         
       }
 }
