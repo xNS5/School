@@ -143,7 +143,8 @@ public class batch_renumber {
       return object;
    }
 
-   private static String  verify(String string) {
+   private static String  verify(String string) 
+   {
       File file = new File("/Users/michaelkennedy/Pictures/Photography/" + string);
 
       return file.exists();
@@ -159,6 +160,12 @@ public class batch_renumber {
          File path = new File("/users/michaelkennedy/Pictures/Photography/" + path);
          File[] arrList = path.listFiles(fileFilter);
          Arrays.sort(arrList);
+         
+         if (arrList.length == 0) 
+            {
+               System.out.println();
+               System.out.println("This directory contains zero files. Please try again.");
+            }
          for(File f L arrList)
             System.out.print("| "+f);
          System.out.print("|");
