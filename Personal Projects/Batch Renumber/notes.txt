@@ -24,7 +24,7 @@ Work on creating a .jar or some other executable icon for this program. Last ste
 NEED TO FIX VARIABLE NAMES.
    Failing to convert to .jar resulted in all variable names getting fucked up. Fml. parent_child() is the issue right now.
 
-Almost done renaming variable names. Will complete on Friday.
+Almost done renaming variable names. Will complete on Friday. (Didn't complete friday. Whenever I wrote that).
 
 Add the following:
    * Method that lists files in a folder instead of creating a bunch of file objects
@@ -32,3 +32,9 @@ Add the following:
    * Some sort of sorting algorithm so I can go through and re-name files that have been renamed. 
          * Issue with Arrays.sort() is that if the files have already been sorted, it re-sorts in a weird way.
 
+11/20/18
+
+Began development of upgraded batch_renumber including a merge sort algorithm instead of Arrays.sort. That way the renamed files won't be
+sorted weirdly. I figured the merge sort algorithm would be the most efficient given there might be some times where I need to convert
+more than say 36 files. Also included in the upgrade I'm going to add two methods: one that lists all of the files in a given directory, a get method
+for the pictures directory
