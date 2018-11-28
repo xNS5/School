@@ -39,13 +39,19 @@ public class batch_renumber{
    }
 
   private static String parent_child(String answer){
-     File path = new File("/Users/michaelkennedy/Pictures/Photography" + path);
-     File[] arrList = path.listFiles(fileFilter);
-     merge_sort srt = new merge_sort();
+     Scanner sc = new Scanner(System.in);
+     StringBuilder sb = new StringBuilder();
+     String path;
+
+     if (answer.equalsIgnoreCase("Y"))
+
 
   }
 
   private static void listFiles(String path){
+     File f = new File("/User/michaelkennedy/Pictures/Photography/"+path);
+     File[] arrList = path.listFiles(fileFilter);
+     
   }
   
    private static String getDir(){  

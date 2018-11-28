@@ -37,4 +37,7 @@ Add the following:
 Began development of upgraded batch_renumber including a merge sort algorithm instead of Arrays.sort. That way the renamed files won't be
 sorted weirdly. I figured the merge sort algorithm would be the most efficient given there might be some times where I need to convert
 more than say 36 files. Also included in the upgrade I'm going to add two methods: one that lists all of the files in a given directory, a get method
-for the pictures directory
+for the pictures director
+
+Okay screw the merge sort idea. It isn't the most efficient right now, but I'm hunting through the string to locate int values in the string then assign it to that space. Probably going to be more efficient than just Arrays.sort(),
+Given that the string itself isn't going to be the longest thing in the world, I'm not too concerned about O(N^2) runtime, but it's still a concern of mine lololololololol.
