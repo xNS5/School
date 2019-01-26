@@ -35,7 +35,9 @@ int main(int argc, char *argv[]) {
 
 	char buf[BUFFSIZE];
 
-	if (itoa(number, buf, base) != buf) {
+	if (itoa(number, buf, base) != buf) 
+   {
+      printf("%s\n", buf);
 		printf("Failed to convert %d to base %d\n", number, base);
 		return 1;
 	}
@@ -46,7 +48,7 @@ int main(int argc, char *argv[]) {
 }
 
 char* itoa(int num, char* str, int base) {
-  int mod_val = 100000;
+  int mod_val = 0;
 	char temp[BUFFSIZE];
 	char reversed[BUFFSIZE];
 	int i = 0;
@@ -72,13 +74,13 @@ char* itoa(int num, char* str, int base) {
 	}
 
 
-	for(int j = i; j >= 0; j--)
+	for(int j = i-1; j >= 0 && temp[j] != '\0'; j--)
 		{
 			reversed[t] = temp[j];
 			t++;
 		}
-	str = reversed;
-	printf("%s", str);
-	return str;
+	str = (char*)reversed;
+   printf("%s", str);
+	return (char*)str;
 
 }
