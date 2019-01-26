@@ -1,6 +1,6 @@
 /*
  Notes: EOF == "End of file".
- Implement counter like Ian's. That's pretty smart imo. 
+ Implement counter like Ian's. That's pretty smart imo.
 
 */
 
@@ -48,24 +48,37 @@ int main(int argc, char *argv[]) {
 char* itoa(int num, char* str, int base) {
   int mod_val = 100000;
 	char temp[BUFFSIZE];
-	char ascii[6] = {'a', 'b', 'c', 'd', 'e', 'f'};
+	char reversed[BUFFSIZE];
+	int i = 0;
+	int t = 0;
+	int counter;
 
-  while(mod_val != 0)
+  while(num != 0)
 	{
 		mod_val = (num % base);
-
-		for(int i = 0; i < BUFFSIZE; i++)
-			{
-				if(mod_val > 10)
-				{
-					if(temp[i] == '\0')
-						{
-							temp[i] = mod_val + '0';
-							break;
-						}
-			}
-
 		num = num/base;
 
+		if(mod_val < 10)
+		{
+			temp[i] = mod_val + '0';
+		}
+
+		else
+		{
+			temp[i] = mod_val-10 + 'a';
+		}
+		counter = i;
+		i++;
 	}
+
+
+	for(int j = i; j >= 0; j--)
+		{
+			reversed[t] = temp[j];
+			t++;
+		}
+	str = reversed;
+	printf("%s", str);
+	return str;
+
 }
