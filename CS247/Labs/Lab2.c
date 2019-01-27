@@ -58,7 +58,8 @@ char* itoa(int num, char* str, int base) {
 		}
 	if(num == 0)
 		{
-			temp[0] = 0;
+			str[0] = '0';
+         return str;
 		}
 
 	while(num != 0)
@@ -85,7 +86,7 @@ char* itoa(int num, char* str, int base) {
 			i++;
 		}
 
-	for(int j = i-1; j >= 0 && temp[j] != '\0'; j--)
+	for(int j = i-1; j >= 0; j--)
 	{
 		str[t] = temp[j];
 		t++;
