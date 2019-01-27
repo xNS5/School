@@ -93,12 +93,13 @@ char* itoa(int num, char* str, int base) {
 			i++;
 		}
 
-	for(int j = i-1; j >= 0; j-- && t++)
+	for(int j = i-1; j >= 0; j--)
 	{
 		str[t] = temp[j];
+		t++;
 		if(j == 0)
 		{
-		  str[t+1] = '\0';
+		  str[t] = '\0';
 		}
 	}
 	return str;
