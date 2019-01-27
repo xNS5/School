@@ -91,7 +91,7 @@ char* itoa(int num, char* str, int base) {
 		str[t] = temp[j];
 		t++;
 	}
-
+   str[t+1] = '\0';
 	return str;
 
 }
