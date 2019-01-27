@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 
 char* itoa(int num, char* str, int base) {
 	int mod_val = 0;
-	char temp[BUFFSIZE] = {"\0"};
+	char temp[BUFFSIZE] = {'\0'};
 	int neg_flag = 0;
 	int i = 0;
 	int t = 0;
@@ -73,10 +73,16 @@ char* itoa(int num, char* str, int base) {
 			temp[i] = mod_val + '0';
 		}
 
-		else
+		else if(mod_val >= 10)
 		{
 			temp[i] = mod_val-10 + 'a';
 		}
+
+		else if(num == 0)
+		{
+			temp[i] = '\0';
+		}
+
 		i++;
 	}
 
@@ -86,12 +92,16 @@ char* itoa(int num, char* str, int base) {
 			i++;
 		}
 
-	for(int j = i-1; j >= 0; j--)
+	for(int j = i-1; j >= 0; j-- && t++)
 	{
 		str[t] = temp[j];
-		t++;
+		if(j == 0)
+		{
+		  str[t+1] = '\0';
+		}
+
+
 	}
-   str[t+1] = '\0';
 	return str;
 
 }
