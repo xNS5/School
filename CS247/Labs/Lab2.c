@@ -1,10 +1,10 @@
 /*
- Notes: EOF == "End of file".
- Implement counter like Ian's. That's pretty smart imo.
+Notes: EOF == "End of file".
 
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #define BUFFSIZE 4096
 
@@ -26,8 +26,6 @@ int main(int argc, char *argv[]) {
 
 	res = sscanf(argv[2], "%d", &base);
 	if (!res || res == EOF) {
-		printf("Could not parse %s\n", argv[2]);
-		return 1;
 	} else if (!(2 <= base && base <= 36)) {
 		printf("Base must be between 2 and 36\n");
 		return 1;
@@ -35,11 +33,9 @@ int main(int argc, char *argv[]) {
 
 	char buf[BUFFSIZE];
 
-	if (itoa(number, buf, base) != buf) 
-   {
-      printf("itoa returned: %s, buf = %s\r\n", itoa(number, buf, base), buf);
-      printf("Bool comparison: %d", itoa(number,buf,base) == buf);
+	if (itoa(number, buf, base) != buf){
 		printf("Failed to convert %d to base %d\n", number, base);
+
 		return 1;
 	}
 
@@ -49,15 +45,25 @@ int main(int argc, char *argv[]) {
 }
 
 char* itoa(int num, char* str, int base) {
-  int mod_val = 0;
+	int mod_val = 0;
 	char temp[BUFFSIZE] = {"\0"};
-	char reversed[BUFFSIZE] = {"\0"};
+	int neg_flag = 0;
 	int i = 0;
 	int t = 0;
-	int counter;
 
-  while(num != 0)
+	if(num < 0)
+		{
+			num = abs(num);
+			neg_flag = 1;
+		}
+	if(num == 0)
+		{
+			temp[0] = 0;
+		}
+
+	while(num != 0)
 	{
+
 		mod_val = (num % base);
 		num = num/base;
 
@@ -70,18 +76,20 @@ char* itoa(int num, char* str, int base) {
 		{
 			temp[i] = mod_val-10 + 'a';
 		}
-		counter = i;
 		i++;
 	}
 
-	for(int j = i-1; j >= 0 && temp[j] != '\0'; j--)
+	if(neg_flag == 1)
 		{
-			reversed[t] = temp[j];
-			t++;
+			temp[i] = '-';
+			i++;
 		}
 
-   str = reversed;
-   printf("%s, %s\r\n", str, reversed);
+	for(int j = i-1; j >= 0 && temp[j] != '\0'; j--)
+	{
+		str[t] = temp[j];
+		t++;
+	}
 
 	return str;
 
