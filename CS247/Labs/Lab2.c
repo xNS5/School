@@ -52,10 +52,10 @@ char* itoa(int num, char* str, int base) {
    int i = 0;
    int t = 0;
 
-   /* 
+   /*
       Checks for whether the number is negative.
-      If the number is zero, the value of num is changed to its absolute value and 
-      the flag neg_flag is changed to 1. I tried using a bool but my computer yelled at me and 
+      If the number is zero, the value of num is changed to its absolute value and
+      the flag neg_flag is changed to 1. I tried using a bool but my computer yelled at me and
       I didn't want to deal with it so I used 0 and 1 as false/true.
     */
    if(num < 0)
@@ -63,7 +63,7 @@ char* itoa(int num, char* str, int base) {
       num = abs(num);
       neg_flag = 1;
    }
-   // If the number is exactly zero, then it adds '0' to the str pointer and a null terminator, 
+   // If the number is exactly zero, then it adds '0' to the str pointer and a null terminator,
    // then returns the pointer
    if(num == 0)
    {
@@ -76,9 +76,7 @@ char* itoa(int num, char* str, int base) {
       This is the main chunk of the function. The program finds the mod of num and base, then
       finds the next value of num by using integer division. If the value of mod_val is less than
       10, then it gets added to the char '0' which is the number 48, and if it's greater than or
-      equal to 10, it gets added to the character 'a' which is the number 97. 
-      If the value of num == 0, a null terminator is added to the temp array. If the neg_flag
-      is 1, a - character is added to the end of the array before the null terminator.
+      equal to 10, it gets added to the character 'a' which is the number 97.
     */
    while(num != 0)
    {
@@ -96,18 +94,22 @@ char* itoa(int num, char* str, int base) {
          temp[i] = mod_val-10 + 'a';
       }
 
-      else if(num == 0)
-      {
-         if(neg_flag == 1)
-         {  
-            temp[i] = '-';
-            i++;
-         }
+      i++;
+   }
 
-         temp[i] = '\0';
+   /*
+      Adding a null terminator to the end of the array, and if the bool flag has been changed to 1 a '-' character is added to the end of the array, then a null terminator.
+   */
+
+   if(num == 0)
+   {
+      if(neg_flag == 1)
+      {
+         temp[i] = '-';
+         i++;
       }
 
-      i++;
+      temp[i] = '\0';
    }
 
    // This part just reversed the array to the str pointer
