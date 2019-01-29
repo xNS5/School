@@ -97,20 +97,12 @@ char* itoa(int num, char* str, int base) {
       i++;
    }
 
-   /*
-      Adding a null terminator to the end of the array, and if the bool flag has been changed to 1 a '-' character is added to the end of the array, then a null terminator.
-   */
 
-   if(num == 0)
-   {
-      if(neg_flag == 1)
-      {
-         temp[i] = '-';
-         i++;
-      }
-
-      temp[i] = '\0';
-   }
+    if(neg_flag == 1)
+    {
+       temp[i] = '-';
+       i++;
+    }
 
    // This part just reversed the array to the str pointer
 
