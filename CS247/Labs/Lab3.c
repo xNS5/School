@@ -4,7 +4,7 @@
 /*
   Todo: methods 11-16
 
-  Notes: Completed Method 10, tested and it works as intended.
+  Notes: Ask about Method 2
 
 */
 
