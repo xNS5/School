@@ -1,7 +1,19 @@
 #include <stdio.h>
 
+/*
+  Todo: methods 11-16
+
+  Notes: Completed Method 10, tested and it works as intended.
+
+*/
+
 int CountSetBits(unsigned int);
-int Converter(unsigned int);
+int UniqueInteger(int, int*);
+int ReverseBits(int);
+bool OnlyOneBitSet(int);
+bool OnlyOneBitSetInEvenPosition(int);
+int ModWithoutModOperator(int, int);
+int SwapNibbles(int);
 
 int main(int argc, char *argv[]) {
   int num;
@@ -14,7 +26,6 @@ int main(int argc, char *argv[]) {
 
 int CountSetBits(unsigned int arg) {
     int bitCounter = 0;
-    char
     int mod;
 
     while(arg != 0){
