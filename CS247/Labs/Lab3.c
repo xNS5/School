@@ -16,14 +16,21 @@ int NumberOfOperationsRequired(int);
 int SwapNibbles(int);
 
 int main(int argc, char *argv[]) {
-  int UniqueArr[argc-1];
+
+  // *Task 1*
+  //printf("%d has %d signed bit(s)\r\n", atoi(argv[1]), CountSetBits(atoi(argv[1])));
+
+
+  // *Task 2*
+  /*int UniqueArr[argc-1];
 
   for(int i = 1; i < argc; i++){
       UniqueArr[i-1] = atoi(argv[i]);
-    }
-
-  //printf("%d has %d signed bit(s)\r\n", atoi(argv[1]), CountSetBits(atoi(argv[1])));
+    }*/
   //printf("%d is the unique element.\r\n", UniqueInteger(argc-1, UniqueArr));
+
+  //*Task 3*
+  printf("%d is %s reversed.\r\n", ReverseBits(atoi(argv[1])), argv[1]);
 
   return 0;
 }
@@ -47,7 +54,19 @@ int UniqueInteger(int count, int* arr)
 }
 
 int ReverseBits(int var){
-  return 0;
+  signed int bits = sizeof(var)*8;
+  //unsigned int bits = sizeof(var)*32-1;
+  unsigned int reversed = 0, i, temp;
+
+  for( i = 0; i < bits; i++)
+    {
+      temp = (var & (1 << i));
+      if(temp)
+        {
+          reversed |= 1 << ((bits - 1) - i);
+        }
+    }
+    return reversed;
 }
 
 bool OnlyOneBitSet(int var){
