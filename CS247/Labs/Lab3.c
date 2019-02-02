@@ -1,10 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 /*
-  Todo: methods 11-16
-
-  Notes: Ask about Method 2
 
 */
 
@@ -18,33 +16,34 @@ int NumberOfOperationsRequired(int);
 int SwapNibbles(int);
 
 int main(int argc, char *argv[]) {
-  int num;
-  int counter;
-  sscanf(argv[1], "%d", &num);
+  int UniqueArr[argc-1];
 
-  printf("%d has %d signed bit(s)\r\n", num, CountSetBits(num));
+  for(int i = 1; i < argc; i++){
+      UniqueArr[i-1] = atoi(argv[i]);
+    }
+
+  //printf("%d has %d signed bit(s)\r\n", atoi(argv[1]), CountSetBits(atoi(argv[1])));
+  //printf("%d is the unique element.\r\n", UniqueInteger(argc-1, UniqueArr));
 
   return 0;
 }
 
 int CountSetBits(unsigned int arg) {
-    int bitCounter = 0;
-    int mod;
-
-    while(arg != 0){
-      mod = arg%2;
-      arg = arg/2;
-
-      if (mod == 1) {
-        bitCounter++;
-      }
-    }
-    return bitCounter;
+  int mod;
+  while(arg){
+    mod += arg & 1;
+    arg >>=1;
+  }
+    return mod;
   }
 
 int UniqueInteger(int count, int* arr)
 {
-  return 0;
+  int xor = arr[0];
+  for(int i = 1; i < count; i++){
+    xor ^= arr[i];
+  }
+  return xor;
 }
 
 int ReverseBits(int var){
