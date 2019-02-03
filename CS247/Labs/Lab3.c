@@ -2,10 +2,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-/*
-
-*/
-
 int CountSetBits(unsigned int);
 int UniqueInteger(int, int*);
 int ReverseBits(int);
@@ -30,16 +26,33 @@ int main(int argc, char *argv[]) {
   //printf("%d is the unique element.\r\n", UniqueInteger(argc-1, UniqueArr));
 
   //*Task 3*
-  printf("%d is %s reversed.\r\n", ReverseBits(atoi(argv[1])), argv[1]);
+  //printf("%d is %s reversed.\r\n", ReverseBits(atoi(argv[1])), argv[1]);
+
+  //*Task 4*
+  //printf("When tested for whether %s has only one set bit, it returned %s\r\n",argv[1], OnlyOneBitSet(atoi(argv[1])) ? "true." : "false.");
+
+  //*Task 5*
+  //printf("%s\n", OnlyOneBitSetInEvenPosition(atoi(argv[1])) ? "true." : "false");
+
+  //*Task 6*
+  if(argc != 3)
+    {
+      printf("This function requires 2 integers. Please try again.\r\n");
+      return 1;
+    }
+  printf("Test: %d\r\n", ModWithoutModOperator(atoi(argv[1]);, atoi(argv[2]);));
+  printf("Actual: %d\r\n", x%y);
+
+
 
   return 0;
 }
 
 int CountSetBits(unsigned int arg) {
-  int mod;
+  int mod = 0;
   while(arg){
     mod += arg & 1;
-    arg >>=1;
+    arg >>= 1;
   }
     return mod;
   }
@@ -54,8 +67,7 @@ int UniqueInteger(int count, int* arr)
 }
 
 int ReverseBits(int var){
-  signed int bits = sizeof(var)*8;
-  //unsigned int bits = sizeof(var)*32-1;
+  unsigned int bits = sizeof(var)*8;
   unsigned int reversed = 0, i, temp;
 
   for( i = 0; i < bits; i++)
@@ -70,15 +82,31 @@ int ReverseBits(int var){
 }
 
 bool OnlyOneBitSet(int var){
-  return false;
-}
+  if(CountSetBits(var) > 1)
+    {
+      return false;
+    }
+    return true;
+  }
 
 bool OnlyOneBitSetInEvenPosition(int var){
-  return false;
+    unsigned int bits = sizeof(var)*8;
+    if(CountSetBits(var) == 1)
+      {
+        for(int i = 0; i < bits; i++)
+          {
+            if(var & 1 && (i % 2 == 0))
+              {
+                return true;
+              }
+            var >>=1;
+          }
+      }
+    return false;
 }
 
 int ModWithoutModOperator(int num, int denom){
-  return 0;
+  return (num & denom-1);
 }
 
 int SwapNibbles(int var){
