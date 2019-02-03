@@ -14,14 +14,14 @@ int SwapNibbles(int);
 int main(int argc, char *argv[]) {
 
   // *Task 1*
-  //printf("%d has %d signed bit(s)\r\n", atoi(argv[1]), CountSetBits(atoi(argv[1])));
+  //printf("%d has %d signed bit(s)\r\n", x), CountSetBits(x);
 
 
   // *Task 2*
   /*int UniqueArr[argc-1];
 
   for(int i = 1; i < argc; i++){
-      UniqueArr[i-1] = atoi(argv[i]);
+      UniqueArr[i-1] = x;
     }*/
   //printf("%d is the unique element.\r\n", UniqueInteger(argc-1, UniqueArr));
 
@@ -35,15 +35,20 @@ int main(int argc, char *argv[]) {
   //printf("%s\n", OnlyOneBitSetInEvenPosition(atoi(argv[1])) ? "true." : "false");
 
   //*Task 6*
-  if(argc != 3)
-    {
-      printf("This function requires 2 integers. Please try again.\r\n");
-      return 1;
-    }
-  printf("Test: %d\r\n", ModWithoutModOperator(atoi(argv[1]);, atoi(argv[2]);));
-  printf("Actual: %d\r\n", x%y);
+  // if(argc != 3)
+  //   {
+  //     printf("This function requires 2 integers. Please try again.\r\n");
+  //     return 1;
+  //   }
+  // int x = atoi(argv[1]), y = atoi(argv[2]);
+  // printf("Test: %d\r\n", ModWithoutModOperator(x, y));
+  // printf("Actual: %d\r\n", x%y);
 
+  //*Task 7*
+  //printf("%d\r\n",SwapNibbles(atoi(argv[1])));
 
+  //*Task 8*
+  //printf("%d\r\n", NumberOfOperationsRequired(atoi(argv[1])));
 
   return 0;
 }
@@ -106,13 +111,39 @@ bool OnlyOneBitSetInEvenPosition(int var){
 }
 
 int ModWithoutModOperator(int num, int denom){
+  if(num < denom)
+  {
+    return num;
+  }
   return (num & denom-1);
 }
 
 int SwapNibbles(int var){
-  return 0;
+  return ((var & 0x0F) << 4 | (var & 0xF0) >> 4);
 }
 
 int NumberOfOperationsRequired(int var){
-  return 0;
+  int counter = 1;
+  int bits = sizeof(var)*8;
+  unsigned int msb = 1 << bits-1;
+  while (var > 1)
+  {
+    if(ModWithoutModOperator(var, 2) != 0)
+      {
+        for(int i = bits; i > 0; i--, msb >>=1)
+        {
+          if((var & msb) == msb)
+          {
+            var /= msb;
+            break;
+          }
+        }
+      }
+    if(ModWithoutModOperator(var, 2) == 0)
+      {
+        var >>=2;
+      }
+      counter++;
+  }
+  return counter;
 }
