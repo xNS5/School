@@ -137,8 +137,8 @@ void* threadFunction(void *arg)
 int main (int argc, char *argv[])
 {
 	/*1.	Call InitGlobals
-	2.	Create a number of threads (start with 1 and increase to 9) using �pthread_Create�
-	3.	Assign 3 threads to SCHED_OTHER, another 3 to SCHED_FIFO and another 3 to SCHED_RR
+	2.	Create a number of threads (start with 1 and increase to 9) using �pthread_Create� // COMPLETED
+	3.	Assign 3 threads to SCHED_OTHER, another 3 to SCHED_FIFO and another 3 to SCHED_RR // COMPLETED
 	4.	Signal the condition variable
 	5.	Call �pthread_join� to wait on the thread
 	6.	Display the stats on the thread
@@ -155,8 +155,6 @@ int main (int argc, char *argv[])
 	{
 		pthread_join(g_ThreadArgs[i].threadId, NULL);
 	}
-
-
 
 	return 0;
 }
