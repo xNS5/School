@@ -16,15 +16,19 @@
 	http://man7.org/linux/man-pages/man7/sched.7.html
 	http://man7.org/linux/man-pages/man2/sched_setscheduler.2.html
 
+	Compile with -lpthread (e.g. gcc Assignment_1.c -lpthread)
+
+	Thread policy numbers
+	1- FIFO
+	2- RR
+	0- OTHER
+
 */
 
 //#defines
 
 #define MAX_TASK_COUNT 0
 #define MAX_THREAD_COUNT 9
-#define SCHED_RR 0
-#define SCHED_FIFO 1
-#define SCHED_OTHER 2
 
 typedef struct{
 	int threadCount;
@@ -43,10 +47,32 @@ typedef struct{
 pthread_mutex_t g_ThreadMutex [MAX_THREAD_COUNT];
 pthread_cond_t g_conditionVar [MAX_THREAD_COUNT];
 ThreadArgs g_ThreadArgs[MAX_THREAD_COUNT];
+ThreadArgs thread;
 
 void InitGlobals(void)
 {
 // Initialize all globals
+	for(int i = 0; i < MAX_THREAD_COUNT; i++)
+		{
+			if(i < 3)
+				{
+					thread.threadPolicy = SCHED_FIFO;
+					thread.threadPri = 4;
+					g_ThreadArgs[i] = thread;
+				}
+			else if(i >=3 && i < 6)
+				{
+					thread.threadPolicy = SCHED_RR;
+					thread.threadPri = 4;
+					g_ThreadArgs[i] = thread;
+				}
+			else
+			{
+				thread.threadPolicy = SCHED_OTHER;
+				thread.threadPri = 4;
+				g_ThreadArgs[i] = thread;
+			}
+		}
 
 }
 
@@ -78,6 +104,7 @@ if( myThreadArg )
 		(myThreadArg->timeStamp[y]-myThreadArg->timeStamp[y-1]));
 	}
 }
+}
 
 void DoProcess(void)
 {
@@ -97,7 +124,9 @@ void* threadFunction(void *arg)
 	6.	Call �DoProcess� to run your task
 	7.	Use �time� and �clock_gettime� to find end time.
 	8.	You can repeat steps 6 and 7 a few times if you wise*/
-	printf("Tacos");
+	ThreadArgs* tnt = (ThreadArgs*) arg;
+	DisplayThreadArgs(tnt);
+
 
 	return NULL;
 
@@ -112,26 +141,25 @@ int main (int argc, char *argv[])
 	3.	Assign 3 threads to SCHED_OTHER, another 3 to SCHED_FIFO and another 3 to SCHED_RR
 	4.	Signal the condition variable
 	5.	Call �pthread_join� to wait on the thread
-	6.	Display the stats on the thread*/
+	6.	Display the stats on the thread
 
+		pthread_join in separate loop
+	*/
 	InitGlobals();
+	for(int i = 0; i < MAX_THREAD_COUNT; i++)
+	{
+		pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
+	}
 
-	pthread_t tid;
-	pthread_attr_t attr;
+	for(int i = 0; i < MAX_THREAD_COUNT; i++)
+	{
+		pthread_join(g_ThreadArgs[i].threadId, NULL);
+	}
 
-	pthread_attr_init(&attr);
 
-	pthread_create(&tid, NULL, threadFunction, NULL);
-	pthread_join(tid, NULL);
+
 	return 0;
-
-
 }
-
-
-
-
-
 
 
 /*
