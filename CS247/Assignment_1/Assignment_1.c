@@ -1,4 +1,3 @@
-========================================================================================================================================================
 
 #include <time.h>
 #include <stdio.h>
@@ -10,7 +9,6 @@
 #include <sys/time.h>
 #include <inttypes.h>
 
-========================================================================================================================================================
 //links
 
 /*
@@ -20,16 +18,14 @@
 
 */
 
-========================================================================================================================================================
 //#defines
 
+#define MAX_TASK_COUNT 0
 #define MAX_THREAD_COUNT 9
-#define SCHED_RR 0;
-#define SCHED_FIFO 1;
-#define SCHED_OTHER 2;
+#define SCHED_RR 0
+#define SCHED_FIFO 1
+#define SCHED_OTHER 2
 
-========================================================================================================================================================
-//Typedefs
 typedef struct{
 	int threadCount;
 	pthread_t threadId;
@@ -48,14 +44,12 @@ pthread_mutex_t g_ThreadMutex [MAX_THREAD_COUNT];
 pthread_cond_t g_conditionVar [MAX_THREAD_COUNT];
 ThreadArgs g_ThreadArgs[MAX_THREAD_COUNT];
 
-========================================================================================================================================================
 void InitGlobals(void)
 {
 // Initialize all globals
 
 }
 
-========================================================================================================================================================
 void DisplayThreadSchdAttributes( pthread_t threadID, int policy, int priority )
 {
 
@@ -68,7 +62,6 @@ void DisplayThreadSchdAttributes( pthread_t threadID, int policy, int priority )
 									priority);
 }
 
-========================================================================================================================================================
 void DisplayThreadArgs(ThreadArgs*	myThreadArg)
 {
 int i,y;
@@ -86,15 +79,12 @@ if( myThreadArg )
 	}
 }
 
-========================================================================================================================================================
 void DoProcess(void)
 {
 	unsigned int longVar =1 ;
 
 	while(longVar < 0xffffffff) longVar++;
 }
-
-========================================================================================================================================================
 
 
 void* threadFunction(void *arg)
@@ -107,12 +97,14 @@ void* threadFunction(void *arg)
 	6.	Call �DoProcess� to run your task
 	7.	Use �time� and �clock_gettime� to find end time.
 	8.	You can repeat steps 6 and 7 a few times if you wise*/
+	printf("Tacos");
+
+	return NULL;
 
 
 
 }
 
-========================================================================================================================================================
 int main (int argc, char *argv[])
 {
 	/*1.	Call InitGlobals
@@ -122,11 +114,6 @@ int main (int argc, char *argv[])
 	5.	Call �pthread_join� to wait on the thread
 	6.	Display the stats on the thread*/
 
-	if(argc < 2)
-		{
-			printf("Please input 2 arguments\r\n");
-			exit(-1);
-		}
 	InitGlobals();
 
 	pthread_t tid;
@@ -134,6 +121,9 @@ int main (int argc, char *argv[])
 
 	pthread_attr_init(&attr);
 
+	pthread_create(&tid, NULL, threadFunction, NULL);
+	pthread_join(tid, NULL);
+	return 0;
 
 
 }
@@ -141,7 +131,6 @@ int main (int argc, char *argv[])
 
 
 
-========================================================================================================================================================
 
 
 
