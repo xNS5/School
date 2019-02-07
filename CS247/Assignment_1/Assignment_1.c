@@ -124,12 +124,14 @@ void* threadFunction(void *arg)
 	6.	Call �DoProcess� to run your task
 	7.	Use �time� and �clock_gettime� to find end time.
 	8.	You can repeat steps 6 and 7 a few times if you wise*/
-	ThreadArgs* tnt = (ThreadArgs*) arg;
-	pthread_mutex_lock ( &g_ThreadMutex[tnt->threadCount] );
+	ThreadArgs* thread = (ThreadArgs*) arg;
+	thread->threadCount +=1;
 
-	DisplayThreadArgs(tnt);
+	pthread_mutex_lock ( &g_ThreadMutex[thread->threadCount] );
 
-	pthread_mutex_unlock( &g_ThreadMutex[tnt->threadCount] );
+	DisplayThreadArgs(thread);
+
+	pthread_mutex_unlock( &g_ThreadMutex[thread->threadCount] );
 
 	return NULL;
 
