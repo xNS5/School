@@ -45,19 +45,22 @@ typedef struct{
 
 //Try to change this to use a single condition variable
 pthread_mutex_t g_ThreadMutex [MAX_THREAD_COUNT];
-pthread_cond_t g_conditionVar [MAX_THREAD_COUNT];
+pthread_cond_t g_conditionVar [MAX_THREAD_COUNT]; //Used for the mutex
 ThreadArgs g_ThreadArgs[MAX_THREAD_COUNT];
-ThreadArgs thread;
+const struct sched_param* param;
+
 
 void InitGlobals(void)
 {
-// Initialize all globals
+	ThreadArgs thread;
+
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
 		{
 			if(i < 3)
 				{
 					thread.threadPolicy = SCHED_FIFO;
 					thread.threadPri = 4;
+					pthread_setschedparam(thread.threadId, SCHED_FIFO, )
 					g_ThreadArgs[i] = thread;
 				}
 			else if(i >=3 && i < 6)
@@ -124,13 +127,13 @@ void* threadFunction(void *arg)
 	6.	Call �DoProcess� to run your task
 	7.	Use �time� and �clock_gettime� to find end time.
 	8.	You can repeat steps 6 and 7 a few times if you wise*/
-	ThreadArgs* tnt = (ThreadArgs*) arg;
+	ThreadArgs* thread = (ThreadArgs*) arg;
 
-  pthread_mutex_lock ( &g_ThreadMutex[tnt->threadCount] );
-	DisplayThreadArgs(tnt);
-pthread_mutex_unlock ( &g_ThreadMutex[tnt->threadCount] );
+  pthread_mutex_lock (&g_ThreadMutex[thread->threadCount] );
+	DisplayThreadArgs(thread);
+	pthread_mutex_unlock (&g_ThreadMutex[thread->threadCount] );
 
-	return NULL;
+	pthread_exit(0);
 
 
 
@@ -148,15 +151,8 @@ int main (int argc, char *argv[])
 		pthread_join in separate loop
 	*/
 	InitGlobals();
-	for(int i = 0; i < MAX_THREAD_COUNT; i++)
-	{
-		pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
-	}
-
-	for(int i = 0; i < MAX_THREAD_COUNT; i++)
-	{
-		pthread_join(g_ThreadArgs[i].threadId, NULL);
-	}
+	pthread_create(&g_ThreadArgs[0].threadId, NULL, threadFunction, &g_ThreadArgs[0]);
+	pthread_join(g_ThreadArgs[0].threadId, NULL);
 
 	return 0;
 }
