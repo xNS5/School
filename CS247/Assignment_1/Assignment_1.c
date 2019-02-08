@@ -125,8 +125,10 @@ void* threadFunction(void *arg)
 	7.	Use �time� and �clock_gettime� to find end time.
 	8.	You can repeat steps 6 and 7 a few times if you wise*/
 	ThreadArgs* tnt = (ThreadArgs*) arg;
-	DisplayThreadArgs(tnt);
 
+  pthread_mutex_lock ( &g_ThreadMutex[tnt->threadCount] );
+	DisplayThreadArgs(tnt);
+pthread_mutex_unlock ( &g_ThreadMutex[tnt->threadCount] );
 
 	return NULL;
 
