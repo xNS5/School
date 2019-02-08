@@ -46,33 +46,38 @@ typedef struct{
 //Try to change this to use a single condition variable
 pthread_mutex_t g_ThreadMutex [MAX_THREAD_COUNT];
 pthread_cond_t g_conditionVar [MAX_THREAD_COUNT]; //Used for the mutex
+
 ThreadArgs g_ThreadArgs[MAX_THREAD_COUNT];
-const struct sched_param* param;
+struct sched_param param;
+ThreadArgs thread;
 
 
 void InitGlobals(void)
 {
-	ThreadArgs thread;
-
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
 		{
 			if(i < 3)
 				{
 					thread.threadPolicy = SCHED_FIFO;
 					thread.threadPri = 4;
-					pthread_setschedparam(thread.threadId, SCHED_FIFO, )
+					param.sched_priority = sched_get_priority_max(SCHED_FIFO);
+					pthread_setschedparam(thread.threadId, SCHED_FIFO, &param);
 					g_ThreadArgs[i] = thread;
 				}
 			else if(i >=3 && i < 6)
 				{
 					thread.threadPolicy = SCHED_RR;
 					thread.threadPri = 4;
+					param.sched_priority = sched_get_priority_max(SCHED_RR);
+					pthread_setschedparam(thread.threadId, SCHED_RR, &param);
 					g_ThreadArgs[i] = thread;
 				}
 			else
 			{
 				thread.threadPolicy = SCHED_OTHER;
 				thread.threadPri = 4;
+				param.sched_priority = sched_get_priority_max(SCHED_OTHER);
+				pthread_setschedparam(thread.threadId,SCHED_OTHER, &param);
 				g_ThreadArgs[i] = thread;
 			}
 		}
