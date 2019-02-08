@@ -27,7 +27,7 @@
 
 //#defines
 
-#define MAX_TASK_COUNT 0
+#define MAX_TASK_COUNT 7
 #define MAX_THREAD_COUNT 9
 
 typedef struct{
@@ -46,9 +46,9 @@ typedef struct{
 //Try to change this to use a single condition variable
 pthread_mutex_t g_ThreadMutex [MAX_THREAD_COUNT];
 pthread_cond_t g_conditionVar [MAX_THREAD_COUNT]; //Used for the mutex
-
 ThreadArgs g_ThreadArgs[MAX_THREAD_COUNT];
 struct sched_param param;
+struct timespec tspec;
 ThreadArgs thread;
 
 
@@ -60,7 +60,7 @@ void InitGlobals(void)
 				{
 					thread.threadPolicy = SCHED_FIFO;
 					thread.threadPri = 4;
-					param.sched_priority = sched_get_priority_max(SCHED_FIFO);
+					//param.sched_priority = SCHED_FIFO;
 					pthread_setschedparam(thread.threadId, SCHED_FIFO, &param);
 					g_ThreadArgs[i] = thread;
 				}
@@ -68,7 +68,7 @@ void InitGlobals(void)
 				{
 					thread.threadPolicy = SCHED_RR;
 					thread.threadPri = 4;
-					param.sched_priority = sched_get_priority_max(SCHED_RR);
+					//param.sched_priority = SCHED_RR;
 					pthread_setschedparam(thread.threadId, SCHED_RR, &param);
 					g_ThreadArgs[i] = thread;
 				}
@@ -76,7 +76,7 @@ void InitGlobals(void)
 			{
 				thread.threadPolicy = SCHED_OTHER;
 				thread.threadPri = 4;
-				param.sched_priority = sched_get_priority_max(SCHED_OTHER);
+				//param.sched_priority = SCHED_OTHER;
 				pthread_setschedparam(thread.threadId,SCHED_OTHER, &param);
 				g_ThreadArgs[i] = thread;
 			}
@@ -133,16 +133,20 @@ void* threadFunction(void *arg)
 	7.	Use �time� and �clock_gettime� to find end time.
 	8.	You can repeat steps 6 and 7 a few times if you wise*/
 	ThreadArgs* thread = (ThreadArgs*) arg;
+	int y = 0;
 
-  pthread_mutex_lock (&g_ThreadMutex[thread->threadCount] );
+  pthread_mutex_lock(&g_ThreadMutex[thread->threadCount]);
+
+	clock_gettime(CLOCK_REALTIME, &tspec);
+	thread->timeStamp[y+1] = tspec.tv_sec *1000000;
+	thread->timeStamp[y+1] += tspec.tv_nsec/1000;
+	if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+1]++;
 	DisplayThreadArgs(thread);
-	pthread_mutex_unlock (&g_ThreadMutex[thread->threadCount] );
 
+	pthread_mutex_unlock(&g_ThreadMutex[thread->threadCount]);
 	pthread_exit(0);
-
-
-
 }
+
 
 int main (int argc, char *argv[])
 {
@@ -156,8 +160,17 @@ int main (int argc, char *argv[])
 		pthread_join in separate loop
 	*/
 	InitGlobals();
-	pthread_create(&g_ThreadArgs[0].threadId, NULL, threadFunction, &g_ThreadArgs[0]);
-	pthread_join(g_ThreadArgs[0].threadId, NULL);
+	int i = 0;
+	// for(int i = 0; i < MAX_THREAD_COUNT; i++)
+	// {
+			pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
+	// }
+
+	// for(int i = 0; i < MAX_THREAD_COUNT; i++)
+	// {
+			pthread_join(g_ThreadArgs[i].threadId, NULL);
+	//}
+
 
 	return 0;
 }
