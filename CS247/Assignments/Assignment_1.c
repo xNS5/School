@@ -49,9 +49,8 @@ ThreadArgs g_ThreadArgs[MAX_THREAD_COUNT];
 struct sched_param param;
 struct timespec tspec;
 ThreadArgs thread;
-pthread_mutex_t mute;
-pthread_cond_t cond_var;
-
+pthread_mutex_t mute = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t cond_var = PTHREAD_COND_INITIALIZER;
 
 
 void InitGlobals(void)
@@ -64,8 +63,8 @@ void InitGlobals(void)
 				{
 					g_ThreadArgs[i] = thread;
 					thread.threadPolicy = SCHED_FIFO;
-					thread.threadPri = sched_get_priority_max(SCHED_FIFO);
-					param.sched_priority = sched_get_priority_max(SCHED_FIFO);
+					thread.threadPri = SCHED_FIFO;
+					param.sched_priority = SCHED_FIFO;
 					self = pthread_self();
 					err1 = pthread_setschedparam(self, SCHED_FIFO, &param);
 					g_ThreadArgs[i] = thread;
@@ -73,8 +72,8 @@ void InitGlobals(void)
 			else if(i >=3 && i < 6)
 				{
 					thread.threadPolicy = SCHED_RR;
-					thread.threadPri = sched_get_priority_max(SCHED_RR);
-					param.sched_priority = sched_get_priority_max(SCHED_RR);
+					thread.threadPri = SCHED_RR;
+					param.sched_priority = SCHED_RR;
 					self = pthread_self();
 					err2 = pthread_setschedparam(self, SCHED_RR, &param);
 					g_ThreadArgs[i] = thread;
@@ -82,8 +81,8 @@ void InitGlobals(void)
 			else
 			{
 				thread.threadPolicy = SCHED_OTHER;
-				thread.threadPri = sched_get_priority_max(SCHED_OTHER);
-				param.sched_priority = sched_get_priority_max(SCHED_OTHER);
+				thread.threadPri = SCHED_OTHER;
+				param.sched_priority = SCHED_OTHER;
 				self = pthread_self();
 				err3 = pthread_setschedparam(self, SCHED_OTHER, &param);
 				g_ThreadArgs[i] = thread;
@@ -93,11 +92,6 @@ void InitGlobals(void)
 		printf("ERRORS:\n");
 		printf("FIFO ERROR: %d\r\n RR ERROR: %d\r\n OTHER ERROR: %d\r\n", err1, err2, err3);
 		printf("==========================================================\n");
-
-		if(!(err1 && err2 && err3))
-		{
-			printf("Thread schedule priority changed successfully!\r\n");
-		}
 	}
 
 void DisplayThreadSchdAttributes( pthread_t threadID, int policy, int priority )
@@ -147,11 +141,10 @@ void* threadFunction(void *arg)
 	6.	Call DoProcess to run your task
 	7.	Use time and clock_gettime to find end time.
 	8.	You can repeat steps 6 and 7 a few times if you wise*/
+
 	ThreadArgs* thread = (ThreadArgs*) arg;
-
-
 	pthread_mutex_lock(&mute);
-	pthread_cond_wait(&cond_var, &mute);
+	int err = pthread_cond_wait(&cond_var, &mute);
 	for(int y = 0; y < MAX_TASK_COUNT; y++)
 	{
 		clock_gettime(CLOCK_REALTIME, &tspec);
@@ -166,7 +159,6 @@ void* threadFunction(void *arg)
 		thread->timeStamp[y+1] += tspec.tv_nsec/1000;
 		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+1]++;
 	}
-	DisplayThreadArgs(thread);
 	pthread_mutex_unlock(&mute);
 	pthread_exit(0);
 }
@@ -191,7 +183,7 @@ int main (int argc, char *argv[])
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
  	{
 			pthread_join(g_ThreadArgs[i].threadId, NULL);
-
+			DisplayThreadArgs(&g_ThreadArgs[i]);
 	}
 
 
