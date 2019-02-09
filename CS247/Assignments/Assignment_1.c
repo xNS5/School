@@ -89,8 +89,7 @@ void InitGlobals(void)
 			}
 		}
 		printf("==========================================================\n");
-		printf("ERRORS:\n");
-		printf("FIFO ERROR: %d\r\n RR ERROR: %d\r\n OTHER ERROR: %d\r\n", err1, err2, err3);
+		printf("ERRORS:\r\n FIFO ERROR: %d\r\n RR ERROR: %d\r\n OTHER ERROR: %d\r\n", err1, err2, err3);
 		printf("==========================================================\n");
 	}
 
@@ -127,7 +126,7 @@ void DoProcess(void)
 {
 	unsigned int longVar =1 ;
 
-	while(longVar < 0xffffffff) longVar++;
+	while(longVar < 0xfffffff) longVar++;
 }
 
 
@@ -145,8 +144,10 @@ void* threadFunction(void *arg)
 	ThreadArgs* thread = (ThreadArgs*) arg;
 	pthread_mutex_lock(&mute);
 	int err = pthread_cond_wait(&cond_var, &mute);
+	printf("Set cond_wait var with error: %d\r\n", err);
 	for(int y = 0; y < MAX_TASK_COUNT; y++)
 	{
+
 		clock_gettime(CLOCK_REALTIME, &tspec);
 		thread->timeStamp[y] = tspec.tv_sec *1000000;
 		thread->timeStamp[y] += tspec.tv_nsec/1000;
@@ -179,13 +180,15 @@ int main (int argc, char *argv[])
 			pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
 	}
 
-	pthread_cond_broadcast(&cond_var);
+	// int err = pthread_cond_broadcast(&cond_var);
+	// printf("Broadcasted with error: %d\r\n", err);
+
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
  	{
+			pthread_cond_signal(&cond_var);
 			pthread_join(g_ThreadArgs[i].threadId, NULL);
 			DisplayThreadArgs(&g_ThreadArgs[i]);
 	}
-
 
 	return 0;
 }
