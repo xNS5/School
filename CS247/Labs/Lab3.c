@@ -13,59 +13,6 @@ int NumberOfOperationsRequired(int);
 int SwapNibbles(int);
 int msb(unsigned int);
 
-int main(int argc, char *argv[]) {
-
-  int x, y;
-
-  switch(argc){
-    case (2):
-      x = atoi(argv[1]);
-      break;
-    case (3):
-      x = atoi(argv[1]);
-      y = atoi(argv[2]);
-      break;
-    }
-
-  // *Task 1*
-  //printf("%d has %d signed bit(s)\r\n", x, CountSetBits(x));
-
-
-  // *Task 2*
-  // int UniqueArr[argc-1];
-  //
-  // for(int i = 1; i < argc; i++){
-  //     UniqueArr[i-1] = atoi(argv[i]);
-  //   }
-  // printf("%d is the unique element.\r\n", UniqueInteger(argc-1, UniqueArr));
-
-  //*Task 3*
-  //printf("%d is %s reversed.\r\n", ReverseBits(x), argv[1]);
-
-  //*Task 4*
-  //printf("When tested for whether %s has only one set bit, it returned %s\r\n",argv[1], OnlyOneBitSet(x) ? "true." : "false.");
-
-  //*Task 5*
-  //printf("%s\n", OnlyOneBitSetInEvenPosition(x) ? "true." : "false.");
-
-  //*Task 6*
-  // if(argc != 3)
-  //   {
-  //     printf("This function requires 2 integers. Please try again.\r\n");
-  //     return 1;
-  //   }
-  // printf("Test: %d\r\n", ModWithoutModOperator(x, y));
-  // printf("Actual: %d\r\n", x%y);
-
-  //*Task 7*
-  //printf("%d\r\n",SwapNibbles(x));
-
-  //*Task 8*
-  printf("%d\r\n", NumberOfOperationsRequired(x));
-
-  return 0;
-}
-
 /*
   Task 1: Counting the number of set bits.
   This task is accomplished by using the bitwise '&' operator to check for whether the value in the nth position is a 1.
