@@ -27,7 +27,7 @@
 
 //#defines
 
-#define MAX_TASK_COUNT 7
+#define MAX_TASK_COUNT 3
 #define MAX_THREAD_COUNT 9
 
 typedef struct{
@@ -50,6 +50,8 @@ ThreadArgs g_ThreadArgs[MAX_THREAD_COUNT];
 struct sched_param param;
 struct timespec tspec;
 ThreadArgs thread;
+pthread_mutex_t mute = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t var;
 
 
 void InitGlobals(void)
@@ -81,7 +83,6 @@ void InitGlobals(void)
 				g_ThreadArgs[i] = thread;
 			}
 		}
-
 }
 
 void DisplayThreadSchdAttributes( pthread_t threadID, int policy, int priority )
@@ -124,59 +125,74 @@ void DoProcess(void)
 
 void* threadFunction(void *arg)
 {
-	/*1.	Typecast the argument to a �ThreadArgs*� variable
-	2.	Use the �pthread_setscheduleparam� API to set the thread policy
+	/*1.	Typecast the argument to a ThreadArgs* variable
+	2.	Use the pthread_setscheduleparam API to set the thread policy
 	3.	Init the Condition variable and associated mutex
 	4.	Wait on condition variable
-	5.	Once condition variable is signaled, use the �time� function and the �clock_gettime(CLOCK_REALTIME, &tms)� to get timestamp
-	6.	Call �DoProcess� to run your task
-	7.	Use �time� and �clock_gettime� to find end time.
+	5.	Once condition variable is signaled, use the time function and the �clock_gettime(CLOCK_REALTIME, &tms) to get timestamp
+	6.	Call DoProcess to run your task
+	7.	Use time and clock_gettime to find end time.
 	8.	You can repeat steps 6 and 7 a few times if you wise*/
 	ThreadArgs* thread = (ThreadArgs*) arg;
 	int y = 0;
 
-  pthread_mutex_lock(&g_ThreadMutex[thread->threadCount]);
-
 	clock_gettime(CLOCK_REALTIME, &tspec);
-	thread->timeStamp[y+1] = tspec.tv_sec *1000000;
-	thread->timeStamp[y+1] += tspec.tv_nsec/1000;
-	if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+1]++;
-	DisplayThreadArgs(thread);
+	pthread_mutex_lock(&mute);
+	//pthread_cond_wait(&var, &mute);
+	for(int y = 0; y < MAX_TASK_COUNT; y++)
+	{
+		thread->timeStamp[y] = tspec.tv_sec *1000000;
+		thread->timeStamp[y] += tspec.tv_nsec/1000;
+		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+1];
 
-	pthread_mutex_unlock(&g_ThreadMutex[thread->threadCount]);
-	pthread_exit(0);
+		DoProcess();
+
+		clock_gettime(CLOCK_REALTIME, &tspec);
+		thread->timeStamp[y+1] = tspec.tv_sec *1000000;
+		thread->timeStamp[y+1] += tspec.tv_nsec/1000;
+		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+1];
+	}
+	DisplayThreadArgs(thread);
+	pthread_mutex_unlock(&mute);
 }
 
 
 int main (int argc, char *argv[])
 {
 	/*1.	Call InitGlobals
-	2.	Create a number of threads (start with 1 and increase to 9) using �pthread_Create� // COMPLETED
+	2.	Create a number of threads (start with 1 and increase to 9) using pthread_Create // COMPLETED
 	3.	Assign 3 threads to SCHED_OTHER, another 3 to SCHED_FIFO and another 3 to SCHED_RR // COMPLETED
 	4.	Signal the condition variable
-	5.	Call �pthread_join� to wait on the thread
+	5.	Call pthread_join to wait on the
+	/*1.	Call InitGlobals
+	2.	Create a number of threads (start with 1 and increase to 9) using pthread_Create // COMPLETED
+	3.	Assign 3 threads to SCHED_OTHER, another 3 to SCHED_FIFO and another 3 to SCHED_RR // COMPLETED
+	4.	Signal the condition variable
+	5.	Call pthread_join to wait on the thread
 	6.	Display the stats on the thread
 
 		pthread_join in separate loop
 	*/
 	InitGlobals();
-	int i = 0;
-	// for(int i = 0; i < MAX_THREAD_COUNT; i++)
-	// {
+	//int i = 0;
+	for(int i = 0; i < MAX_THREAD_COUNT; i++)
+	{
 			pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
-	// }
-
-	// for(int i = 0; i < MAX_THREAD_COUNT; i++)
-	// {
+	}
+				pthread_cond_broadcast(&var);
+	for(int i = 0; i < MAX_THREAD_COUNT; i++)
+ 	{
 			pthread_join(g_ThreadArgs[i].threadId, NULL);
-	//}
+
+
+	}
 
 
 	return 0;
 }
 
 
-/*
+/*>timeStamp[y]-myThreadArg
 
 ************* HINTS ******************
 
