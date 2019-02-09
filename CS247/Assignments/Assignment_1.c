@@ -43,8 +43,8 @@ typedef struct{
 //Globals
 
 //Try to change this to use a single condition variable
-pthread_mutex_t g_ThreadMutex [MAX_THREAD_COUNT];
-pthread_cond_t g_conditionVar [MAX_THREAD_COUNT]; //Used for the mutex
+//pthread_mutex_t g_ThreadMutex [MAX_THREAD_COUNT];
+//pthread_cond_t g_conditionVar [MAX_THREAD_COUNT]; //Used for the mutex
 ThreadArgs g_ThreadArgs[MAX_THREAD_COUNT];
 struct sched_param param;
 struct timespec tspec;
@@ -89,9 +89,16 @@ void InitGlobals(void)
 				g_ThreadArgs[i] = thread;
 			}
 		}
+		printf("==========================================================\n");
 		printf("ERRORS:\n");
 		printf("FIFO ERROR: %d\r\n RR ERROR: %d\r\n OTHER ERROR: %d\r\n", err1, err2, err3);
-}
+		printf("==========================================================\n");
+
+		if(!(err1 && err2 && err3))
+		{
+			printf("Thread schedule priority changed successfully!\r\n");
+		}
+	}
 
 void DisplayThreadSchdAttributes( pthread_t threadID, int policy, int priority )
 {
