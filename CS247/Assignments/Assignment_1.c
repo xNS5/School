@@ -118,7 +118,7 @@ void DoProcess(void)
 {
 	unsigned int longVar =1 ;
 
-	while(longVar < 0xfffffffa) longVar++;
+	while(longVar < 0xffffffff) longVar++;
 }
 
 
