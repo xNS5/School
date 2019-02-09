@@ -62,7 +62,7 @@ void InitGlobals(void)
 				{
 					thread.threadPolicy = SCHED_FIFO;
 					thread.threadPri = 4;
-					//param.sched_priority = SCHED_FIFO;
+					param.sched_priority = sched_get_priority_max(SCHED_FIFO);
 					pthread_setschedparam(thread.threadId, SCHED_FIFO, &param);
 					g_ThreadArgs[i] = thread;
 				}
@@ -70,7 +70,7 @@ void InitGlobals(void)
 				{
 					thread.threadPolicy = SCHED_RR;
 					thread.threadPri = 4;
-					//param.sched_priority = SCHED_RR;
+					param.sched_priority = sched_get_priority_max(SCHED_RR);
 					pthread_setschedparam(thread.threadId, SCHED_RR, &param);
 					g_ThreadArgs[i] = thread;
 				}
@@ -78,7 +78,7 @@ void InitGlobals(void)
 			{
 				thread.threadPolicy = SCHED_OTHER;
 				thread.threadPri = 4;
-				//param.sched_priority = SCHED_OTHER;
+				param.sched_priority = sched_get_priority_max(SCHED_OTHER);
 				pthread_setschedparam(thread.threadId,SCHED_OTHER, &param);
 				g_ThreadArgs[i] = thread;
 			}
@@ -88,8 +88,7 @@ void InitGlobals(void)
 void DisplayThreadSchdAttributes( pthread_t threadID, int policy, int priority )
 {
 
-	printf("\nDisplayThreadSchdAttributes:\n threadID = 0x%lx\n policy = %s\n priority = %d\n",
-									threadID,
+	printf("\nDisplayThreadSchdAttributes:\n threadID = 0x%lx\n policy = %s\n priority = %d\n", (unsigned long)threadID,
 									(policy == SCHED_FIFO) ? "SCHED_FIFO" :
 									(policy == SCHED_RR)	? "SCHED_RR" :
 									(policy == SCHED_OTHER) ? "SCHED_OTHER" :
@@ -134,8 +133,6 @@ void* threadFunction(void *arg)
 	7.	Use time and clock_gettime to find end time.
 	8.	You can repeat steps 6 and 7 a few times if you wise*/
 	ThreadArgs* thread = (ThreadArgs*) arg;
-	int y = 0;
-
 	clock_gettime(CLOCK_REALTIME, &tspec);
 	pthread_mutex_lock(&mute);
 	//pthread_cond_wait(&var, &mute);
@@ -143,6 +140,7 @@ void* threadFunction(void *arg)
 	{
 		thread->timeStamp[y] = tspec.tv_sec *1000000;
 		thread->timeStamp[y] += tspec.tv_nsec/1000;
+		printf("%lld", thread->timeStamp[y]);
 		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+1];
 
 		DoProcess();
@@ -150,9 +148,8 @@ void* threadFunction(void *arg)
 		clock_gettime(CLOCK_REALTIME, &tspec);
 		thread->timeStamp[y+1] = tspec.tv_sec *1000000;
 		thread->timeStamp[y+1] += tspec.tv_nsec/1000;
-		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+1];
+		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+2];
 	}
-	DisplayThreadArgs(thread);
 	pthread_mutex_unlock(&mute);
 }
 
@@ -163,15 +160,7 @@ int main (int argc, char *argv[])
 	2.	Create a number of threads (start with 1 and increase to 9) using pthread_Create // COMPLETED
 	3.	Assign 3 threads to SCHED_OTHER, another 3 to SCHED_FIFO and another 3 to SCHED_RR // COMPLETED
 	4.	Signal the condition variable
-	5.	Call pthread_join to wait on the
-	/*1.	Call InitGlobals
-	2.	Create a number of threads (start with 1 and increase to 9) using pthread_Create // COMPLETED
-	3.	Assign 3 threads to SCHED_OTHER, another 3 to SCHED_FIFO and another 3 to SCHED_RR // COMPLETED
-	4.	Signal the condition variable
-	5.	Call pthread_join to wait on the thread
-	6.	Display the stats on the thread
-
-		pthread_join in separate loop
+	5.	Call pthread_join to wait on the pthread_join in separate loop
 	*/
 	InitGlobals();
 	//int i = 0;
@@ -183,7 +172,6 @@ int main (int argc, char *argv[])
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
  	{
 			pthread_join(g_ThreadArgs[i].threadId, NULL);
-
 
 	}
 
