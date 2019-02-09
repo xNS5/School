@@ -9,7 +9,7 @@
 #include <sys/time.h>
 #include <inttypes.h>
 
-//links taco
+//links
 
 /*
 	http://man7.org/linux/man-pages/man3/pthread_create.3.html
@@ -50,8 +50,8 @@ ThreadArgs g_ThreadArgs[MAX_THREAD_COUNT];
 struct sched_param param;
 struct timespec tspec;
 ThreadArgs thread;
-pthread_mutex_t mute = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t var;
+pthread_mutex_t mute;
+pthread_cond_t cond_var;
 
 
 void InitGlobals(void)
@@ -118,7 +118,7 @@ void DoProcess(void)
 {
 	unsigned int longVar =1 ;
 
-	while(longVar < 0xffffffff) longVar++;
+	while(longVar < 0xfffffffa) longVar++;
 }
 
 
@@ -133,24 +133,25 @@ void* threadFunction(void *arg)
 	7.	Use time and clock_gettime to find end time.
 	8.	You can repeat steps 6 and 7 a few times if you wise*/
 	ThreadArgs* thread = (ThreadArgs*) arg;
-	clock_gettime(CLOCK_REALTIME, &tspec);
+
 	pthread_mutex_lock(&mute);
-	//pthread_cond_wait(&var, &mute);
+	pthread_cond_wait(&cond_var, &mute);
 	for(int y = 0; y < MAX_TASK_COUNT; y++)
 	{
+		clock_gettime(CLOCK_REALTIME, &tspec);
 		thread->timeStamp[y] = tspec.tv_sec *1000000;
 		thread->timeStamp[y] += tspec.tv_nsec/1000;
-		printf("%lld", thread->timeStamp[y]);
-		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+1];
+		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y]++;
 
 		DoProcess();
 
 		clock_gettime(CLOCK_REALTIME, &tspec);
 		thread->timeStamp[y+1] = tspec.tv_sec *1000000;
 		thread->timeStamp[y+1] += tspec.tv_nsec/1000;
-		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+2];
+		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+1]++;
 	}
 	pthread_mutex_unlock(&mute);
+	pthread_exit(0);
 }
 
 
@@ -168,10 +169,13 @@ int main (int argc, char *argv[])
 	{
 			pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
 	}
-				pthread_cond_broadcast(&var);
+
+
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
  	{
+			pthread_cond_signal(&cond_var);
 			pthread_join(g_ThreadArgs[i].threadId, NULL);
+			DisplayThreadArgs(&g_ThreadArgs[i]);
 
 	}
 
