@@ -1,4 +1,3 @@
-
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
@@ -54,35 +53,44 @@ pthread_mutex_t mute;
 pthread_cond_t cond_var;
 
 
+
 void InitGlobals(void)
 {
+	pthread_t self;
+	int err1, err2, err3 = 0;
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
 		{
 			if(i < 3)
 				{
+					g_ThreadArgs[i] = thread;
 					thread.threadPolicy = SCHED_FIFO;
-					thread.threadPri = 4;
+					thread.threadPri = sched_get_priority_max(SCHED_FIFO);
 					param.sched_priority = sched_get_priority_max(SCHED_FIFO);
-					pthread_setschedparam(thread.threadId, SCHED_FIFO, &param);
+					self = pthread_self();
+					err1 = pthread_setschedparam(self, SCHED_FIFO, &param);
 					g_ThreadArgs[i] = thread;
 				}
 			else if(i >=3 && i < 6)
 				{
 					thread.threadPolicy = SCHED_RR;
-					thread.threadPri = 4;
+					thread.threadPri = sched_get_priority_max(SCHED_RR);
 					param.sched_priority = sched_get_priority_max(SCHED_RR);
-					pthread_setschedparam(thread.threadId, SCHED_RR, &param);
+					self = pthread_self();
+					err2 = pthread_setschedparam(self, SCHED_RR, &param);
 					g_ThreadArgs[i] = thread;
 				}
 			else
 			{
 				thread.threadPolicy = SCHED_OTHER;
-				thread.threadPri = 4;
+				thread.threadPri = sched_get_priority_max(SCHED_OTHER);
 				param.sched_priority = sched_get_priority_max(SCHED_OTHER);
-				pthread_setschedparam(thread.threadId,SCHED_OTHER, &param);
+				self = pthread_self();
+				err3 = pthread_setschedparam(self, SCHED_OTHER, &param);
 				g_ThreadArgs[i] = thread;
 			}
 		}
+		printf("ERRORS:\n");
+		printf("FIFO ERROR: %d\r\n RR ERROR: %d\r\n OTHER ERROR: %d\r\n", err1, err2, err3);
 }
 
 void DisplayThreadSchdAttributes( pthread_t threadID, int policy, int priority )
@@ -134,6 +142,7 @@ void* threadFunction(void *arg)
 	8.	You can repeat steps 6 and 7 a few times if you wise*/
 	ThreadArgs* thread = (ThreadArgs*) arg;
 
+
 	pthread_mutex_lock(&mute);
 	pthread_cond_wait(&cond_var, &mute);
 	for(int y = 0; y < MAX_TASK_COUNT; y++)
@@ -150,6 +159,7 @@ void* threadFunction(void *arg)
 		thread->timeStamp[y+1] += tspec.tv_nsec/1000;
 		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+1]++;
 	}
+	DisplayThreadArgs(thread);
 	pthread_mutex_unlock(&mute);
 	pthread_exit(0);
 }
@@ -164,18 +174,16 @@ int main (int argc, char *argv[])
 	5.	Call pthread_join to wait on the pthread_join in separate loop
 	*/
 	InitGlobals();
-	//int i = 0;
+	int i = 0;
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
 	{
 			pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
 	}
 
-
+	pthread_cond_broadcast(&cond_var);
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
  	{
-			pthread_cond_signal(&cond_var);
 			pthread_join(g_ThreadArgs[i].threadId, NULL);
-			DisplayThreadArgs(&g_ThreadArgs[i]);
 
 	}
 
