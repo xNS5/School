@@ -38,7 +38,8 @@ struct sched_param param;																												// Needed to create this fo
 struct timespec tspec;																													// Needed to get clock_gettime to work
 pthread_mutex_t mute = PTHREAD_MUTEX_INITIALIZER;																// Mutex parameter
 pthread_cond_t cond_var = PTHREAD_COND_INITIALIZER;															// Conditional parameter
-ThreadArgs thread;
+	ThreadArgs thread;
+
 
 /*
 	This function initializes all of the thread schedules and assigns them to a location
@@ -50,6 +51,7 @@ ThreadArgs thread;
 void InitGlobals(void)
 {
 	int err1, err2, err3 = 0;
+
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
 		{
 			if(i < 3)
@@ -133,8 +135,8 @@ void* threadFunction(void *arg)
 	ThreadArgs* thread = (ThreadArgs*)arg;
 	pthread_mutex_lock(&mute);
 	pthread_cond_wait(&cond_var, &mute);
-	//int err1 = pthread_cond_wait(&cond_var, &mute);
-	//printf("Set cond_wait var with error: %d\r\n", err1);
+	// int err1 = pthread_cond_wait(&cond_var, &mute);
+	// printf("Set cond_wait var with error: %d\r\n", err1);
 	for(int y = 0; y < MAX_TASK_COUNT; y++)
 	{
 		clock_gettime(CLOCK_REALTIME, &tspec);
@@ -149,7 +151,7 @@ void* threadFunction(void *arg)
 		thread->timeStamp[y+1] += tspec.tv_nsec/1000;
 		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+1]++;
 	}
-	//printf("Completed DoProcess, unlocking mutex\r\n");
+	// printf("Completed DoProcess, unlocking mutex\r\n");
 	pthread_mutex_unlock(&mute);
 	pthread_exit(0);
 }
@@ -163,112 +165,22 @@ void* threadFunction(void *arg)
 	even though it had received the broadcast. I resolved that issue by instead using pthread_cond_signal(var) in the for loop with the pthread_join(var)
 	function.
 */
-
 int main (int argc, char *argv[])
 {
 	InitGlobals();
-	int i = 0;
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
 	{
-			pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
+		 pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
 	}
 
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
  	{
-			pthread_cond_signal(&cond_var);
-			//int err = pthread_cond_signal(&cond_var); I noticed that when I ran this on my mac with the error checking in place, the program just hung.
-			//printf("Signal error: %d\r\n", err);
-			pthread_join(g_ThreadArgs[i].threadId, NULL);
-			//printf("Printing output\r\n");
-			DisplayThreadArgs(&g_ThreadArgs[i]);
+		pthread_cond_signal(&cond_var);
+		// int err = pthread_cond_signal(&cond_var); // I noticed that when I ran this on my mac with the error checking in place, the program just hung.
+		// printf("Signal error: %d\r\n", err);
+		pthread_join(g_ThreadArgs[i].threadId, NULL);
+		DisplayThreadArgs(&g_ThreadArgs[i]);
 	}
 
 	return 0;
 }
-
-
-/*
-
-************* HINTS ******************
-
-========================================================================================================================================================
-Every time you run into issues with usage of an API, please look up samples on how that API is used here...
-
-http://www.yolinux.com/TUTORIALS/LinuxTutorialPosixThreads.html
-
-========================================================================================================================================================
-
-
-Please check the return values from all system calls and print an error message in all error cases including the error code.. That will help catch errors quickly.
-========================================================================================================================================================
-
-
-You can use the following technique to pass the address of the element corresponding to a particular thread to the thread function...
-
-	void* threadFunction(void *arg)
-	{
-		ThreadArgs*	myThreadArg;
-
-		myThreadArg = (ThreadArgs*)arg;
-
-	}
-
-
-	int main (int argc, char *argv[])
-	{
-
-		while(threadCount < MAX_THREAD_COUNT)
-		{
-		...
-			if( pthread_create(&(g_ThreadArgs[threadCount].threadId), &threadAttrib, &threadFunction, &g_ThreadArgs[threadCount]) )
-		...
-
-		}
-	}
-========================================================================================================================================================
-
-Here is the usage for clock_gettime�
-
-	clock_gettime(CLOCK_REALTIME, &tms);
-	myThreadArg->timeStamp[y+1] = tms.tv_sec *1000000;
-	myThreadArg->timeStamp[y+1] += tms.tv_nsec/1000;
-	if(tms.tv_nsec % 1000 >= 500 ) myThreadArg->timeStamp[y+1]++;
-
-========================================================================================================================================================
-
-Here is how you wait on a condition event�
-
-	pthread_mutex_lock ( &g_ThreadMutex[myThreadArg->threadCount] );
-	pthread_cond_wait ( &g_conditionVar[myThreadArg->threadCount], &g_ThreadMutex[myThreadArg->threadCount] );
-	pthread_mutex_unlock( &g_ThreadMutex[myThreadArg->threadCount] );
-
-========================================================================================================================================================
-
-Note that this sample is changing the policy of the current thread... so if you follow this sample, make sure you are making the call from the thread function.
-
-
-	http://man7.org/linux/man-pages/man3/pthread_setschedparam.3.html
-
-	if (main_sched_str != NULL) {
-	if (!get_policy(main_sched_str[0], &policy))
-		usage(argv[0], "Bad policy for main thread (-m)\n");
-		param.sched_priority = strtol(&main_sched_str[1], NULL, 0);
-
-	s = pthread_setschedparam(pthread_self(), policy, &param);
-	if (s != 0)
-		handle_error_en(s, "pthread_setschedparam");
-	}
-
-========================================================================================================================================================
-For those confused about my comment on trying to using a single Condition variable instead of an array... please read the following...
-
-http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
-
-You can use the broadcast API to wake multiple threads waiting on the same condition variable.
-
-For those who really like to go deeper, know that you have access to the code for most of the Linux system APIs... here is the code pthread_cond_broadcast...
-
-https://code.woboq.org/userspace/glibc/nptl/pthread_cond_broadcast.c.html
-
-========================================================================================================================================================
-*/
