@@ -8,23 +8,15 @@
 #include <sys/time.h>
 #include <inttypes.h>
 
-//links
-
 /*
-	http://man7.org/linux/man-pages/man3/pthread_create.3.html
-	http://man7.org/linux/man-pages/man7/sched.7.html
-	http://man7.org/linux/man-pages/man2/sched_setscheduler.2.html
+	Author: Michael Kennedy
+	Class: CS247
+	Assignment 1
 
-	Compile with -lpthread (e.g. gcc Assignment_1.c -lpthread)
-
-	Thread policy numbers
-	1- FIFO
-	2- RR
-	0- OTHER
-
+	Notes: When I tried running my program on my mac with the 'int err[n] = pthread...' it wouldn't run properly.
+	So in order to fix that, I commented out the pthread functions that are assigned to an int value and replaced them with
+	just function calls.
 */
-
-//#defines
 
 #define MAX_TASK_COUNT 3
 #define MAX_THREAD_COUNT 9
@@ -41,21 +33,21 @@ typedef struct{
 } ThreadArgs;
 
 //Globals
-
-//Try to change this to use a single condition variable
-//pthread_mutex_t g_ThreadMutex [MAX_THREAD_COUNT];
-//pthread_cond_t g_conditionVar [MAX_THREAD_COUNT]; //Used for the mutex
 ThreadArgs g_ThreadArgs[MAX_THREAD_COUNT];
-struct sched_param param;
-struct timespec tspec;
-ThreadArgs thread;
-pthread_mutex_t mute = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t cond_var = PTHREAD_COND_INITIALIZER;
+struct sched_param param;																												// Needed to create this for sched_priority to work
+struct timespec tspec;																													// Needed to get clock_gettime to work
+pthread_mutex_t mute = PTHREAD_MUTEX_INITIALIZER;																// Mutex parameter
+pthread_cond_t cond_var = PTHREAD_COND_INITIALIZER;															// Conditional parameter
 
-
+/*
+	This function initializes all of the thread schedules and assigns them to a location
+	in the ThreadArgs array. I use the pthread_setschedparam to change the schedule priority of the
+	threads.
+	Note: If for whatever reason the thread schedule policy isn't successfully changed,
+	it'll print out the error number for each pthread_setschedparam function call.
+*/
 void InitGlobals(void)
 {
-	pthread_t self;
 	int err1, err2, err3 = 0;
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
 		{
@@ -65,8 +57,7 @@ void InitGlobals(void)
 					thread.threadPolicy = SCHED_FIFO;
 					thread.threadPri = sched_get_priority_max(SCHED_FIFO);
 					param.sched_priority = sched_get_priority_max(SCHED_FIFO);
-					self = pthread_self();
-					err1 = pthread_setschedparam(self, SCHED_FIFO, &param);
+					err1 = pthread_setschedparam((pthread_self()), SCHED_FIFO, &param);
 					g_ThreadArgs[i] = thread;
 				}
 			else if(i >=3 && i < 6)
@@ -74,8 +65,7 @@ void InitGlobals(void)
 					thread.threadPolicy = SCHED_RR;
 					thread.threadPri = sched_get_priority_max(SCHED_RR);
 					param.sched_priority =sched_get_priority_max(SCHED_RR);
-					self = pthread_self();
-					err2 = pthread_setschedparam(self, SCHED_RR, &param);
+					err2 = pthread_setschedparam((pthread_self()), SCHED_RR, &param);
 					g_ThreadArgs[i] = thread;
 				}
 			else
@@ -83,8 +73,7 @@ void InitGlobals(void)
 				thread.threadPolicy = SCHED_OTHER;
 				thread.threadPri = sched_get_priority_max(SCHED_OTHER);;
 				param.sched_priority = sched_get_priority_max(SCHED_OTHER);
-				self = pthread_self();
-				err3 = pthread_setschedparam(self, SCHED_OTHER, &param);
+				err3 = pthread_setschedparam((pthread_self()), SCHED_OTHER, &param);
 				g_ThreadArgs[i] = thread;
 			}
 		}
@@ -130,20 +119,21 @@ void DoProcess(void)
 }
 
 
+
+/*
+	This function times how long a thread takes to execute DoProcess() in nanoseconds using the clock_gettime() function.
+	In the for loop, it assigns each timestamp to a location in the array in the ThreadArgs struct. It uses mutex locks and unlocks
+	to restrict the contents between the two mutexes to each thread. I use the pthread_cond_wait to wait until all of the threads have been created
+	to run in the threadFunction.
+	Note: I've commented out the int err1= pthread_cond_wait... becuase it affected usage on my Mac. It was hanging in weird places and I narrowed down
+	the cause to the commented out pthread_cond_wait function calls.
+*/
 void* threadFunction(void *arg)
 {
-	/*1.	Typecast the argument to a ThreadArgs* variable
-	2.	Use the pthread_setscheduleparam API to set the thread policy
-	3.	Init the Condition variable and associated mutex
-	4.	Wait on condition variable
-	5.	Once condition variable is signaled, use the time function and the �clock_gettime(CLOCK_REALTIME, &tms) to get timestamp
-	6.	Call DoProcess to run your task
-	7.	Use time and clock_gettime to find end time.
-	8.	You can repeat steps 6 and 7 a few times if you wise*/
-
 	ThreadArgs* thread = (ThreadArgs*) arg;
 	pthread_mutex_lock(&mute);
-	int err1 = pthread_cond_wait(&cond_var, &mute);
+	pthread_cond_wait(&cond_var, &mute);
+	//int err1 = pthread_cond_wait(&cond_var, &mute);
 	//printf("Set cond_wait var with error: %d\r\n", err1);
 	for(int y = 0; y < MAX_TASK_COUNT; y++)
 	{
@@ -166,14 +156,17 @@ void* threadFunction(void *arg)
 }
 
 
+/*
+	I have my pthread_create in a for loop so it populates all 9 indexes of the g_ThreadArgs array with a thread. Once the threads are generated
+	and it tries to run the threadFunction(var) it will hit the pthread_cond_wait and wait until the program runs the pthread_join(var) function.
+	I was having trouble with pthread_cond_broadcast(var) for some reason and I wasn't 100% sure how to resolve it. What was happening was
+	at the last SCHED_OTHER printout it would just hang. I narrowed it down to the program waiting at the pthread_cond_wait(var, var) for some reason
+	even though it had received the broadcast. I resolved that issue by instead using pthread_cond_signal(var) in the for loop with the pthread_join(var)
+	function.
+*/
+
 int main (int argc, char *argv[])
 {
-	/*1.	Call InitGlobals
-	2.	Create a number of threads (start with 1 and increase to 9) using pthread_Create // COMPLETED
-	3.	Assign 3 threads to SCHED_OTHER, another 3 to SCHED_FIFO and another 3 to SCHED_RR // COMPLETED
-	4.	Signal the condition variable
-	5.	Call pthread_join to wait on the pthread_join in separate loop
-	*/
 	InitGlobals();
 	int i = 0;
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
@@ -183,7 +176,8 @@ int main (int argc, char *argv[])
 
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
  	{
-			int err = pthread_cond_signal(&cond_var);
+			pthread_cond_signal(&cond_var);
+			//int err = pthread_cond_signal(&cond_var); I noticed that when I ran this on my mac with the error checking in place, the program just hung.
 			//printf("Signal error: %d\r\n", err);
 			pthread_join(g_ThreadArgs[i].threadId, NULL);
 			//printf("Printing output\r\n");
