@@ -63,8 +63,8 @@ void InitGlobals(void)
 				{
 					g_ThreadArgs[i] = thread;
 					thread.threadPolicy = SCHED_FIFO;
-					thread.threadPri = SCHED_FIFO;
-					param.sched_priority = SCHED_FIFO;
+					thread.threadPri = sched_get_priority_max(SCHED_FIFO);
+					param.sched_priority = sched_get_priority_max(SCHED_FIFO);
 					self = pthread_self();
 					err1 = pthread_setschedparam(self, SCHED_FIFO, &param);
 					g_ThreadArgs[i] = thread;
@@ -72,8 +72,8 @@ void InitGlobals(void)
 			else if(i >=3 && i < 6)
 				{
 					thread.threadPolicy = SCHED_RR;
-					thread.threadPri = SCHED_RR;
-					param.sched_priority = SCHED_RR;
+					thread.threadPri = sched_get_priority_max(SCHED_RR);
+					param.sched_priority =sched_get_priority_max(SCHED_RR);
 					self = pthread_self();
 					err2 = pthread_setschedparam(self, SCHED_RR, &param);
 					g_ThreadArgs[i] = thread;
@@ -81,8 +81,8 @@ void InitGlobals(void)
 			else
 			{
 				thread.threadPolicy = SCHED_OTHER;
-				thread.threadPri = SCHED_OTHER;
-				param.sched_priority = SCHED_OTHER;
+				thread.threadPri = sched_get_priority_max(SCHED_OTHER);;
+				param.sched_priority = sched_get_priority_max(SCHED_OTHER);
 				self = pthread_self();
 				err3 = pthread_setschedparam(self, SCHED_OTHER, &param);
 				g_ThreadArgs[i] = thread;
@@ -126,7 +126,7 @@ void DoProcess(void)
 {
 	unsigned int longVar =1 ;
 
-	while(longVar < 0xfffffff) longVar++;
+	while(longVar < 0xffffffff) longVar++;
 }
 
 
@@ -143,8 +143,8 @@ void* threadFunction(void *arg)
 
 	ThreadArgs* thread = (ThreadArgs*) arg;
 	pthread_mutex_lock(&mute);
-	int err = pthread_cond_wait(&cond_var, &mute);
-	printf("Set cond_wait var with error: %d\r\n", err);
+	int err1 = pthread_cond_wait(&cond_var, &mute);
+	//printf("Set cond_wait var with error: %d\r\n", err1);
 	for(int y = 0; y < MAX_TASK_COUNT; y++)
 	{
 
@@ -160,6 +160,7 @@ void* threadFunction(void *arg)
 		thread->timeStamp[y+1] += tspec.tv_nsec/1000;
 		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+1]++;
 	}
+	//printf("Completed DoProcess, unlocking mutex\r\n");
 	pthread_mutex_unlock(&mute);
 	pthread_exit(0);
 }
@@ -180,13 +181,12 @@ int main (int argc, char *argv[])
 			pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
 	}
 
-	// int err = pthread_cond_broadcast(&cond_var);
-	// printf("Broadcasted with error: %d\r\n", err);
-
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
  	{
-			pthread_cond_signal(&cond_var);
+			int err = pthread_cond_signal(&cond_var);
+			//printf("Signal error: %d\r\n", err);
 			pthread_join(g_ThreadArgs[i].threadId, NULL);
+			//printf("Printing output\r\n");
 			DisplayThreadArgs(&g_ThreadArgs[i]);
 	}
 
@@ -194,7 +194,7 @@ int main (int argc, char *argv[])
 }
 
 
-/*>timeStamp[y]-myThreadArg
+/*
 
 ************* HINTS ******************
 
