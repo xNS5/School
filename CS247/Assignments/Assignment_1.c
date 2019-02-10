@@ -38,6 +38,7 @@ struct sched_param param;																												// Needed to create this fo
 struct timespec tspec;																													// Needed to get clock_gettime to work
 pthread_mutex_t mute = PTHREAD_MUTEX_INITIALIZER;																// Mutex parameter
 pthread_cond_t cond_var = PTHREAD_COND_INITIALIZER;															// Conditional parameter
+ThreadArgs thread;
 
 /*
 	This function initializes all of the thread schedules and assigns them to a location
@@ -53,7 +54,6 @@ void InitGlobals(void)
 		{
 			if(i < 3)
 				{
-					g_ThreadArgs[i] = thread;
 					thread.threadPolicy = SCHED_FIFO;
 					thread.threadPri = sched_get_priority_max(SCHED_FIFO);
 					param.sched_priority = sched_get_priority_max(SCHED_FIFO);
@@ -130,14 +130,13 @@ void DoProcess(void)
 */
 void* threadFunction(void *arg)
 {
-	ThreadArgs* thread = (ThreadArgs*) arg;
+	ThreadArgs* thread = (ThreadArgs*)arg;
 	pthread_mutex_lock(&mute);
 	pthread_cond_wait(&cond_var, &mute);
 	//int err1 = pthread_cond_wait(&cond_var, &mute);
 	//printf("Set cond_wait var with error: %d\r\n", err1);
 	for(int y = 0; y < MAX_TASK_COUNT; y++)
 	{
-
 		clock_gettime(CLOCK_REALTIME, &tspec);
 		thread->timeStamp[y] = tspec.tv_sec *1000000;
 		thread->timeStamp[y] += tspec.tv_nsec/1000;
