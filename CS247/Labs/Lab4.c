@@ -16,7 +16,7 @@ int main()
    //printf("%04x\n\r", float_negate(var));
    //printf("%04x\n\r", float_absval(var));
    //printf("%04x\n\r", float_twice(var));
-   //printf("%04x\n\r", float_half(var));
+   printf("%04x\n\r", float_half(var));
    return 0;
 }
 
@@ -63,10 +63,10 @@ float_bits float_absval(float_bits num)
 
 float_bits float_twice(float_bits num)
   {
-    return (num * 2.0);
+    return (num << 1);
   }
 
 float_bits float_half(float_bits num)
 {
-  return (num * 0.5);
+  return (num >> 1);
 }
