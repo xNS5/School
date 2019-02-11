@@ -1,3 +1,0 @@
-Floating point ops float_bits is an unsigned int
-
-32 bits unsigned int using bit operations (can use with math operators)
