@@ -1,3 +1,24 @@
+/*
+	ANALYSIS:
+
+	I noticed that when I ran 0xffffffff on my Mac computer, runtime for all of the threads were around ~6000000 ns.
+	However when I ran it on my Linux machine, the delta was around ~8000000 ns. My mac has an i7 processor whereas my Linux machine has a
+	i5 processor. My mac has a 2.7 GHz i7 Intel CPU, meaning that it has the ability to Hyper-thread which creates two logical cores inside each core.
+	My Linux has an i5 CPU which doesn't include the hyper-threading feature. This explains the difference in runtime between the two computers.
+
+	Sched_rr and sched_fifo are both real-time (RT) schedules. RR or "round-robin" is a schedule that allocates a slice of time
+	for each process, and these processes are executed in a circular order. Fifo or "first in first out" and is nearly identical to RR
+	except it runs first in first out without timeslices and it is never preempted -- meaning it'll leave the CPU when its completed it's task.
+	Lastly, Sched_other is the normal process schedule that the computer runs on. RT processes that are RR or FIFO have greater importance than OTHER.
+	The number of threads that can run on a CPU depends on how many cores the CPU has. So theoretically if the CPU has 4 cores it will run 4 threads at once,
+	but because of the scheduling policies it can run multiple threads while having others on hold until the time slice is used up or the higher
+	priority process is completed. RT priorities take precende over OTHER, so while a RT process is being run, no SCHED_OTHER will be allowed to run in the CPU.
+*/
+
+
+
+
+
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
@@ -38,7 +59,6 @@ struct sched_param param;																												// Needed to create this fo
 struct timespec tspec;																													// Needed to get clock_gettime to work
 pthread_mutex_t mute = PTHREAD_MUTEX_INITIALIZER;																// Mutex parameter
 pthread_cond_t cond_var = PTHREAD_COND_INITIALIZER;															// Conditional parameter
-	ThreadArgs thread;
 
 
 /*
@@ -51,7 +71,7 @@ pthread_cond_t cond_var = PTHREAD_COND_INITIALIZER;															// Conditional
 void InitGlobals(void)
 {
 	int err1, err2, err3 = 0;
-
+	ThreadArgs thread;
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
 		{
 			if(i < 3)
@@ -81,6 +101,7 @@ void InitGlobals(void)
 		}
 		printf("==========================================================\n");
 		printf("ERRORS:\r\n FIFO ERROR: %d\r\n RR ERROR: %d\r\n OTHER ERROR: %d\r\n", err1, err2, err3);
+		printf("Note: please run as root user\r\n");
 		printf("==========================================================\n");
 	}
 
@@ -140,6 +161,7 @@ void* threadFunction(void *arg)
 	for(int y = 0; y < MAX_TASK_COUNT; y++)
 	{
 		clock_gettime(CLOCK_REALTIME, &tspec);
+		thread->startTime = time(0);
 		thread->timeStamp[y] = tspec.tv_sec *1000000;
 		thread->timeStamp[y] += tspec.tv_nsec/1000;
 		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y]++;
@@ -147,6 +169,7 @@ void* threadFunction(void *arg)
 		DoProcess();
 
 		clock_gettime(CLOCK_REALTIME, &tspec);
+		thread->endTime = time(0);
 		thread->timeStamp[y+1] = tspec.tv_sec *1000000;
 		thread->timeStamp[y+1] += tspec.tv_nsec/1000;
 		if(tspec.tv_nsec % 1000 >= 500 ) thread->timeStamp[y+1]++;
