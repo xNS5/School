@@ -15,10 +15,6 @@
 	priority process is completed. RT priorities take precende over OTHER, so while a RT process is being run, no SCHED_OTHER will be allowed to run in the CPU.
 */
 
-
-
-
-
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
@@ -32,11 +28,7 @@
 /*
 	Author: Michael Kennedy
 	Class: CS247
-	Assignment 1
-
-	Notes: When I tried running my program on my mac with the 'int err[n] = pthread...' it wouldn't run properly.
-	So in order to fix that, I commented out the pthread functions that are assigned to an int value and replaced them with
-	just function calls.
+	Assignment 1 -- Thread Generation using Pthread
 */
 
 #define MAX_TASK_COUNT 3

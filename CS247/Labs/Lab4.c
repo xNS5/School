@@ -33,12 +33,13 @@ int main()
 {
    float_bits var = 0xc4410000;
    // Please uncomment as needed to test. Or don't, it's your life.
-   // printf("The inputted value is: 0x%4x\r\n", var);
-   // printf("The float class is: %d\r\n", floatClass(var));
-   // printf("The negated value is: 0x%04x\n\r", float_negate(var));
-   // printf("The absolute value is: 0x%04x\n\r", float_absval(var));
-   // printf("Double the value is: 0x%04x\n\r", float_twice(var));
-   // printf("Half of the value is: 0x%04x\n\r", float_half(var));
+
+   printf("The inputted value is: 0x%4x\r\n", var);
+   printf("The float class is: %d\r\n", floatClass(var));
+   printf("The negated value is: 0x%04x\n\r", float_negate(var));
+   printf("The absolute value is: 0x%04x\n\r", float_absval(var));
+   printf("Double the value is: 0x%04x\n\r", float_twice(var));
+   printf("Half of the value is: 0x%04x\n\r", float_half(var));
    return 0;
 }
 
@@ -50,17 +51,19 @@ int floatClass(float_bits num)
 {
   unsigned pos_infinity = 0x7f800000;
   unsigned neg_infinity = 0xff800000; // This needed to be a signed int because otherwise I wouldn't be able to check for whether num < negative infinity.
-  if((0x80000000^num) == 0) // Checks for whether the number is -0.0 or 0 using XOR.
+  if((0x80000000^num) == 0 || (0x00000000^num) == 0) // Checks for whether the number is -0.0 or 0 using XOR.
     {
-      return 0;
+      return 0;             // If the number is positive/negative zero. 
     }
   else if((pos_infinity^num) == 0 || (neg_infinity^num) == 0) // Checks for whether the number is positive or negative infinity using XOR.
     {
-      return 1;
+      return 1;              // If the number is +/- infinity.
     }
   else if(num > pos_infinity && (num & (1<<31))) // Checks for whether num > infinity and the sign bit is set.
     {
-      return 2;
+      return 2;               /* Representing Not A Number. Unsigned negative infinity is greater than positive infinity, so if it's greater than positive infinity and the
+                                 sign bit is set, then it's NaN.
+                              */
     }
   /*
     This last else statement checks for whether a number is normalized or denormalized. It checks over the 8 bits in the exponent for whether the number
@@ -74,11 +77,11 @@ int floatClass(float_bits num)
         {
           if(check & num)
             {
-              return 4; // Meaning this is a Normalized number.
+              return 4;           // Meaning this is a Normalized number.
             }
-            check >>=1; // Shifts the bits left 1.
+            check >>=1;           // Shifts the bits left 1.
         }
-        return 3; // Meanint this is a de-normalized number.
+        return 3;                 // Meanint this is a de-normalized number.
     }
 }
 
@@ -91,9 +94,9 @@ float_bits float_negate(float_bits num)
   {
     if(num & (1 << 31))
       {
-        return (num-= (1<<31));
+        return (num - (1<<31));
       }
-    return (num += (1<<31));
+    return (num + (1<<31));
   }
 
 /*
@@ -104,8 +107,7 @@ float_bits float_absval(float_bits num)
   {
     if(num & (1<<31))
       {
-        num -= (1 << 31);
-        return num;
+        return (num - (1 << 31));
       }
     return num;
   }
