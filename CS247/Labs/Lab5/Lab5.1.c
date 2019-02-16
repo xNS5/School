@@ -2,9 +2,10 @@
 
 int main()
 {
-  int x, y;
-  x = 10;
-  y = 15;
-  x = y-x;
-  y = x+y; 
+  int x = 0;
+  int y = 0;
+  y = y + x;
+  x = x + y;
+  y += x++;
+  return 0;
 }
