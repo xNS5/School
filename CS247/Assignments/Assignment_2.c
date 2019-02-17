@@ -13,12 +13,12 @@
 #include <signal.h>
 #include <errno.h>
 
-#define	MAX_THREAD_COUNT		3
+#define	MAX_THREAD_COUNT		  3
 
 #define LOW_THREAD_PRIORITY		50
 
-#define STACK_SIZE				0x400000
-#define	MAX_TASK_COUNT			3
+#define STACK_SIZE				    0x400000
+#define	MAX_TASK_COUNT			  3
 
 //define error handling later on
 #define handle_error_en(en, msg) \
@@ -41,7 +41,7 @@ typedef struct{
   	int 				      sig;
   	sigset_t 		      alarm_sig;
   	int 				      wakeups_missed;
-  	timer_t 		      timer_id;
+  	time_t 		      timer_id;
   	int 				      timer_Period;
     //sigset_t timer_signal;
 } ThreadArgs;
@@ -167,7 +167,7 @@ void* threadFunction(void *arg)
 int main (int argc, char *argv[])
 {
 	int threadCount = 0;
-    int err, i;
+  int err, i;
 	int fifoPri = 60;
 	int period = 1;
 	int retVal;
@@ -177,7 +177,7 @@ int main (int argc, char *argv[])
    sigset_t timer_signal;
    sigemptyset(&timer_signal);
    for (int i = SIGRTMIN; i <=SIGRTMAX; i++)
-      sigaddset(&timer_signal, i);
+   sigaddset(&timer_signal, i);
    sigprocmask(SIG_BLOCK, &timer_signal, NULL);
 
 
@@ -186,8 +186,8 @@ int main (int argc, char *argv[])
    for (int i = 0; i < MAX_THREAD_COUNT; i ++)
    {
 	  g_ThreadArgs[i].threadCount = i+1;
-      g_ThreadArgs[i].threadPolicy = SCHED_FIFO;
-      g_ThreadArgs[i].param.sched_priority = fifoPri++;
+    g_ThreadArgs[i].threadPolicy = SCHED_FIFO;
+    g_ThreadArgs[i].param.sched_priority = fifoPri++;
 	  g_ThreadArgs[i].timer_Period = (period << i)*1000000;
 
       retVal = pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
@@ -201,7 +201,7 @@ int main (int argc, char *argv[])
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
 	{
       pthread_join(g_ThreadArgs[i].threadId, NULL);
-    }
+  }
 
 	printf("Main thread is exiting\n");
 

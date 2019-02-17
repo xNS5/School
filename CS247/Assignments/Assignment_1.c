@@ -190,9 +190,9 @@ int main (int argc, char *argv[])
 
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
  	{
-		pthread_cond_signal(&cond_var);
-		// int err = pthread_cond_signal(&cond_var); // I noticed that when I ran this on my mac with the error checking in place, the program just hung.
-		// printf("Signal error: %d\r\n", err);
+		//pthread_cond_signal(&cond_var);
+		int err = pthread_cond_signal(&cond_var); // I noticed that when I ran this on my mac with the error checking in place, the program just hung.
+		printf("Signal error: %d\r\n", err);
 		pthread_join(g_ThreadArgs[i].threadId, NULL);
 		DisplayThreadArgs(&g_ThreadArgs[i]);
 	}
