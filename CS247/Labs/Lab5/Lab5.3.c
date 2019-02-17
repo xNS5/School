@@ -16,7 +16,7 @@ int main()
    arr[10] = 0x1;
    arr[3] =  0x0;
 
-   arr[3] = (arr[4] * arr[8]);
+   arr[3] += (arr[4] * arr[8]);
    arr[3] = (arr[5] * arr[9]);
    arr[3] = (arr[6] * arr[10]);
 
