@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 
 int main()
@@ -16,6 +15,6 @@ int main()
   arr[3] += (arr[5] * arr[9]);
   arr[3] += (arr[6] * arr[10]);
 
-  return arr[3];
+  return 0;
 
 }
