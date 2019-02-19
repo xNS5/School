@@ -20,6 +20,6 @@ int main()
    arr[2] += (arr[3] * arr[7]);
    arr[3] += (arr[5] * arr[9]);
    arr[3] += (arr[6] * arr[10]);
-   
+
    return 0;
 }
