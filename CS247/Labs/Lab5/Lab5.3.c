@@ -22,7 +22,7 @@ int main()
    arr[8] = 0x2;
    arr[9] = 0x3;
    arr[10] = 0x1;
-   arr[3] =  0x0;
+   arr[3] = 0x0;
 
    arr[3] += (arr[4] * arr[8]);
    arr[3] += (arr[5] * arr[9]);

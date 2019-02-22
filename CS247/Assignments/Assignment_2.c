@@ -29,21 +29,20 @@ pthread_mutex_t		g_DisplayMutex = PTHREAD_MUTEX_INITIALIZER;;
 pthread_mutex_t 	g_SignalMutex = PTHREAD_MUTEX_INITIALIZER;
 
 typedef struct{
-  	int					      threadCount;
-  	pthread_t		      threadId;
-  	int					      threadPolicy;
-  	int					      threadPri;
-	struct sched_param 	param;
-  	long				      processTime;
-  	int64_t			      timeStamp[MAX_TASK_COUNT+1];
-  	time_t			      startTime;
-  	time_t			      endTime;
-  	int 				      sig;
-  	sigset_t 		      alarm_sig;
-  	int 				      wakeups_missed;
-  	time_t 		      timer_id;
-  	int 				      timer_Period;
-    //sigset_t timer_signal;
+  	int					        threadCount;
+  	pthread_t		        threadId;
+  	int					        threadPolicy;
+  	int					        threadPri;
+	  struct sched_param 	param;
+  	long				        processTime;
+  	int64_t			        timeStamp[MAX_TASK_COUNT+1];
+  	time_t			        startTime;
+  	time_t			        endTime;
+  	int 				        signal_number;
+  	sigset_t 		        timer_signal;
+  	int 				        wakeups_missed_count;
+  	timer_t 		        timer_id;
+  	int 				        timer_Period;
 } ThreadArgs;
 
 ThreadArgs g_ThreadArgs[MAX_THREAD_COUNT];
@@ -110,6 +109,48 @@ void DisplayThreadArgs(ThreadArgs*	myThreadArg)
 int CreateAndArmTimer(int unsigned period, ThreadArgs* info)
 {
    //TODO:
+
+   /*
+    1. Create static int variable to keep track of next available signal signal_number
+    2. Initialize thread structure elements
+    3. Assign next real time signal to thread signal_number
+    4. Create signal mask corresponding to the chosen signal_number in "timer_signal".
+      use sigemptyset and sigaddset
+    5. Use timer_Create to create timer
+    6. Arm timer
+   */
+   struct sigevent mySignalEvent;
+   struct itimerspec timerSpec;
+   static int next_signal;
+   int ret;
+   int seconds = period/1000000;
+   int nanoseconds = period*1000; // Ask about sec
+
+   mySignalEvent.sigev_notify = SIGEV_SIGNAL;
+   mySignalEvent.sigev_signo = info->signal_number;
+   mySignalEvent.sigev_value.sival_ptr = (void *)&(info->timer_id);
+   ret = timer_create(CLOCK_MONOTONIC, &mySignalEvent, &info->timer_id);
+   if(ret != 0)
+    {
+      handle_error_en(ret, "Timer Create");
+    }
+
+    timerSpec.it_interval.tv_sec = seconds;
+    timerSpec.it_interval.tv_nsec = nanoseconds;
+    timerSpec.it_value.tv_sec = seconds;
+    timerSpec.it_value.tv_nsec = nanoseconds;
+    ret = timer_settime(&info->timer_id, 0, &timerSpec, NULL);
+    if(ret != 0)
+     {
+       handle_error_en(ret, "Timer Set");
+     }
+
+
+
+
+
+
+
 }
 
 /*****************************************************************************************/
@@ -117,12 +158,18 @@ int CreateAndArmTimer(int unsigned period, ThreadArgs* info)
 static void wait_period (ThreadArgs *info)
 {
 	//TODO:
+
+  /*
+    1. use sigwait function to wait on timer_signal
+    2. update missed_signal_count by calling timer_getoverrun
+  */
 }
 
 /*****************************************************************************************/
 
 void* threadFunction(void *arg)
 {
+  pthread_mutex_lock(&g_SignalMutex);
 	ThreadArgs*	myThreadArg;
 	struct timeval	t1;
 	struct timespec tms;
@@ -144,7 +191,8 @@ void* threadFunction(void *arg)
 		myThreadArg->processTime = 0;
 	}
 
-	//TODO: Call "CreateAndArmTimer(myThreadArg->timer_Period, myThreadArg);"
+	CreateAndArmTimer(myThreadArg->timer_Period, myThreadArg);
+
 
 	myThreadArg->startTime = time(NULL);
 
@@ -155,6 +203,8 @@ void* threadFunction(void *arg)
 	myThreadArg->endTime = time(NULL);
 
 	DisplayThreadArgs(myThreadArg);
+
+  pthread_mutex_unlock(&g_SignalMutex);
 
 	pthread_exit(NULL);
 
@@ -176,9 +226,10 @@ int main (int argc, char *argv[])
 
    sigset_t timer_signal;
    sigemptyset(&timer_signal);
-   for (int i = SIGRTMIN; i <=SIGRTMAX; i++)
+   for (int i = SIGRTMIN; i <=SIGRTMAX; i++){
    sigaddset(&timer_signal, i);
    sigprocmask(SIG_BLOCK, &timer_signal, NULL);
+ }
 
 
 	InitThreadArgs();
@@ -190,18 +241,18 @@ int main (int argc, char *argv[])
     g_ThreadArgs[i].param.sched_priority = fifoPri++;
 	  g_ThreadArgs[i].timer_Period = (period << i)*1000000;
 
-      retVal = pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
+    retVal = pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
 	  if(retVal != 0)
-	  {
-		handle_error_en(retVal, "pthread_create");
-	  }
+	   {
+		     handle_error_en(retVal, "pthread_create");
+	   }
 
    }
 
 	for(int i = 0; i < MAX_THREAD_COUNT; i++)
-	{
+	 {
       pthread_join(g_ThreadArgs[i].threadId, NULL);
-  }
+   }
 
 	printf("Main thread is exiting\n");
 
