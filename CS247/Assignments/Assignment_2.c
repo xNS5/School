@@ -108,23 +108,21 @@ void DisplayThreadArgs(ThreadArgs*	myThreadArg)
 
 int CreateAndArmTimer(int unsigned period, ThreadArgs* info)
 {
-   //TODO:
 
    /*
-    1. Create static int variable to keep track of next available signal signal_number
-    2. Initialize thread structure elements
-    3. Assign next real time signal to thread signal_number
-    4. Create signal mask corresponding to the chosen signal_number in "timer_signal".
-      use sigemptyset and sigaddset
-    5. Use timer_Create to create timer
-    6. Arm timer
+      1) Find way to initialized info->sig to have a unique value b/t SIGRTMIN and SIGRTMAX
+      2) Ensure that this initialization is thread safe
+      3) Initialize info->timer_Period to the argument period
+      4) Use "sigemptyset" to initialize info->alarm_sig
+      5) Use "signaddset" to add info->sig to info->alarm_sig
+      6) Initialize local variable "mySignalEvent" and Call "timer_create" to create timer
+      7) Initialize local variable "timerSpec" and call "timer_settime" to set the time out
    */
    struct sigevent mySignalEvent;
    struct itimerspec timerSpec;
-   static int next_signal;
-   int ret;
    int seconds = period/1000000;
-   int nanoseconds = period*1000; // Ask about sec
+   int nanoseconds = period*1000;
+   int ret;
 
    mySignalEvent.sigev_notify = SIGEV_SIGNAL;
    mySignalEvent.sigev_signo = info->signal_number;
@@ -145,12 +143,7 @@ int CreateAndArmTimer(int unsigned period, ThreadArgs* info)
        handle_error_en(ret, "Timer Set");
      }
 
-
-
-
-
-
-
+    return 0;
 }
 
 /*****************************************************************************************/
@@ -160,8 +153,8 @@ static void wait_period (ThreadArgs *info)
 	//TODO:
 
   /*
-    1. use sigwait function to wait on timer_signal
-    2. update missed_signal_count by calling timer_getoverrun
+  1) Call "sigwait" to wait on info->alarm_sig
+	2) Update "info->wakeups_missed" with the return from "timer_getoverrun"
   */
 }
 
@@ -177,19 +170,19 @@ void* threadFunction(void *arg)
 
 	myThreadArg = (ThreadArgs*)arg;
 
-	if( myThreadArg->threadId != pthread_self() )
-	{
-		printf("mismatched thread Ids... exiting...\n");
-		pthread_exit(arg);
-	}
-	else
-	{
-		retVal = pthread_setschedparam(pthread_self(), myThreadArg->threadPolicy, &myThreadArg->param);		//SCHED_FIFO, SCHED_RR, SCHED_OTHER
-		if(retVal != 0){
-			handle_error_en(retVal, "pthread_setschedparam");
-		}
-		myThreadArg->processTime = 0;
-	}
+	// if( myThreadArg->threadId != pthread_self() )
+	// {
+	// 	printf("mismatched thread Ids... exiting...\n");
+	// 	pthread_exit(arg);
+	// }
+	// else
+	// {
+	// 	retVal = pthread_setschedparam(pthread_self(), myThreadArg->threadPolicy, &myThreadArg->param);		//SCHED_FIFO, SCHED_RR, SCHED_OTHER
+	// 	if(retVal != 0){
+	// 		handle_error_en(retVal, "pthread_setschedparam");
+	// 	}
+	// 	myThreadArg->processTime = 0;
+	// }
 
 	CreateAndArmTimer(myThreadArg->timer_Period, myThreadArg);
 
@@ -240,7 +233,7 @@ int main (int argc, char *argv[])
     g_ThreadArgs[i].threadPolicy = SCHED_FIFO;
     g_ThreadArgs[i].param.sched_priority = fifoPri++;
 	  g_ThreadArgs[i].timer_Period = (period << i)*1000000;
-
+    g_ThreadArgs[i].signal_number = SIGRTMIN + i;
     retVal = pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
 	  if(retVal != 0)
 	   {
