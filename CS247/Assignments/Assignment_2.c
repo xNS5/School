@@ -176,9 +176,8 @@ static void wait_period (ThreadArgs *info)
   1) Call "sigwait" to wait on info->alarm_sig
 	2) Update "info->wakeups_missed" with the return from "timer_getoverrun"
   */
-
   ret = sigwait(&info->timer_signal, &info->signal_number);
-  info->wakeups_missed_count++;
+  info->wakeups_missed_count= timer_getoverrun(&info->timer_id);
 
 }
 
@@ -216,8 +215,15 @@ void* threadFunction(void *arg)
 	//TODO: In a loop call "wait_period(myThreadArg);" taking a timestamp before and after using "clock_gettime(CLOCK_REALTIME, &tms);"
   for(int i = 0; i < MAX_TASK_COUNT; i++)
   {
-    
+    clock_gettime(CLOCK_REALTIME, &tms);
+    myThreadArg->timeStamp[y] = tms.tv_sec *1000000;
+    myThreadArg->timeStamp[y] += tms.tv_nsec/1000;
+
     wait_period(myThreadArg);
+
+    clock_gettime(CLOCK_REALTIME, &tms);
+		myThreadArg->timeStamp[y+1] = tms.tv_sec *1000000;
+		myThreadArg->timeStamp[y+1] += tms.tv_nsec/1000;
   }
 	time_t tmp;
 	tmp = time(NULL);
@@ -252,7 +258,6 @@ int main (int argc, char *argv[])
    sigaddset(&timer_signal, i);
  }
    sigprocmask(SIG_BLOCK, &timer_signal, NULL);
-
 
 	InitThreadArgs();
 
