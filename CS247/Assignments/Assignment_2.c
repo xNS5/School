@@ -120,17 +120,30 @@ int CreateAndArmTimer(int unsigned period, ThreadArgs* info)
    */
    struct sigevent mySignalEvent;
    struct itimerspec timerSpec;
-   sigset_t sig = info->timer_signal;
+   int signal_number = info->signal_number;
    int seconds = period/1000000;
    int nanoseconds = (period - (seconds * 1000000))*1000;
-   int ret;
+   int ret, ret2, ret3;
+
    if(nanoseconds > 999999999)
    {
      printf("nanoseconds cannot be greater than 999999999");
    }
 
-   sigemptyset(info->timer_signal);
-   sigaddset(info->timer_signal, )
+   ret2 = sigemptyset(&info->timer_signal);
+   ret3 = sigaddset(&info->timer_signal, signal_number);
+
+   if(ret2 || ret3)
+    {
+      if(ret2)
+        {
+          handle_error_en(ret2, "Sig Empty Set");
+        }
+      if(ret3)
+        {
+          handle_error_en(ret3, "Sig Add Set");
+        }
+    }
 
    mySignalEvent.sigev_notify = SIGEV_SIGNAL;
    mySignalEvent.sigev_signo = info->signal_number;
@@ -148,7 +161,7 @@ int CreateAndArmTimer(int unsigned period, ThreadArgs* info)
     ret = timer_settime(info->timer_id, 0, &timerSpec, NULL);
     if(ret != 0)
      {
-       handle_error_en(ret, "Timer Set error");
+       handle_error_en(ret, "Timer Set");
      }
 
     return 0;
@@ -158,12 +171,15 @@ int CreateAndArmTimer(int unsigned period, ThreadArgs* info)
 
 static void wait_period (ThreadArgs *info)
 {
-	//TODO:
-
+  int ret, ret2;
   /*
   1) Call "sigwait" to wait on info->alarm_sig
 	2) Update "info->wakeups_missed" with the return from "timer_getoverrun"
   */
+
+  ret = sigwait(&info->timer_signal, &info->signal_number);
+  info->wakeups_missed_count++;
+
 }
 
 /*****************************************************************************************/
@@ -198,7 +214,11 @@ void* threadFunction(void *arg)
 	myThreadArg->startTime = time(NULL);
 
 	//TODO: In a loop call "wait_period(myThreadArg);" taking a timestamp before and after using "clock_gettime(CLOCK_REALTIME, &tms);"
-
+  for(int i = 0; i < MAX_TASK_COUNT; i++)
+  {
+    
+    wait_period(myThreadArg);
+  }
 	time_t tmp;
 	tmp = time(NULL);
 	myThreadArg->endTime = time(NULL);
