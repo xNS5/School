@@ -177,7 +177,11 @@ static void wait_period (ThreadArgs *info)
 	2) Update "info->wakeups_missed" with the return from "timer_getoverrun"
   */
   ret = sigwait(&info->timer_signal, &info->signal_number);
-  info->wakeups_missed_count= timer_getoverrun(&info->timer_id);
+  ret2 = timer_getoverrun(info->timer_id);
+  if(ret2)
+  {
+    handle_error_en(ret2, "Overrun");
+  }
 
 }
 
@@ -189,7 +193,7 @@ void* threadFunction(void *arg)
 	ThreadArgs*	myThreadArg;
 	struct timeval	t1;
 	struct timespec tms;
-	int y, retVal;
+	int retVal;
 
 	myThreadArg = (ThreadArgs*)arg;
 
@@ -200,7 +204,7 @@ void* threadFunction(void *arg)
 	}
 	else
 	{
-		retVal = pthread_setschedparam(pthread_self(), myThreadArg->threadPolicy, &myThreadArg->param);		//SCHED_FIFO, SCHED_RR, SCHED_OTHER
+		retVal = pthread_setschedparam(pthread_self(), myThreadArg->threadPolicy, &myThreadArg->param);
 		if(retVal != 0){
 			handle_error_en(retVal, "pthread_setschedparam");
 		}
@@ -209,24 +213,25 @@ void* threadFunction(void *arg)
 
 	CreateAndArmTimer(myThreadArg->timer_Period, myThreadArg);
 
-
 	myThreadArg->startTime = time(NULL);
 
 	//TODO: In a loop call "wait_period(myThreadArg);" taking a timestamp before and after using "clock_gettime(CLOCK_REALTIME, &tms);"
   for(int i = 0; i < MAX_TASK_COUNT; i++)
   {
     clock_gettime(CLOCK_REALTIME, &tms);
-    myThreadArg->timeStamp[y] = tms.tv_sec *1000000;
-    myThreadArg->timeStamp[y] += tms.tv_nsec/1000;
+    myThreadArg->timeStamp[i] = tms.tv_sec *1000000;
+    myThreadArg->timeStamp[i] += tms.tv_nsec/1000;
+    if(tms.tv_nsec % 1000 >= 500 ) myThreadArg->timeStamp[i]++;
 
     wait_period(myThreadArg);
 
     clock_gettime(CLOCK_REALTIME, &tms);
-		myThreadArg->timeStamp[y+1] = tms.tv_sec *1000000;
-		myThreadArg->timeStamp[y+1] += tms.tv_nsec/1000;
+		myThreadArg->timeStamp[i+1] = tms.tv_sec *1000000;
+		myThreadArg->timeStamp[i+1] += tms.tv_nsec/1000;
+    if(tms.tv_nsec % 1000 >= 500 ) myThreadArg->timeStamp[i+1]++;
   }
-	time_t tmp;
-	tmp = time(NULL);
+	// time_t tmp;
+	// tmp = time(NULL);
 	myThreadArg->endTime = time(NULL);
 
 	DisplayThreadArgs(myThreadArg);
