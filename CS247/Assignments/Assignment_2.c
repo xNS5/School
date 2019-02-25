@@ -120,9 +120,17 @@ int CreateAndArmTimer(int unsigned period, ThreadArgs* info)
    */
    struct sigevent mySignalEvent;
    struct itimerspec timerSpec;
+   sigset_t sig = info->timer_signal;
    int seconds = period/1000000;
-   int nanoseconds = period*1000;
+   int nanoseconds = (period - (seconds * 1000000))*1000;
    int ret;
+   if(nanoseconds > 999999999)
+   {
+     printf("nanoseconds cannot be greater than 999999999");
+   }
+
+   sigemptyset(info->timer_signal);
+   sigaddset(info->timer_signal, )
 
    mySignalEvent.sigev_notify = SIGEV_SIGNAL;
    mySignalEvent.sigev_signo = info->signal_number;
@@ -137,10 +145,10 @@ int CreateAndArmTimer(int unsigned period, ThreadArgs* info)
     timerSpec.it_interval.tv_nsec = nanoseconds;
     timerSpec.it_value.tv_sec = seconds;
     timerSpec.it_value.tv_nsec = nanoseconds;
-    ret = timer_settime(&info->timer_id, 0, &timerSpec, NULL);
+    ret = timer_settime(info->timer_id, 0, &timerSpec, NULL);
     if(ret != 0)
      {
-       handle_error_en(ret, "Timer Set");
+       handle_error_en(ret, "Timer Set error");
      }
 
     return 0;
@@ -170,19 +178,19 @@ void* threadFunction(void *arg)
 
 	myThreadArg = (ThreadArgs*)arg;
 
-	// if( myThreadArg->threadId != pthread_self() )
-	// {
-	// 	printf("mismatched thread Ids... exiting...\n");
-	// 	pthread_exit(arg);
-	// }
-	// else
-	// {
-	// 	retVal = pthread_setschedparam(pthread_self(), myThreadArg->threadPolicy, &myThreadArg->param);		//SCHED_FIFO, SCHED_RR, SCHED_OTHER
-	// 	if(retVal != 0){
-	// 		handle_error_en(retVal, "pthread_setschedparam");
-	// 	}
-	// 	myThreadArg->processTime = 0;
-	// }
+	if( myThreadArg->threadId != pthread_self() )
+	{
+		printf("mismatched thread Ids... exiting...\n");
+		pthread_exit(arg);
+	}
+	else
+	{
+		retVal = pthread_setschedparam(pthread_self(), myThreadArg->threadPolicy, &myThreadArg->param);		//SCHED_FIFO, SCHED_RR, SCHED_OTHER
+		if(retVal != 0){
+			handle_error_en(retVal, "pthread_setschedparam");
+		}
+		myThreadArg->processTime = 0;
+	}
 
 	CreateAndArmTimer(myThreadArg->timer_Period, myThreadArg);
 
@@ -214,6 +222,7 @@ int main (int argc, char *argv[])
 	int fifoPri = 60;
 	int period = 1;
 	int retVal;
+  timer_t timer;
 
 	pthread_attr_t threadAttrib;
 
@@ -221,8 +230,8 @@ int main (int argc, char *argv[])
    sigemptyset(&timer_signal);
    for (int i = SIGRTMIN; i <=SIGRTMAX; i++){
    sigaddset(&timer_signal, i);
-   sigprocmask(SIG_BLOCK, &timer_signal, NULL);
  }
+   sigprocmask(SIG_BLOCK, &timer_signal, NULL);
 
 
 	InitThreadArgs();
