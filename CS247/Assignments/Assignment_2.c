@@ -90,7 +90,8 @@ void DisplayThreadArgs(ThreadArgs*	myThreadArg)
 	if( myThreadArg )
 	{
 			DisplayThreadSchdAttributes(myThreadArg->threadId, myThreadArg->threadPolicy, myThreadArg->threadPri);
-			printf("        startTime = %s        endTime = %s", ctime(&myThreadArg->startTime), ctime(&myThreadArg->endTime));
+			printf("        startTime = %s ", ctime(&myThreadArg->startTime));
+      printf("        endTime = %s", ctime(&myThreadArg->endTime));
 			printf("        TimeStamp [%"PRId64"]\n", myThreadArg->timeStamp[0] );
 
 			for(int y=1; y<MAX_TASK_COUNT+1; y++)
@@ -178,10 +179,21 @@ static void wait_period (ThreadArgs *info)
   */
   ret = sigwait(&info->timer_signal, &info->signal_number);
   ret2 = timer_getoverrun(info->timer_id);
-  if(ret2)
-  {
-    handle_error_en(ret2, "Overrun");
-  }
+  if(ret2 || ret)
+    {
+      if(ret){
+        handle_error_en(ret, "Signal Wait");
+      }
+      if(ret2 <= -1)
+        {
+          handle_error_en(ret2, "Timer Get Overrun");
+        }
+    }
+    else{
+      info->wakeups_missed_count += ret2;
+    }
+
+
 
 }
 
@@ -195,26 +207,27 @@ void* threadFunction(void *arg)
 	struct timespec tms;
 	int retVal;
 
+
+
 	myThreadArg = (ThreadArgs*)arg;
 
-	if( myThreadArg->threadId != pthread_self() )
-	{
-		printf("mismatched thread Ids... exiting...\n");
-		pthread_exit(arg);
-	}
-	else
-	{
-		retVal = pthread_setschedparam(pthread_self(), myThreadArg->threadPolicy, &myThreadArg->param);
-		if(retVal != 0){
-			handle_error_en(retVal, "pthread_setschedparam");
-		}
-		myThreadArg->processTime = 0;
-	}
+	// if( myThreadArg->threadId != pthread_self() )
+	// {
+	// 	printf("mismatched thread Ids... exiting...\n");
+	// 	pthread_exit(arg);
+	// }
+	// else
+	// {
+	// 	retVal = pthread_setschedparam(pthread_self(), myThreadArg->threadPolicy, &myThreadArg->param);
+	// 	if(retVal != 0){
+	// 		handle_error_en(retVal, "pthread_setschedparam");
+	// 	}
+	// 	myThreadArg->processTime = 0;
+	// }
 
 	CreateAndArmTimer(myThreadArg->timer_Period, myThreadArg);
-
-	myThreadArg->startTime = time(NULL);
-
+  time_t tmp;
+	myThreadArg->startTime = time(&tmp);
 	//TODO: In a loop call "wait_period(myThreadArg);" taking a timestamp before and after using "clock_gettime(CLOCK_REALTIME, &tms);"
   for(int i = 0; i < MAX_TASK_COUNT; i++)
   {
@@ -230,9 +243,8 @@ void* threadFunction(void *arg)
 		myThreadArg->timeStamp[i+1] += tms.tv_nsec/1000;
     if(tms.tv_nsec % 1000 >= 500 ) myThreadArg->timeStamp[i+1]++;
   }
-	// time_t tmp;
-	// tmp = time(NULL);
-	myThreadArg->endTime = time(NULL);
+  time_t tmp2;
+	myThreadArg->endTime = time(&tmp2);
 
 	DisplayThreadArgs(myThreadArg);
 
