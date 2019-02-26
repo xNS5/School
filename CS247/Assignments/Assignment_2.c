@@ -91,7 +91,7 @@ void DisplayThreadArgs(ThreadArgs*	myThreadArg)
 	{
 			DisplayThreadSchdAttributes(myThreadArg->threadId, myThreadArg->threadPolicy, myThreadArg->threadPri);
 			printf("        startTime = %s ", ctime(&myThreadArg->startTime));
-      printf("        endTime = %s", ctime(&myThreadArg->endTime));
+         printf("       endTime =   %s", ctime(&myThreadArg->endTime));
 			printf("        TimeStamp [%"PRId64"]\n", myThreadArg->timeStamp[0] );
 
 			for(int y=1; y<MAX_TASK_COUNT+1; y++)
@@ -118,21 +118,25 @@ int CreateAndArmTimer(int unsigned period, ThreadArgs* info)
       5) Use "signaddset" to add info->sig to info->alarm_sig
       6) Initialize local variable "mySignalEvent" and Call "timer_create" to create timer
       7) Initialize local variable "timerSpec" and call "timer_settime" to set the time out
+
+      The info->sig is initialized in main. Because there is a mutex lock and unlock in thread function, 
+      I can assume that this function is thread safe. Sigemptyset and Sigaddset* are functioning and aren't returning values.
+      Added additional return ints to catch errors. 
    */
    struct sigevent mySignalEvent;
    struct itimerspec timerSpec;
-   int signal_number = info->signal_number;
    int seconds = period/1000000;
    int nanoseconds = (period - (seconds * 1000000))*1000;
    int ret, ret2, ret3;
-
    if(nanoseconds > 999999999)
    {
-     printf("nanoseconds cannot be greater than 999999999");
+     printf("Nanoseconds is %d, which is greater than 999999999\r\n", nanoseconds); // For some reason my timer_settime wasn't working because the nanosecond was
+                                                             // greater than 999999999. I fixed it and I put in this just to check.
+     printf("itimerspec requires a value less than 999999999\r\n");
    }
 
    ret2 = sigemptyset(&info->timer_signal);
-   ret3 = sigaddset(&info->timer_signal, signal_number);
+   ret3 = sigaddset(&info->timer_signal,info->signal_number);
 
    if(ret2 || ret3)
     {
@@ -193,8 +197,6 @@ static void wait_period (ThreadArgs *info)
       info->wakeups_missed_count += ret2;
     }
 
-
-
 }
 
 /*****************************************************************************************/
@@ -226,8 +228,7 @@ void* threadFunction(void *arg)
 	// }
 
 	CreateAndArmTimer(myThreadArg->timer_Period, myThreadArg);
-  time_t tmp;
-	myThreadArg->startTime = time(&tmp);
+	myThreadArg->startTime = time(NULL);
 	//TODO: In a loop call "wait_period(myThreadArg);" taking a timestamp before and after using "clock_gettime(CLOCK_REALTIME, &tms);"
   for(int i = 0; i < MAX_TASK_COUNT; i++)
   {
@@ -238,13 +239,12 @@ void* threadFunction(void *arg)
 
     wait_period(myThreadArg);
 
-    clock_gettime(CLOCK_REALTIME, &tms);
-		myThreadArg->timeStamp[i+1] = tms.tv_sec *1000000;
-		myThreadArg->timeStamp[i+1] += tms.tv_nsec/1000;
-    if(tms.tv_nsec % 1000 >= 500 ) myThreadArg->timeStamp[i+1]++;
+   clock_gettime(CLOCK_REALTIME, &tms);
+	myThreadArg->timeStamp[i+1] = tms.tv_sec *1000000;
+	myThreadArg->timeStamp[i+1] += tms.tv_nsec/1000;
+   if(tms.tv_nsec % 1000 >= 500 ) myThreadArg->timeStamp[i+1]++;
   }
-  time_t tmp2;
-	myThreadArg->endTime = time(&tmp2);
+	myThreadArg->endTime = time(NULL);
 
 	DisplayThreadArgs(myThreadArg);
 
@@ -274,7 +274,11 @@ int main (int argc, char *argv[])
    for (int i = SIGRTMIN; i <=SIGRTMAX; i++){
    sigaddset(&timer_signal, i);
  }
-   sigprocmask(SIG_BLOCK, &timer_signal, NULL);
+   retVal = sigprocmask(SIG_BLOCK, &timer_signal, NULL);
+   if(retVal)
+      {
+         handle_error_en(retVal, "Sigproc Mask");
+      }
 
 	InitThreadArgs();
 
@@ -282,7 +286,7 @@ int main (int argc, char *argv[])
    {
 	  g_ThreadArgs[i].threadCount = i+1;
     g_ThreadArgs[i].threadPolicy = SCHED_FIFO;
-    g_ThreadArgs[i].param.sched_priority = fifoPri++;
+    g_ThreadArgs[i].param.sched_priority = sched_get_priority_max(SCHED_FIFO);
 	  g_ThreadArgs[i].timer_Period = (period << i)*1000000;
     g_ThreadArgs[i].signal_number = SIGRTMIN + i;
     retVal = pthread_create(&g_ThreadArgs[i].threadId, NULL, threadFunction, &g_ThreadArgs[i]);
