@@ -119,9 +119,9 @@ int CreateAndArmTimer(int unsigned period, ThreadArgs* info)
       6) Initialize local variable "mySignalEvent" and Call "timer_create" to create timer
       7) Initialize local variable "timerSpec" and call "timer_settime" to set the time out
 
-      The info->sig is initialized in main. Because there is a mutex lock and unlock in thread function, 
+      The info->sig is initialized in main. Because there is a mutex lock and unlock in thread function,
       I can assume that this function is thread safe. Sigemptyset and Sigaddset* are functioning and aren't returning values.
-      Added additional return ints to catch errors. 
+      Added additional return ints to catch errors.
    */
    struct sigevent mySignalEvent;
    struct itimerspec timerSpec;
@@ -213,19 +213,19 @@ void* threadFunction(void *arg)
 
 	myThreadArg = (ThreadArgs*)arg;
 
-	// if( myThreadArg->threadId != pthread_self() )
-	// {
-	// 	printf("mismatched thread Ids... exiting...\n");
-	// 	pthread_exit(arg);
-	// }
-	// else
-	// {
-	// 	retVal = pthread_setschedparam(pthread_self(), myThreadArg->threadPolicy, &myThreadArg->param);
-	// 	if(retVal != 0){
-	// 		handle_error_en(retVal, "pthread_setschedparam");
-	// 	}
-	// 	myThreadArg->processTime = 0;
-	// }
+	if( myThreadArg->threadId != pthread_self() )
+	{
+		printf("mismatched thread Ids... exiting...\n");
+		pthread_exit(arg);
+	}
+	else
+	{
+		retVal = pthread_setschedparam(pthread_self(), myThreadArg->threadPolicy, &myThreadArg->param);
+		if(retVal != 0){
+			handle_error_en(retVal, "pthread_setschedparam");
+		}
+		myThreadArg->processTime = 0;
+	}
 
 	CreateAndArmTimer(myThreadArg->timer_Period, myThreadArg);
 	myThreadArg->startTime = time(NULL);
