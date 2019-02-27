@@ -22,7 +22,7 @@
 
 //define error handling later on
 #define handle_error_en(en, msg) \
-        do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
+        do { errno = en; perror(msg); NULL; } while (0)
 
 /*****************************************************************************************/
 pthread_mutex_t		g_DisplayMutex = PTHREAD_MUTEX_INITIALIZER;;
@@ -188,8 +188,7 @@ static void wait_period (ThreadArgs *info)
       if(ret){
         handle_error_en(ret, "Signal Wait");
       }
-      if(ret2 <= -1)
-        {
+      if(ret2 <= -1){
           handle_error_en(ret2, "Timer Get Overrun");
         }
     }
@@ -209,8 +208,6 @@ void* threadFunction(void *arg)
 	struct timespec tms;
 	int retVal;
 
-
-
 	myThreadArg = (ThreadArgs*)arg;
 
 	if( myThreadArg->threadId != pthread_self() )
@@ -220,7 +217,7 @@ void* threadFunction(void *arg)
 	}
 	else
 	{
-		retVal = pthread_setschedparam(pthread_self(), myThreadArg->threadPolicy, &myThreadArg->param);
+		retVal = pthread_setschedparam(pthread_self(), myThreadArg->threadPolicy, &myThreadArg->param); // Change param to a val < 60
 		if(retVal != 0){
 			handle_error_en(retVal, "pthread_setschedparam");
 		}
@@ -242,7 +239,7 @@ void* threadFunction(void *arg)
    clock_gettime(CLOCK_REALTIME, &tms);
 	myThreadArg->timeStamp[i+1] = tms.tv_sec *1000000;
 	myThreadArg->timeStamp[i+1] += tms.tv_nsec/1000;
-   if(tms.tv_nsec % 1000 >= 500 ) myThreadArg->timeStamp[i+1]++;
+  if(tms.tv_nsec % 1000 >= 500 ) myThreadArg->timeStamp[i+1]++;
   }
 	myThreadArg->endTime = time(NULL);
 
@@ -262,7 +259,7 @@ int main (int argc, char *argv[])
 {
 	int threadCount = 0;
   int err, i;
-	int fifoPri = 60;
+	int fifoPri = 20; // Change this
 	int period = 1;
 	int retVal;
   timer_t timer;
