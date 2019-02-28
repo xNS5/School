@@ -103,11 +103,11 @@ void DisplayThreadArgs(ThreadArgs*	myThreadArg)
       DisplayThreadSchdAttributes(myThreadArg->threadId, myThreadArg->threadPolicy, myThreadArg->threadPri, myThreadArg->wakeups_missed_count);
       printf("        startTime = %s ", ctime(&myThreadArg->startTime));
       printf("       endTime =   %s", ctime(&myThreadArg->endTime));
-      printf("        TimeStamp [%"PRId64"]\n", myThreadArg->timeStamp[0] );
+      printf("        TimeStamp %d [%"PRId64"]\n", 0, myThreadArg->timeStamp[0] );
 
       for(int y=1; y<MAX_TASK_COUNT+1; y++)
       {
-         printf("        TimeStamp [%"PRId64"]   Delta [%"PRId64"]us     Jitter[%"PRId64"]us\n", myThreadArg->timeStamp[y],
+         printf("        TimeStamp %d [%"PRId64"]   Delta [%"PRId64"]us     Jitter[%"PRId64"]us\n", y, myThreadArg->timeStamp[y],
                (myThreadArg->timeStamp[y]-myThreadArg->timeStamp[y-1]),
                (myThreadArg->timeStamp[y]-myThreadArg->timeStamp[y-1]-myThreadArg->timer_Period));
       }
