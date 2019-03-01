@@ -12,12 +12,10 @@ int main(int argc, char* argv[])
 {
   int          retVal = 0;
 
+  //Use the POSIX "shm_open" API to open file descriptor with  "O_RDWR" options and the "0666" permissions>
 
-  <Use the POSIX "shm_open" API to open file descriptor with 
-    "O_RDWR" options and the "0666" permissions>
-  
-  <Use the "mmap" API to memory map the file descriptor>
- 
+  //Use the "mmap" API to memory map the file descriptor
+
   printf("[Client]: Waiting for valid data ...\n");
 
   while(shmPtr->status != VALID)
@@ -26,19 +24,13 @@ int main(int argc, char* argv[])
     }
 
   printf("[Client]: Received %d\n",shmPtr->data);
-  
+
   shmPtr->status = CONSUMED;
 
    <use the "munmap" API to unmap the pointer>
-  
+
   printf("[Client]: Client exiting...\n");
 
   return(retVal);
 
 }
-
-  
-  
-  
-      
-  
