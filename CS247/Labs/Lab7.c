@@ -1,8 +1,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <errno.h>
 #include <string.h>
+#include <time.h>
 
 #define handle_error_en(en, msg) \
   {errno = en; int errnum = errno; perror(msg); strerror(errnum); exit(EXIT_FAILURE);}
@@ -38,6 +40,11 @@ int main(int argc, char* argv[])
 
 void computationMethod(int num, int matrix_dimension, int** arr)
 {
+  struct timespec start, end;
+  float difference;
+
+  clock_gettime(CLOCK_MONOTONIC, &start);
+
   int accumulator = 0;
   if(num == 1)
     {
@@ -46,7 +53,7 @@ void computationMethod(int num, int matrix_dimension, int** arr)
           for(int j = 0; j < matrix_dimension; j++)
             {
               arr[i][j]= i + j;
-              accumulator = arr[i][j];
+              accumulator += arr[i][j];
             }
         }
     }
@@ -57,9 +64,10 @@ void computationMethod(int num, int matrix_dimension, int** arr)
           for(int i = 0; i < matrix_dimension; i++)
             {
               arr[i][j]= i + j;
-              accumulator = arr[i][j];
+              accumulator += arr[i][j];
             }
         }
     }
-  printf("%d\r\n", accumulator);
+  clock_gettime(CLOCK_MONOTONIC, &end);
+  printf("Accumulator total:%d\r\n", accumulator);
 }
