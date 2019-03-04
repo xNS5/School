@@ -15,7 +15,7 @@ void computationMethod(int, int, int**);
   Which is weird, considering I have L1-icache-load-misses available. My analysis is based on dcache output because the icache-loads isn't supported on my computer.
 
   Analysis: When I ran my program using the dcache with computation method 1, as the array dimensions increased the number of misses went down. Using a 64 length array,
-  I I got 5.73% L1-dcache-load-misses. The lowest it got was 1.01% misses from 1024 using computation method 1. For computation method 2, the dcache miss percentage went down, then
+  I got 5.73% L1-dcache-load-misses. The lowest it got was 1.01% misses from 1024 using computation method 1. For computation method 2, the dcache miss percentage went down, then
   increased when the array size turned to 512. In most processors today, each core has a unified L2 cache which might explain why my computer is unable to see the L1-icache-loads.
 
   In C, arrays are organized in row major order. Meaning that it would be easier to go to one row, traverse it, then move onto the next row than it is to go to one column and
@@ -27,8 +27,6 @@ void computationMethod(int, int, int**);
   This means in order to ensure that a program involving 2D arrays functions properly, it needs to iterate over the columns first then move to the next row instead of the reverse.
 
   I can't explain the L1-icache-loads and misses because I don't have the loads to compare the misses to.
-
-  Unfortunately my computer doesn't have access to L1-icache-loads so I copied the number of cache misses for each computation method.
 
   perf output:
 
@@ -87,9 +85,9 @@ int main(int argc, char* argv[])
     }
 
   /*
-    I wanted to move it to a separate function for space. There's no real reason to do this, but then again there's no real reason to not.
+    I wanted to move it to a separate function for space. There's no real reason to do this, but then again there's no real reason not to.
     If you were concerned with runtime, I'm fairly certain there would be a minute difference in time of using a switch vs a function call.
-    Once the function completes its task and prints out the accumulator, it returns to the main function, frees the memory allocated by
+    Once the function completes its task and prints out the accumulator, returns to the main function, frees the memory allocated by
     the array, then quits.
   */
   computationMethod(computation_method, matrix_dimension, arr);
@@ -104,6 +102,8 @@ void computationMethod(int num, int matrix_dimension, int** arr)
     Two computation methods:
     1. The array iterates over each column, then shifts to the next row.
     2. The array iterates down each row, then shifts columns.
+    The accumulator is initialized to zero, then adds each element of the array to itself
+    then finally prints out the total value of the numbers stored in the array.
   */
   int accumulator = 0;
   if(num == 1)
