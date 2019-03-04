@@ -12,17 +12,27 @@ void computationMethod(int, int, int**);
 
 /*
   Note: On my computer I wasn't able to use L1-icache-loads for some reason. From what I can gather, the perf hardware events depend on what hardware I'm on.
-  Which is weird, considering I have L1-icache-load-misses available. My analysis is based on dcache output because the icache isn't supported on my computer. I can see the
-  icache misses, but not the loads for some reason.
+  Which is weird, considering I have L1-icache-load-misses available. My analysis is based on dcache output because the icache-loads isn't supported on my computer.
 
   Analysis: When I ran my program using the dcache with computation method 1, as the array dimensions increased the number of misses went down. Using a 64 length array,
-  I for a 5.73% L1-dcache-load-misses. The lowest it got was 1.01% misses from 1024 using computation method 1. For computation method 2, the dcache miss percentage went down but
+  I I got 5.73% L1-dcache-load-misses. The lowest it got was 1.01% misses from 1024 using computation method 1. For computation method 2, the dcache miss percentage went down, then
   increased when the array size turned to 512. In most processors today, each core has a unified L2 cache which might explain why my computer is unable to see the L1-icache-loads.
-  For the first computation method, as the array size increased, the number of cache misses decreased.
 
-  In the case of Method 2, it keeps shifting rows instead of columns so it can't necessarily rely on the cached data
+  In C, arrays are organized in row major order. Meaning that it would be easier to go to one row, traverse it, then move onto the next row than it is to go to one column and
+  jump from row to row. It's a lot easier to cache information that way, which explains why the number of misses for method 2 is much higher than that of method 1. In method 1,
+  the cache utilizes the fact that all of the data elements are going to be +/- 1 of the current data element, so it's easier spatially to store and access elements
+  than it is if I were traversing rows of a column. Traversing the rows of the column will result in more cache misses because the location of the next element isn't necessarily
+  in the cache, which means that the computer will have to retrieve it from memory which takes a little more time.
 
-  64 1 --  5.63% of all L1-dcache hits, 0.504 CPUs utilized, 0 context-switches\
+  This means in order to ensure that a program involving 2D arrays functions properly, it needs to iterate over the columns first then move to the next row instead of the reverse.
+
+  I can't explain the L1-icache-loads and misses because I don't have the loads to compare the misses to.
+
+  Unfortunately my computer doesn't have access to L1-icache-loads so I copied the number of cache misses for each computation method.
+
+  perf output:
+
+  64 1 --  5.63% of all L1-dcache hits, 0.504 CPUs utilized, 0 context switches
   64 1 --  22,556 L1-icache-misses, 0.587 CPUs utilized
   128 1 -- 3.26% of all L1-dcache hits, 0.545 CPUs utilized, 0 context switches
   128 1 -- 21,374 L1-icache-misses, 0.643 CPUs utilized
@@ -30,7 +40,7 @@ void computationMethod(int, int, int**);
   256 1 -- 23,316 L1-icache-misses, 0.699 CPUs utilized
   512 1 -- 1.20% of all L1-dcache hits, 0.873 CPUs utilized, 0 context switches
   512 1 -- 23,402 L1-icache-misses, 0.886 CPUs utilized
-  1024 1 -- 1.00% of all L1-dcache hits 0.959 CPUs utilized
+  1024 1 -- 1.00% of all L1-dcache hits 0.959 CPUs utilized, 0 context switches
   1024 1 -- 29,676 L1-icache-misses, 0.956 CPUs utilized
 
   64 2 --  5.19% of all L1-dcache hits, 0.614 CPUs utilized, 0 context switches
@@ -50,24 +60,38 @@ int main(int argc, char* argv[])
   if(argc != 3)
     {
       printf("Usage: ./<filename>   <int matrix size>   <int computation method>\r\n");
-      handle_error_en(EINVAL, "Input count");
+      handle_error_en(EINVAL, "Input count"); // I thought Susheel's error handling function was really neat so I copied it over from Assignment2
     }
 
   int matrix_dimension = atoi(argv[1]);
   int computation_method = atoi(argv[2]);
 
+  /*
+    Checks to see if the computation method is valid. Even if you input a floating point number,
+    the computation method will be floor(atoi(argv[2])), so if argv[2] were 2.9 it would be converted to 2.
+  */
   if(computation_method != 1 && computation_method != 2)
   {
     printf("Valid computation methods: 1, 2\r\n");
     handle_error_en(EINVAL, "Computation Method");
   }
 
+  /*
+    Allocating memory for the array by multiplying the matrix dimension by the size of an integer pointer.
+    Then, I populate the array with integer pointers with the matrix size times the size of an integer.
+  */
   int** arr = (int**)malloc(matrix_dimension * sizeof(int*));
   for(int i = 0; i < matrix_dimension; i++)
     {
       arr[i] = (int*)malloc(matrix_dimension*sizeof(int));
     }
 
+  /*
+    I wanted to move it to a separate function for space. There's no real reason to do this, but then again there's no real reason to not.
+    If you were concerned with runtime, I'm fairly certain there would be a minute difference in time of using a switch vs a function call.
+    Once the function completes its task and prints out the accumulator, it returns to the main function, frees the memory allocated by
+    the array, then quits.
+  */
   computationMethod(computation_method, matrix_dimension, arr);
   free(arr);
 
@@ -76,9 +100,11 @@ int main(int argc, char* argv[])
 
 void computationMethod(int num, int matrix_dimension, int** arr)
 {
-  struct timespec start, end;
-  float difference;
-
+  /*
+    Two computation methods:
+    1. The array iterates over each column, then shifts to the next row.
+    2. The array iterates down each row, then shifts columns.
+  */
   int accumulator = 0;
   if(num == 1)
     {
@@ -102,6 +128,5 @@ void computationMethod(int num, int matrix_dimension, int** arr)
             }
         }
     }
-  printf("\r\n");
   printf("Accumulator total: %d\r\n", accumulator);
 }
