@@ -2,9 +2,9 @@
 //
 // <Define a typedef structure with the enum above and an "int" variable called "data">
 
-enum Status {INVALID = -1; VALID = 0; CONSUMED = 1;}
+enum StatusEnus {INVALID = -1, VALID = 0, CONSUMED = 1};
 
-typedef struct{
-  int Status;
-  int data;
-}ShmData
+typedef struct ShmData{
+    enum StatusEnus status;
+    int data;
+  } Data;
