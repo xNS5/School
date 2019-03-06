@@ -13,25 +13,38 @@
 
 int main (int argc, char* argv[])
 {
-  char*        name = "/shm";
-  int          retVal = 0;
-  int*         map;
-  size_t       page_size = (size_t) sysconf (_SC_PAGESIZE);
+  const char*   name = argv[1];
+  int           retVal;
+  int           fd = 0;
+  struct stat   st;
+  size_t        size;
+  void*         map;
   Data*         shmPtr;
 
+  if(argc != 2)
+    {
+      printf("Usage: ./<filename>   <shared memory object file>\r\n");
+      exit(EXIT_FAILURE);
+    }
 
   //Use the POSIX "shm_open" API to open file descriptor with  "O_RDWR" options and the "0666" permissions>
   //shm_open returns positive on success, -1 on error.
-  retVal = shm_open(name, O_CREAT | O_RDWR, 0666);
-  printf("retVal: %d\r\n", retVal);
-  if(retVal == -1)
+  fd = shm_open(name, O_CREAT | O_RDWR, 0666);
+  if(fd == -1)
     {
       perror("SHM_Open");
       exit(EXIT_FAILURE);
     }
 
+  retVal = stat(name, &st); // to get the offset for mmap
+  if(retVal)
+    {
+      perror("Stat");
+      exit(EXIT_FAILURE);
+    }
+  size = st.st_size;
   //Use the "mmap" API to memory map the file descriptor
-  map = mmap(0, page_size, PROT_READ, MAP_SHARED, retVal, 0);
+  map = mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
   if(map == MAP_FAILED)
   {
     perror("mmap");
@@ -40,14 +53,14 @@ int main (int argc, char* argv[])
 
   printf("[Client]: Waiting for valid data ...\n");
 
-  while(shmPtr->status != VALID)
-    {
-      sleep(1);
-    }
+  // while(shmPtr->status != VALID)
+  //   {
+  //     sleep(1);
+  //   }
 
-  printf("[Client]: Received %d\n",shmPtr->data);
-
-  shmPtr->status = CONSUMED;
+  // printf("[Client]: Received %d\n",shmPtr->data);
+  //
+  // shmPtr->status = CONSUMED;
 
    //<use the "munmap" API to unmap the pointer>
 
