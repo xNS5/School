@@ -18,6 +18,7 @@ int main(int argc, char* argv[])
   int          retVal = 0;
   char *name = "/shm.h";
   //Use the POSIX "shm_open" API to open file descriptor with  "O_RDWR" options and the "0666" permissions>
+  
   //shm_open returns positive on success
   retVal = shm_open(name, O_RDWR, 0666);
   if(retVal == -1)

@@ -53,7 +53,7 @@ int floatClass(float_bits num)
   unsigned neg_infinity = 0xff800000; // This needed to be a signed int because otherwise I wouldn't be able to check for whether num < negative infinity.
   if((0x80000000^num) == 0 || (0x00000000^num) == 0) // Checks for whether the number is -0.0 or 0 using XOR.
     {
-      return 0;             // If the number is positive/negative zero. 
+      return 0;             // If the number is positive/negative zero. c
     }
   else if((pos_infinity^num) == 0 || (neg_infinity^num) == 0) // Checks for whether the number is positive or negative infinity using XOR.
     {

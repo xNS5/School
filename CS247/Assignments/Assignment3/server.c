@@ -18,17 +18,15 @@ int main(int argc, char* argv[])
 	if(argc != 2)
 		{
 			printf("Usage: ./<file name>   <Arg2>");
-			exit(0);
+			exit(-1);
 		}
 
-  // <Use the POSIX "shm_open" API to open file descriptor with
-  //   "O_CREAT | O_RDWR" options and the "0666" permissions>
+  // <Use the POSIX "shm_open" API to open file descriptor with "O_CREAT | O_RDWR" options and the "0666" permissions>
 
-  // <Use the "ftruncate" API to set the size to the size of your
-  //   structure shm.h>
+  // <Use the "ftruncate" API to set the size to the size of your structure shm.h>
 	//
   // <Use the "mmap" API to memory map the file descriptor>
-	//
+
   // <Set the "status" field to INVALID>
   // <Set the "data" field to atoi(argv[1])>
   // <Set the "status" field to VALID>

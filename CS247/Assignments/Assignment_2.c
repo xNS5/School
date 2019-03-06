@@ -150,39 +150,42 @@ int CreateAndArmTimer(int unsigned period, ThreadArgs* info)
    mySignalEvent.sigev_notify = SIGEV_SIGNAL;
    mySignalEvent.sigev_signo = info->signal_number;
    mySignalEvent.sigev_value.sival_ptr = (void *)&(info->timer_id);
-   ret3 = timer_create(CLOCK_MONOTONIC, &mySignalEvent, &info->timer_id);
-
-   timerSpec.it_interval.tv_sec = seconds;
-   timerSpec.it_interval.tv_nsec = nanoseconds;
-   timerSpec.it_value.tv_sec = seconds;
-   timerSpec.it_value.tv_nsec = nanoseconds;
-   ret4 = timer_settime(info->timer_id, 0, &timerSpec, NULL);
-
-   if(ret || ret2 || ret3 || ret4)
+   ret3 = timer_create(CLOCK_MONOTONIC, &mySignalEvent, &info->timer_id); // Have if statement, if success, do timer_settime. Else return -1 so
+                                                                          // Don't have to check for other ret values. Potential to cause a crash
+   if(!ret3)
    {
-      printf("Errors:\r\n");
-      printf("========================\n");
-      if(ret)
-      {
-        handle_error_print(ret, "Sig Empty Set");
-      }
-      if(ret2)
-      {
-         handle_error_print(ret2, "Sig Add Set");
-      }
-      if(ret3)
-      {
-        handle_error_print(ret3, "Timer Create");
-      }
-      if(ret4)
-      {
-        handle_error_print(ret4, "Set Timer");
-      }
-      printf("========================\r\n");
-
-      return -1;
+     timerSpec.it_interval.tv_sec = seconds;
+     timerSpec.it_interval.tv_nsec = nanoseconds;
+     timerSpec.it_value.tv_sec = seconds;
+     timerSpec.it_value.tv_nsec = nanoseconds;
+     ret4 = timer_settime(info->timer_id, 0, &timerSpec, NULL);
+     return 0;
    }
-   return 0;
+   // if(ret || ret2 || ret3 || ret4)
+   // {
+   //    printf("Errors:\r\n");
+   //    printf("========================\n");
+   //    if(ret)
+   //    {
+   //      handle_error_print(ret, "Sig Empty Set");
+   //    }
+   //    if(ret2)
+   //    {
+   //       handle_error_print(ret2, "Sig Add Set");
+   //    }
+   //    if(ret3)
+   //    {
+   //      handle_error_print(ret3, "Timer Create");
+   //    }
+   //    if(ret4)
+   //    {
+   //      handle_error_print(ret4, "Set Timer");
+   //    }
+   //    printf("========================\r\n");
+   //
+   //    return -1;
+   // }
+   return -1;
 }
 
 /*****************************************************************************************/
