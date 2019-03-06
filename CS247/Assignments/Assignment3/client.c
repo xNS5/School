@@ -13,13 +13,13 @@
 
 int main (int argc, char* argv[])
 {
-  const char*   name = argv[1];
-  int           retVal;
-  int           fd = 0;
-  struct stat   st;
-  size_t        size;
-  void*         map;
-  Data*         shmPtr;
+  const char*           name = argv[1];
+  int                   retVal;
+  int                   fd = 0;
+  struct stat           st;
+  size_t                size;
+  void*                 map;
+  Data*                 shmPtr;
 
   if(argc != 2)
     {
@@ -36,22 +36,25 @@ int main (int argc, char* argv[])
       exit(EXIT_FAILURE);
     }
 
-  retVal = stat(name, &st); // to get the offset for mmap
+  retVal = stat(name, &st);
   if(retVal)
     {
       perror("Stat");
       exit(EXIT_FAILURE);
     }
+
   size = st.st_size;
   //Use the "mmap" API to memory map the file descriptor
-  map = mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
+  map = mmap(NULL, size, PROT_READ, MAP_SHARED | MAP_POPULATE, fd, 0);
   if(map == MAP_FAILED)
   {
-    perror("mmap");
+    perror("Mmap");
     exit(EXIT_FAILURE);
   }
 
   printf("[Client]: Waiting for valid data ...\n");
+
+  printf("%d\r\n", shmPtr->status == VALID);
 
   // while(shmPtr->status != VALID)
   //   {

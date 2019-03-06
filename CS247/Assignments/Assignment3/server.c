@@ -12,20 +12,33 @@
 
 int main(int argc, char* argv[])
 {
+	const char* name = argv[1];
 	int retVal = 0;
+	int fd = 0;
 
   //<Confirm argc is 2 and if not print a usage string.>
 	if(argc != 2)
 		{
-			printf("Usage: ./<file name>   <Arg2>");
-			exit(-1);
+			printf("Usage: ./<filename>   <shared memory object file>\r\n");
+			exit(EXIT_FAILURE);
 		}
 
   // <Use the POSIX "shm_open" API to open file descriptor with "O_CREAT | O_RDWR" options and the "0666" permissions>
 
+	fd = shm_open(name, O_CREAT | O_RDWR, 0666);
+	if(fd == -1)
+    {
+      perror("SHM_Open");
+      exit(EXIT_FAILURE);
+    }
+
   // <Use the "ftruncate" API to set the size to the size of your structure shm.h>
 	//
   // <Use the "mmap" API to memory map the file descriptor>
+
+	
+
+
 
   // <Set the "status" field to INVALID>
   // <Set the "data" field to atoi(argv[1])>
