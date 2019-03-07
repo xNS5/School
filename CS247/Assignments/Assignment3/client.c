@@ -10,7 +10,6 @@
 #include <sys/types.h>
 #include "shm.h"
 
-
 int main (int argc, char* argv[])
 {
   const char*           name = argv[1];
@@ -45,7 +44,7 @@ int main (int argc, char* argv[])
 
   size = st.st_size;
   //Use the "mmap" API to memory map the file descriptor
-  map = mmap(NULL, size, PROT_READ, MAP_SHARED | MAP_POPULATE, fd, 0);
+  map = mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
   if(map == MAP_FAILED)
   {
     perror("Mmap");
