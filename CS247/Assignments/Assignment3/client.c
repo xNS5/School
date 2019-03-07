@@ -18,7 +18,7 @@ int main (int argc, char* argv[])
   struct stat           st;
   size_t                size;
   void*                 map;
-  Data*                 shmPtr;
+  Data   shmPtr;
 
   if(argc != 2)
     {
@@ -42,6 +42,7 @@ int main (int argc, char* argv[])
       exit(EXIT_FAILURE);
     }
 
+
   size = st.st_size;
   //Use the "mmap" API to memory map the file descriptor
   map = mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
@@ -50,15 +51,15 @@ int main (int argc, char* argv[])
     perror("Mmap");
     exit(EXIT_FAILURE);
   }
-
+   
   printf("[Client]: Waiting for valid data ...\n");
 
-  printf("%d\r\n", shmPtr->status == VALID);
-
-  // while(shmPtr->status != VALID)
-  //   {
+  shmPtr.test = 0;
+  printf("test: %d\r\n", shmPtr.test);
+  //while(shmPtr.status != VALID)
+  // {
   //     sleep(1);
-  //   }
+  // }
 
   // printf("[Client]: Received %d\n",shmPtr->data);
   //
