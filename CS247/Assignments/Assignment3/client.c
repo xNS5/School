@@ -12,19 +12,21 @@
 
 int main (int argc, char* argv[])
 {
-  const char*           name = argv[1];
-  int                   retVal;
-  int                   fd = 0;
+  const char*  name = argv[1];
+  int    retVal, fd = 0;
   struct stat           st;
   size_t                size;
   void*                 map;
-  Data   shmPtr;
+  struct Data           temp_dec, *shmPtr;
 
   if(argc != 2)
     {
       printf("Usage: ./<filename>   <shared memory object file>\r\n");
       exit(EXIT_FAILURE);
     }
+
+  shmPtr = (Data*)malloc(sizeof(struct Data));
+
 
   //Use the POSIX "shm_open" API to open file descriptor with  "O_RDWR" options and the "0666" permissions>
   //shm_open returns positive on success, -1 on error.
@@ -54,8 +56,6 @@ int main (int argc, char* argv[])
    
   printf("[Client]: Waiting for valid data ...\n");
 
-  shmPtr.test = 0;
-  printf("test: %d\r\n", shmPtr.test);
   //while(shmPtr.status != VALID)
   // {
   //     sleep(1);
