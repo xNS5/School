@@ -10,6 +10,8 @@
 #include <sys/types.h>
 #include "shm.h"
 
+#define handle_error_mod(msg) \
+   perror(msg); strerror(errno); exit(EXIT_FAILURE);
 int main (int argc, char* argv[])
 {
   const char*  name = argv[1];
@@ -33,33 +35,30 @@ int main (int argc, char* argv[])
   fd = shm_open(name, O_CREAT | O_RDWR, 0666);
   if(fd == -1)
     {
-      perror("SHM_Open");
-      exit(EXIT_FAILURE);
+      handle_error_mod("Shm_Open");
     }
 
   retVal = stat(name, &st);
   if(retVal)
     {
-      perror("Stat");
-      exit(EXIT_FAILURE);
+      handle_error_mod("Stat");
     }
 
 
   size = st.st_size;
   //Use the "mmap" API to memory map the file descriptor
-  map = mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
+  map = mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0); // Ask about mmap
   if(map == MAP_FAILED)
   {
-    perror("Mmap");
-    exit(EXIT_FAILURE);
+    handle_error_mod("Mmap");
   }
    
   printf("[Client]: Waiting for valid data ...\n");
 
-  //while(shmPtr.status != VALID)
-  // {
-  //     sleep(1);
-  // }
+  while(shmPtr->status != VALID)
+  {
+       sleep(1);
+  }
 
   // printf("[Client]: Received %d\n",shmPtr->data);
   //
