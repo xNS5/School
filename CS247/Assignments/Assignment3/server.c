@@ -1,68 +1,105 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <string.h>
 #include <errno.h>
-#include <sys/shm.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
-#include <sys/types.h>
 #include "shm.h"
 
-int main(int argc, char* argv[])
-{
-	const char* name = argv[1];
-	int retVal = 0;
-	int fd = 0;
+#define handle_error_mod(msg) \
+   perror(msg); strerror(errno); exit(EXIT_FAILURE);
 
-  //<Confirm argc is 2 and if not print a usage string.>
-	if(argc != 2)
-		{
-			printf("Usage: ./<filename>   <shared memory object file>\r\n");
+int main(int argc, char* argv[]){
+	int 								retVal = 0, counter = 0, fd = 0;
+	const char* 				name = "/shared_memory";
+	struct ShmData		 *shmPtr;
+/*
+  First, the function checks for whether the input is a valid integer.
+  If atoi receives a char or string, it'll return zero.
+  Assuming atoi returns 0 and the length of the string is greater than or equal to one
+  it'll simply error out.
+*/
+	if(argc != 2 || (atoi(argv[1]) == 0 && strlen(argv[1])>=1)){
+			printf("Usage: ./<filename>   <int data>\r\n");
 			exit(EXIT_FAILURE);
 		}
 
-  // <Use the POSIX "shm_open" API to open file descriptor with "O_CREAT | O_RDWR" options and the "0666" permissions>
-
 	fd = shm_open(name, O_CREAT | O_RDWR, 0666);
-	if(fd == -1)
-    {
-      perror("SHM_Open");
-      exit(EXIT_FAILURE);
+  while(fd == -1){
+      printf("Client inactive\r\n");
+      fd = shm_open(name, O_RDWR, 0666);
+      sleep(1);
+      counter++;
+      if(counter == 30 && fd == -1){
+        printf("Client inactive. Exiting...\r\n");
+        return -1;
+      }
     }
 
-  // <Use the "ftruncate" API to set the size to the size of your structure shm.h>
-	//
-  // <Use the "mmap" API to memory map the file descriptor>
+  counter = 0;
+	retVal = ftruncate(fd, sizeof(struct ShmData));
+	if(retVal){
+			handle_error_mod("Ftruncate");
+		}
 
-	
-
-
-
-  // <Set the "status" field to INVALID>
-  // <Set the "data" field to atoi(argv[1])>
-  // <Set the "status" field to VALID>
-
+  /*
+  Casts the return from mmap to the shared memory pointer.
+  */
+	shmPtr=(ShmData*)mmap(NULL, sizeof(struct ShmData), PROT_WRITE, MAP_SHARED, fd, 0);
+	if(shmPtr == MAP_FAILED){
+			handle_error_mod("Mmap");
+	}
+  shmPtr->status = INVALID;
+  shmPtr->data = atoi(argv[1]);
+	shmPtr->status = VALID;
 
   printf("[Server]: Server data Valid... waiting for client\n");
 
-  while(shmPtr->status != CONSUMED)
-    {
+  /*
+    In the while loop, the server waits for the client. If the server is inactive for
+    30 seconds, it quits.
+  */
+  while(shmPtr->status != CONSUMED){
+      printf("Client inactive\r\n");
+      counter++;
       sleep(1);
+      if(counter == 30 && shmPtr->status != CONSUMED){
+          printf("Server has been waiting for the client for 30 seconds\r\nPlease check the status of the server\r\n");
+          printf("Exiting...\r\n");
+
+          /*
+          If for some reason client isn't active to receive the data, it will unmap and unlink
+          all of the files and pointers. If this didn't happen, the client would still be able to
+          see the leftover input from the server side.
+          */
+          retVal = munmap(shmPtr, sizeof(struct ShmData));
+        	if(retVal){
+        			handle_error_mod("Mmunmap");
+        	}
+        	retVal = close(fd);
+        	if (retVal){
+        			handle_error_mod("Close");
+        	}
+        	retVal = shm_unlink(name);
+        	if(retVal){
+        			handle_error_mod("Unlink");
+        	}
+          exit(EXIT_FAILURE);
+        }
     }
 
   printf("[Server]: Server Data consumed!\n");
 
-  // <use the "munmap" API to unmap the pointer>
-	//
-  // <use the "close" API to close the file Descriptor>
-	//
-  // <use the "shm_unlink" API to revert the shm_open call above>
-
+	retVal = munmap(shmPtr, sizeof(struct ShmData));
+	if(retVal){
+			handle_error_mod("Mmunmap");
+	}
+	retVal = close(fd);
+	if (retVal){
+			handle_error_mod("Close");
+	}
+	retVal = shm_unlink(name);
+	if(retVal){
+			handle_error_mod("Unlink");
+	}
   printf("[Server]: Server exiting...\n");
-
+  retVal = 0;
 
   return(retVal);
-
 }
