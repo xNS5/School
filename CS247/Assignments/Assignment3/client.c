@@ -21,23 +21,28 @@ int main (int argc, char* argv[]){
     }
 
   /*
-    I have the shm_open in a while loop to check for whether the server is active.
-    if it isn't active and sends the data to the client, it quits.
+    I have the shm_open in a while loop to check for whether the server created a shared object
+    If it hasn't been created by the server (seeing as the client only has O_RDWR permissions
+    instead of O_CREAT | O_RDWR -- which means if the shared memory object doesn't exist it creates one),
+    it loops and waits for the server to create the shared memory object
   */
   fd = shm_open(name, O_RDWR, 0666);
-  while(fd == -1){
-      printf("Server inactive\r\n");
+  while(fd == -1)
+  {
       fd = shm_open(name, O_RDWR, 0666);
+      printf("Waiting on server...\r\n");
       counter++;
+      if(counter == 30 && fd == -1)
+        {
+          printf("Client is unable to access the shared memory file. Exiting...\r\n");
+          exit(EXIT_FAILURE);
+        }
       sleep(1);
-      if(counter == 30 && fd == -1){
-        printf("Server inactive. Exiting...\r\n");
-        exit(EXIT_FAILURE);
-      }
     }
   counter = 0; // Re-initializes the counter to zero.
+
   /*
-  Casts the return value of mmap to the shared memory pointer
+    Casts the return value of mmap to the shared memory pointer
   */
   shmPtr =(ShmData*)mmap(NULL, sizeof(struct ShmData), PROT_WRITE, MAP_SHARED, fd, 0);
   if(shmPtr == MAP_FAILED){
@@ -47,7 +52,7 @@ int main (int argc, char* argv[]){
   printf("[Client]: Waiting for valid data ...\n");
 
   /*
-    If the client doesn't receive VALID in 30 seconds, it
+    If the client doesn't receive VALID in 30 seconds, it unmaps and quits.
   */
   while(shmPtr->status != VALID){
       printf("Server inactive\r\n");
@@ -66,13 +71,18 @@ int main (int argc, char* argv[]){
   printf("[Client]: Received %d\n",shmPtr->data);
 
   shmPtr->status = CONSUMED;
-
+  
    retVal = munmap(shmPtr, sizeof(struct ShmData));
    if(retVal){
         handle_error_mod("Munmap");
       }
-  printf("[Client]: Client exiting...\n");
-  retVal = 0;
-  return(retVal);
 
+  printf("[Client]: Client exiting...\n");
+
+ /*
+  I have my own error handling in this function which will exit if one of the system calls
+  returns an error. Otherwise, retVal will remain 0 and will return normally.
+ */
+
+  return(retVal);
 }

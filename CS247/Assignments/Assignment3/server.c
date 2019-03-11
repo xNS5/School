@@ -21,18 +21,9 @@ int main(int argc, char* argv[]){
 		}
 
 	fd = shm_open(name, O_CREAT | O_RDWR, 0666);
-  while(fd == -1){
-      printf("Client inactive\r\n");
-      fd = shm_open(name, O_RDWR, 0666);
-      sleep(1);
-      counter++;
-      if(counter == 30 && fd == -1){
-        printf("Client inactive. Exiting...\r\n");
-        return -1;
-      }
+  if(fd == -1){
+      handle_error_mod("Shm_open");
     }
-
-  counter = 0;
 	retVal = ftruncate(fd, sizeof(struct ShmData));
 	if(retVal){
 			handle_error_mod("Ftruncate");
@@ -60,9 +51,8 @@ int main(int argc, char* argv[]){
       counter++;
       sleep(1);
       if(counter == 30 && shmPtr->status != CONSUMED){
-          printf("Server has been waiting for the client for 30 seconds\r\nPlease check the status of the server\r\n");
+          printf("Server has been waiting for the client for 30 seconds\r\nPlease check the status of the client\r\n");
           printf("Exiting...\r\n");
-
           /*
           If for some reason client isn't active to receive the data, it will unmap and unlink
           all of the files and pointers. If this didn't happen, the client would still be able to
