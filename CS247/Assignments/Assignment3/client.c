@@ -2,12 +2,14 @@
 #include <errno.h>
 #include "shm.h"
 
+// File name in header file with a #define in it? Okay cool I guess lol
+
+
 #define handle_error_mod(msg) \
    perror(msg); strerror(errno); exit(EXIT_FAILURE);
 
 int main (int argc, char* argv[]){
   int                   retVal = 0, counter = 0, fd = 0;
-  const char*           name = "/shared_memory";
   struct ShmData        *shmPtr;
 
   /*
@@ -71,7 +73,7 @@ int main (int argc, char* argv[]){
   printf("[Client]: Received %d\n",shmPtr->data);
 
   shmPtr->status = CONSUMED;
-  
+
    retVal = munmap(shmPtr, sizeof(struct ShmData));
    if(retVal){
         handle_error_mod("Munmap");

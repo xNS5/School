@@ -8,11 +8,12 @@
 #include <sys/types.h>
 #ifndef shm
 #define shm
+#define name "/shared_memory"
 
-enum StatusEnus {VALID,INVALID,CONSUMED};
+enum StatusEnum {VALID,INVALID,CONSUMED};
 
 typedef struct ShmData{
-    enum StatusEnus status;
+    enum StatusEnum status;
     int data;
   }ShmData;
 
