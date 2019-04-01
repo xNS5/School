@@ -7,7 +7,6 @@
 
 int main(int argc, char* argv[]){
 	int 								retVal = 0, counter = 0, fd = 0;
-	const char* 				name = "/shared_memory";
 	struct ShmData		 *shmPtr;
 /*
   First, the function checks for whether the input is a valid integer.
@@ -35,6 +34,7 @@ int main(int argc, char* argv[]){
 	shmPtr=(ShmData*)mmap(NULL, sizeof(struct ShmData), PROT_WRITE, MAP_SHARED, fd, 0);
 	if(shmPtr == MAP_FAILED){
 			handle_error_mod("Mmap");
+      // Forgot to close fd in this part for client and server
 	}
   shmPtr->status = INVALID;
   shmPtr->data = atoi(argv[1]);

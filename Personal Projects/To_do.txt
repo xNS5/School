@@ -1,0 +1,4 @@
+1. UI for Batch Renumbering program
+2. Some kind of mobile app
+3. Something with web development
+4. A system information program in some language
