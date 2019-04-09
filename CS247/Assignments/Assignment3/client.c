@@ -1,12 +1,15 @@
-#include <string.h>
-#include <errno.h>
+
 #include "shm.h"
+
+/*
+  Because these use the same memory object, I thought I'd move the header files to the shm.h file
+*/
 
 #define handle_error_mod(msg) \
    perror(msg); strerror(errno); exit(EXIT_FAILURE);
 
-int main (int argc, char* argv[]){
-  int                   retVal = 0, counter = 0, fd = 0;
+int main(int argc, char* argv[]){
+  int                   retVal = 0, counter = 0, size = sizeof(struct ShmData), fd = 0;
   const char*           name = "/shared_memory";
   struct ShmData        *shmPtr;
 
@@ -29,22 +32,23 @@ int main (int argc, char* argv[]){
   fd = shm_open(name, O_RDWR, 0666);
   while(fd == -1)
   {
-      fd = shm_open(name, O_RDWR, 0666);
-      printf("Waiting on server...\r\n");
-      counter++;
-      if(counter == 30 && fd == -1)
-        {
-          printf("Client is unable to access the shared memory file. Exiting...\r\n");
-          exit(EXIT_FAILURE);
-        }
-      sleep(1);
+    fd = shm_open(name, O_RDWR, 0666);
+    printf("Waiting on server...\r\n");
+    counter++;
+    sleep(1);
+    if(counter == 30 && fd == -1)
+      {
+        printf("Client is unable to access the shared memory file. Exiting...\r\n");
+        exit(EXIT_FAILURE);
+      }
+
     }
   counter = 0; // Re-initializes the counter to zero.
 
   /*
     Casts the return value of mmap to the shared memory pointer
   */
-  shmPtr =(ShmData*)mmap(NULL, sizeof(struct ShmData), PROT_WRITE, MAP_SHARED, fd, 0);
+  shmPtr =(ShmData*)mmap(NULL, size, PROT_WRITE, MAP_SHARED, fd, 0);
   if(shmPtr == MAP_FAILED){
       handle_error_mod("Mmap");
     }
@@ -61,7 +65,7 @@ int main (int argc, char* argv[]){
       if(counter == 30 && shmPtr->status != VALID){
           printf("Client has been waiting for server for 30 seconds\r\nPlease check the status of the server\r\n");
           printf("Exiting...\r\n");
-          retVal = munmap(shmPtr, sizeof(struct ShmData));
+          retVal = munmap(shmPtr, size);
           if(retVal){
                handle_error_mod("Munmap");
              }
@@ -71,8 +75,8 @@ int main (int argc, char* argv[]){
   printf("[Client]: Received %d\n",shmPtr->data);
 
   shmPtr->status = CONSUMED;
-  
-   retVal = munmap(shmPtr, sizeof(struct ShmData));
+
+   retVal = munmap(shmPtr, size);
    if(retVal){
         handle_error_mod("Munmap");
       }
