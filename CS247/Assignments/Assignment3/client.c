@@ -1,16 +1,26 @@
 
 #include "shm.h"
 
+<<<<<<< HEAD
 /*
   Because these use the same memory object, I thought I'd move the header files to the shm.h file
 */
+=======
+// File name in header file with a #define in it? Okay cool I guess lol
+
+>>>>>>> 832c40244bbe8ee1eb24bed9d77a1d820a237c99
 
 #define handle_error_mod(msg) \
    perror(msg); strerror(errno); exit(EXIT_FAILURE);
 
+<<<<<<< HEAD
 int main(int argc, char* argv[]){
   int                   retVal = 0, counter = 0, size = sizeof(struct ShmData), fd = 0;
   const char*           name = "/shared_memory";
+=======
+int main (int argc, char* argv[]){
+  int                   retVal = 0, counter = 0, fd = 0;
+>>>>>>> 832c40244bbe8ee1eb24bed9d77a1d820a237c99
   struct ShmData        *shmPtr;
 
   /*
@@ -76,7 +86,11 @@ int main(int argc, char* argv[]){
 
   shmPtr->status = CONSUMED;
 
+<<<<<<< HEAD
    retVal = munmap(shmPtr, size);
+=======
+   retVal = munmap(shmPtr, sizeof(struct ShmData));
+>>>>>>> 832c40244bbe8ee1eb24bed9d77a1d820a237c99
    if(retVal){
         handle_error_mod("Munmap");
       }

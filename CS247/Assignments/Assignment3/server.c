@@ -8,10 +8,15 @@
    perror(msg); strerror(errno); exit(EXIT_FAILURE);
 
 int main(int argc, char* argv[]){
+<<<<<<< HEAD
 	int 								  retVal = 0, counter = 0, size = sizeof(struct ShmData), fd = 0;
 	const char* 				  name = "/shared_memory";
 	struct ShmData		    *shmPtr;
 
+=======
+	int 								retVal = 0, counter = 0, fd = 0;
+	struct ShmData		 *shmPtr;
+>>>>>>> 832c40244bbe8ee1eb24bed9d77a1d820a237c99
 /*
   First, the function checks for whether the input is a valid integer.
   If atoi receives a char or string, it'll return zero.
@@ -41,6 +46,7 @@ int main(int argc, char* argv[]){
 	shmPtr=(ShmData*)mmap(NULL, size, PROT_WRITE, MAP_SHARED, fd, 0);
 	if(shmPtr == MAP_FAILED){
 			handle_error_mod("Mmap");
+      // Forgot to close fd in this part for client and server
 	}
   shmPtr->status = INVALID;
   shmPtr->data = atoi(argv[1]);
