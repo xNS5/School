@@ -1,0 +1,142 @@
+Michael Kennedy
+CS 301 -- Lab 2
+Scheme Journal
+
+
+Chapter 1:
+
+==================================================================
+Section 1.1
+==================================================================
+
+Scheme is made up of keywords, variables, structure forms, data, whitespace, and comments
+Keywords anv variables are called Identifiers. 
+
+Characters used:
+
+* a-z, A-Z, 0-9, and characters.
+
+Identifiers can't start with the @ symbol, and normally can't start with character that
+may start with a number. 
+
+True and False booleans are written as #t and #f. 
+
+Lists are written: (a b c)
+Vctors: #(name)
+Strings: "String"
+Char: #\x
+Comments; ';'
+
+==================================================================
+Section 1.2
+==================================================================
+
+* Predicate names end in a question mark (?). Predicate names are procedures that return
+  a true or false answer.
+
+* Type predicates, e.g. 'pair?' are created from the name of the type, which in this case
+  is 'pair'
+
+* The names of most char, string, and vector procecdures start with prefixes such as 'char-',
+  'string-', and 'vector-' (e.g. 'string-append').
+
+* Names of procedures that convert an object from one type into an object of another type is 
+  written as type1->type2. 
+
+* Procedures that end with a side effect end with '!'
+
+Questions: 
+
+1. What's an example of converting an object from one type into an object of another type? As in
+converting an int- to a string-?
+
+2. What does "side effects" mean?
+
+==================================================================
+Section 1.3
+==================================================================
+
+* The value of a procedure is said to be unspecefied*. 
+
+Question: What does that even mean?
+
+
+Chapter 2:
+
+==================================================================
+Section 2.1
+==================================================================
+
+Scheme follows a 'Read-evaluate-print' cycle, aka REPL. Perhaps similar to Python.
+
+You can write from the keyboard and get the expression back immediately.
+
+To save for later use:
+* transcript-on/off
+
+Lists can contain more than one object, so an int and a string can be in a single list.
+
+'=>' means "evaluates to"
+
+==================================================================
+Section 2.2
+==================================================================
+
+Scheme expressions are constant data objects. 
+
+* Numbers are constant. Scheme echoes numbers back. (e.g +1/2 1/2 returns 1)
+
+Scheme provides names for arithmatic proceduress: '+, -, *, /'
+Each procedure accepts 2 arguments. Arithmatic procedures take 2 arguments.
+
+'cdr' and 'car' returns the first element of a list and the rest of the elements of a list
+respectively. 
+
+'cons' constructs a list. 
+
+Exercise 2.2.1
+
+A. 1.2 * (2-1/3) + -8.7 -> (+ (* 1/2 ( - 2 1/3)) -8.7)
+   Answer: -6.6999999999
+B. (2/3 + 4/9) / (5/11 - 4/3) -> (/ (+ 2/3 4/9) (- 5/11 4/3))
+   Answer: -1 23/87
+C. 1 + 1 / (2 + 1 / (1 + 1/2)) -> (+ 1 (/ 1 (+ 2 (/ 1 (+ 1 1/2)))))
+   Answer: 1 3/8
+D. 1 * -2 * 3 * -4 * 5 * -6 * 7 = (* 1 (* -2 (* 3 (* -4 (* 5 (* -6 7))))))
+   Answer: -5040
+
+Exercise 2.2.2
+
+(+ 2 3/4) = 2 3/4
+
+(+ 2 3/4 5) = 7 3/4
+
+Exercuse 2.2.3
+
+A. '(car . cdr)
+B. '(this (is silly))
+C. '(is silly)
+D. '(+ 2 3)
+E. '(+ 2 3)
+F. '+
+G. '(2 3)
+H. #<procedure:cons>
+I. 'cons
+J. '' cons
+K. 'quote
+L. 5
+M. 5
+N. 5
+O. 5
+
+Exercise 2.2.4
+
+(car (car '((b a) (c d)))) = b
+(car (car '((c d) (a b)))) = c
+(car (car '((d c) (a b)))) = d
+
+Exercise 2.2.5
+
+
+
+
