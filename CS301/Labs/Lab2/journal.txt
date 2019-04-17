@@ -111,7 +111,7 @@ Exercise 2.2.2
 
 (+ 2 3/4 5) = 7 3/4
 
-Exercuse 2.2.3
+Exercise 2.2.3
 
 A. '(car . cdr)
 B. '(this (is silly))
@@ -137,6 +137,13 @@ Exercise 2.2.4
 
 Exercise 2.2.5
 
+(list (cons 'a 'b) (cons (cons 'c '()) (cons 'd '())) (cons '() '()))
 
+Exercise 2.2.6
+
+
+
+
+Exercise 2.2.7
 
 
