@@ -1,238 +1,0 @@
-Script started on Fri Apr 13 13:52:35 2018
-[?1034hbash-3.2$ mkdir 241repo
-bash-3.2$ mk[K[Kcd 242[K1repo/
-bash-3.2$ ls
-bash-3.2$ mkdir [K lab1
-bash-3.2$ cd -
-/Users/michaelkennedy/documents/school/github/201820_csci241_kennedm6
-bash-3.2$ ls
-241repo		README.md	typescript
-bash-3.2$ git add 241repo
-bash-3.2$ git commit -m "added 241repo"[K to [K[K[K[K"
-On branch master
-Your branch is up to date with 'origin/master'.
-
-Untracked files:
-	[31m.DS_Store[m
-	[31mtypescript[m
-
-nothing added to commit but untracked files present
-bash-3.2$ git push
-Everything up-to-date
-bash-3.2$ touch writeup.txt
-bash-3.2$ git add writeup.txt
-bash-3.2$ s[Kls
-241repo		README.md	typescript	writeup.txt
-bash-3.2$ cd[K[Kgit mv writeup.txt 241repo
-bash-3.2$ ls
-241repo		README.md	typescript
-bash-3.2$ cd 241repo
-bash-3.2$ ls
-lab1		writeup.txt
-bash-3.2$ cd[K[Kgit mv writeup.tt la[K[K[K[Kxt lav1[K[Kb1
-bash-3.2$ ls
-lab1
-bash-3.2$ ce lab[K[K[K[K[Kd lab1
-bash-3.2$ ls
-writeup.txt
-bash-3.2$ git add writeup.txt
-bash-3.2$ git commit 0-m[K[K[K0m [K[K[K-m added wr[K[K[K[K[K[K[K[K"Writeup.txt to the [K[K[K[K[K lab1"
-[master 2b2f1ea] Writeup.txt to lab1
- 1 file changed, 0 insertions(+), 0 deletions(-)
- create mode 100644 241repo/lab1/writeup.txt
-bash-3.2$ git push
-Counting objects: 5, done.
-Delta compression using up to 4 threads.
-Compressing objects:  50% (1/2)   Compressing objects: 100% (2/2)   Compressing objects: 100% (2/2), done.
-Writing objects:  20% (1/5)   Writing objects:  40% (2/5)   Writing objects:  60% (3/5)   Writing objects:  80% (4/5)   Writing objects: 100% (5/5)   Writing objects: 100% (5/5), 381 bytes | 381.00 KiB/s, done.
-Total 5 (delta 0), reused 0 (delta 0)
-To https://github.com/hutchteaching/201820_csci241_kennedm6
-   535e968..2b2f1ea  master -> master
-bash-3.2$ opo[Ken -e writeu.[Kp.txt
-bash-3.2$ git commit 0m [K[K[K-m "Added part 1 to the test[K[Kxt file"
-On branch master
-Your branch is up to date with 'origin/master'.
-
-Changes not staged for commit:
-	[31mmodified:   writeup.txt[m
-
-Untracked files:
-	[31m../../.DS_Store[m
-	[31m../../typescript[m
-
-no changes added to commit
-bash-3.2$ git push [K[K[K[K[K[K status
-On branch master
-Your branch is up to date with 'origin/master'.
-
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	[31mmodified:   writeup.txt[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	[31m../../.DS_Store[m
-	[31m../../typescript[m
-
-no changes added to commit (use "git add" and/or "git commit -a")
-bash-3.2$ git -e writeup.txt
-Unknown option: -e
-usage: git [--version] [--help] [-C <path>] [-c name=value]
-           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
-           [-p | --paginate | --no-pager] [--no-replace-objects] [--bare]
-           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
-           <command> [<args>]
-bash-3.2$ open - w[K[Ke writeup.txt
-bash-3.2$ git commit -m "Added part 2, hobbies"[K[K[Ky[K[Ky"
-On branch master
-Your branch is up to date with 'origin/master'.
-
-Changes not staged for commit:
-	[31mmodified:   writeup.txt[m
-
-Untracked files:
-	[31m../../.DS_Store[m
-	[31m../../typescript[m
-
-no changes added to commit
-bash-3.2$ git status
-On branch master
-Your branch is up to date with 'origin/master'.
-
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	[31mmodified:   writeup.txt[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	[31m../../.DS_Store[m
-	[31m../../typescript[m
-
-no changes added to commit (use "git add" and/or "git commit -a")
-bash-3.2$ git push
-Everything up-to-date
-bash-3.2$ git add writeup.txt
-bash-3.2$ git commit -m "Added part 2, [K[K"
-[master 647fea9] Added part 2
- 1 file changed, 3 insertions(+)
-bash-3.2$ git push
-Counting objects: 5, done.
-Delta compression using up to 4 threads.
-Compressing objects:  50% (1/2)   Compressing objects: 100% (2/2)   Compressing objects: 100% (2/2), done.
-Writing objects:  20% (1/5)   Writing objects:  40% (2/5)   Writing objects:  60% (3/5)   Writing objects:  80% (4/5)   Writing objects: 100% (5/5)   Writing objects: 100% (5/5), 424 bytes | 424.00 KiB/s, done.
-Total 5 (delta 0), reused 0 (delta 0)
-To https://github.com/hutchteaching/201820_csci241_kennedm6
-   2b2f1ea..647fea9  master -> master
-bash-3.2$ bit [K[K[K[Kgit blame writeup.txt
-[?1h=647fea9a (Michael Kennedy 2018-04-13 13:58:07 -0700 1) 1. Michael Kennedy [m
-647fea9a (Michael Kennedy 2018-04-13 13:58:07 -0700 2) [m
-647fea9a (Michael Kennedy 2018-04-13 13:58:07 -0700 3) 2. Hobby: Classical Guita[m r[m
-[K[?1l>bash-3.2$ git diff 
-[?1h=[K[?1l>bash-3.2$ git diff writeup.txt
-[?1h=[K[?1l>bash-3.2$ clear
-[H[2Jbash-3.2$ ls[K[K
-bash-3.2$ git commit [K[K[K[K[K[K[K[K git [K[K[K[K[K[K[K[K
-bash-3.2$ git checkout 0b [K[K[K0-[K[K-b '[Kquestion3
-Switched to a new branch 'question3'
-bash-3.2$ open - [Ke writeup.txt
-bash-3.2$ git commit -0[K0[Km "Added e[K[K e[Kquestion 3"
-On branch question3
-Changes not staged for commit:
-	[31mmodified:   writeup.txt[m
-
-Untracked files:
-	[31m../../.DS_Store[m
-	[31m../../typescript[m
-
-no changes added to commit
-bash-3.2$ git add writeup.txt
-bash-3.2$ git status
-On branch question3
-Changes to be committed:
-  (use "git reset HEAD <file>..." to unstage)
-
-	[32mmodified:   writeup.txt[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	[31m../../.DS_Store[m
-	[31m../../typescript[m
-
-bash-3.2$ git merge p[Kquestion3
-Already up to date.
-bash-3.2$ git -b question3
-Unknown option: -b
-usage: git [--version] [--help] [-C <path>] [-c name=value]
-           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
-           [-p | --paginate | --no-pager] [--no-replace-objects] [--bare]
-           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
-           <command> [<args>]
-bash-3.2$ git checkout -b question3
-fatal: A branch named 'question3' already exists.
-bash-3.2$ git checkout question [K3
-M	241repo/lab1/writeup.txt
-Already on 'question3'
-bash-3.2$ git merge question3
-Already up to date.
-bash-3.2$ git master
-git: 'master' is not a git command. See 'git --help'.
-bash-3.2$ git checkout master
-M	241repo/lab1/writeup.txt
-Switched to branch 'master'
-Your branch is up to date with 'origin/master'.
-bash-3.2$ git merge w[Kquestion3
-Already up to date.
-bash-3.2$ clear
-[H[2Jbash-3.2$ igt [K[K[Kg[K[Kgit e [K[K-e q[Kq[Kwriteup.txt
-Unknown option: -e
-usage: git [--version] [--help] [-C <path>] [-c name=value]
-           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
-           [-p | --paginate | --no-pager] [--no-replace-objects] [--bare]
-           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
-           <command> [<args>]
-bash-3.2$ open -e writeup.txt
-bash-3.2$ git checku[Kout question3
-M	241repo/lab1/writeup.txt
-Switched to branch 'question3'
-bash-3.2$ git commit -m "Added question 3 branch (I think?)"
-[question3 1bf08e5] Added question 3 branch (I think?)
- 1 file changed, 4 insertions(+), 2 deletions(-)
-bash-3.2$ git checkout master
-Switched to branch 'master'
-Your branch is up to date with 'origin/master'.
-bash-3.2$ git merge iss[K[K[K[K question3
-Updating 647fea9..1bf08e5
-Fast-forward
- 241repo/lab1/writeup.txt | 6 [32m++++[m[31m--[m
- 1 file changed, 4 insertions(+), 2 deletions(-)
-bash-3.2$ git status
-On branch master
-Your branch is ahead of 'origin/master' by 1 commit.
-  (use "git push" to publish your local commits)
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	[31m../../.DS_Store[m
-	[31m../../typescript[m
-
-nothing added to commit but untracked files present (use "git add" to track)
-bash-3.2$ git push
-Counting objects: 5, done.
-Delta compression using up to 4 threads.
-Compressing objects:  33% (1/3)   Compressing objects:  66% (2/3)   Compressing objects: 100% (3/3)   Compressing objects: 100% (3/3), done.
-Writing objects:  20% (1/5)   Writing objects:  40% (2/5)   Writing objects:  60% (3/5)   Writing objects:  80% (4/5)   Writing objects: 100% (5/5)   Writing objects: 100% (5/5), 493 bytes | 493.00 KiB/s, done.
-Total 5 (delta 0), reused 0 (delta 0)
-To https://github.com/hutchteaching/201820_csci241_kennedm6
-   647fea9..1bf08e5  master -> master
-bash-3.2$ exit
-exit
-
-Script done on Fri Apr 13 14:11:04 2018
