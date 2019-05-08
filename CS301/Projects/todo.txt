@@ -1,0 +1,4 @@
+Fix conditional statement such that it actually checks for whether the
+number is a prime or not
+
+implement file input and output
