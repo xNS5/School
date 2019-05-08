@@ -13,7 +13,7 @@
         (cond
             [(< prime x) (iter x (+ n 1))]
             [(< prime y)
-             (printf "~a\n" prime)
+             (printf "~o\n" prime)
              (iter x (+ n 1))]))
              
   (iter x 0))
