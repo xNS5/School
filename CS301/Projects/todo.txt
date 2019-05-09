@@ -1,4 +1,6 @@
 Fix conditional statement such that it actually checks for whether the
-number is a prime or not
+number is a prime or not -- COMPLETED
 
 implement file input and output
+
+Fix two squares function
