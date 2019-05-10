@@ -1,17 +1,3 @@
-#lang R5Rs
-
-;This function reads in data from a text file.
-;Read data
-(define loader
-  (lambda (filename)
-    (define in (open-input-file filename))
-    (list (read-char in))))
-     
-
-(define driver
-  (display (loader "test.txt")))
-  
-  
 ; Simple function that just returns 4x+1
 ; Stage 1 
 (define alg
@@ -32,18 +18,22 @@
    (define (iter x n)
      (define prime (alg n))
      (cond
-        [(< prime x) (iter x (+ n 1))]
-        [(integer? (sqrt prime)) (iter x (+ n 1))]
-        [(< prime y)
+        ((< prime x) (iter x (+ n 1)))
+        ((integer? (sqrt prime)) (iter x (+ n 1)))
+        ((< prime y)
            (cond
-             [(send-help prime) (iter x (+ n 1))]
-             [else
-                  (printf "~a" prime)
-                  (let ([roots (root prime)])
-                  (let* ([low (car roots)] [high (car (cdr roots))] [lowsq (* low low)] [highsq (* high high)])
-                  (displayln (format " Sum: ~a  Squares: ~a ~a" (+ lowsq highsq) low high))
-                  (iter x (+ n 1))))])]))
-  (iter x 0))
+             ((send-help prime) (iter x (+ n 1)))
+             (else
+                  (display prime)
+                  (let ((roots (root prime)))
+                    (let* ((low (car roots)) (high (car (cdr roots))) (lowsq (* low low)) (highsq (* high high)))
+                      (display " ")
+                      (display low)
+                      (display " ")
+                      (display high)
+                      (newline)
+                      (iter x (+ n 1)))))))))
+        (iter x 0))
 
 ; This function just recursively loops to see if there exists a number that
 ; when x (or the prime number) modulo another number that itsn't x equals zero.
@@ -52,9 +42,9 @@
 (define (send-help x)
   (define (iter y)
     (cond
-      [(eqv? x y) false]
-      [(eqv? 0 (modulo x y)) true]
-      [else (iter (+ y 1))]))
+      ((eqv? x y) #f)
+      ((eqv? 0 (modulo x y)) #t)
+      (else (iter (+ y 1)))))
   (iter 2))
 
 ; This function finds two numbers that, when suqared,
@@ -65,11 +55,24 @@
 ; Stage 3
 (define (root x)
   (define (iter y)
-    (let [(diff (- x y))]
+    (let ((diff (- x y)))
      (cond
-      [(and (integer? (sqrt y)) (integer? (sqrt diff))) (list (sqrt diff) (sqrt y))]
-      [else (iter (- y 1))])))
+      ((and (integer? (sqrt y)) (integer? (sqrt diff))) (list (sqrt diff) (sqrt y)))
+      (else (iter (- y 1))))))
   (iter x))
-     
+
+;This function reads in data from a text file.
+;Read data
+(define loader
+  (let ((p (open-input-file "test.txt")))
+  (let f ((x (read p)))
+    (if (eof-object? x)
+        (begin
+          (close-input-port p)
+          '())
+        (cons x (f (read p)))))))
+
+;Main function
+(caller (car loader) (car (cdr loader)))
 
 
