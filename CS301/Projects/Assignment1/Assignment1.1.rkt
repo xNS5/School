@@ -24,13 +24,9 @@
            (cond
              ((send-help prime) (iter x (+ n 1)))
              (else
-                  (display prime)
                   (let ((roots (root prime)))
                     (let* ((low (car roots)) (high (car (cdr roots))) (lowsq (* low low)) (highsq (* high high)))
-                      (display " ")
-                      (display low)
-                      (display " ")
-                      (display high)
+                     (display (list prime low high))
                       (newline)
                       (iter x (+ n 1)))))))))
         (iter x 0))
@@ -63,16 +59,32 @@
 
 ;This function reads in data from a text file.
 ;Read data
-(define loader
-  (let ((p (open-input-file "test.txt")))
-  (let f ((x (read p)))
+(define reader
+  (let ((n (open-input-file "test.txt")))
+  (let z ((x (read n)))
     (if (eof-object? x)
         (begin
-          (close-input-port p)
+          (close-input-port n)
           '())
-        (cons x (f (read p)))))))
+        (cons x (z (read n)))))))
+
+;Write data
+(define writer
+  (let ((p (open-output-file "output.txt")))
+  (let f ((ls list-to-be-printed))
+    (if (not (null? ls))
+        (begin
+          (write (car ls) p)
+          (newline p)
+          (f (cdr ls)))))
+  (close-output-port p)))
+
+
 
 ;Main function
-(caller (car loader) (car (cdr loader)))
+(caller (car reader) (car (cdr reader)))
+
+(writer (1 2 3))
+
 
 
