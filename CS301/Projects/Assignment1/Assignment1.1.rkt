@@ -22,9 +22,9 @@
            (cond
              ((send-help prime) (iter x (+ n 1)))
              (else
-                  (let ((roots (root prime)))
-                    (let* ((low (car roots)) (high (car (cdr roots))) (lowsq (* low low)) (highsq (* high high)))
-                      (writer (append (list prime low high) (iter x (+ n 1)))))))))))
+              (let ((roots (root prime)))
+              (let* ((low (car roots)) (high (car (cdr roots))) (lowsq (* low low)) (highsq (* high high)))
+                (writer(append (list prime low high) (iter x (+ n 1)))))))))))
         (iter x 0))
 
 ; This function just recursively loops to see if there exists a number that
@@ -65,15 +65,19 @@
         (cons x (z (read n)))))))
 
 ;Write data
-(define (writer x)
-  (let ((p (open-output-file "output.txt")))
-  (let f ((ls x))
-     (if (not (null? ls))
-         (begin
-         (write (car ls) p)
-         (f (cdr ls)))))
-  (close-output-port p))
-
+(define writer
+  (lambda (x)
+    (let ((p (open-output-file "output.txt")))
+      (let f ((ls x))
+        (filter (lambda (f) (equal? f "#<void>")))
+        (if (filter f)
+            (remove f)
+            (if ((if (not (null? ls))
+                 (begin
+                   (write (car ls) p)
+                   (newline p)
+                   (f (cdr ls)))))
+            (close-output-port p)))))))
 
 ;Main function
 (caller (car reader) (car (cdr reader)))
