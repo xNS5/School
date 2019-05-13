@@ -17,6 +17,7 @@
    (define (iter x n)
      (define prime (alg n))
      (cond
+        ((> prime y) '())
         ((or (< prime x) (integer? (sqrt prime))) (iter x (+ n 1)))
         ((< prime y)
            (cond
@@ -24,7 +25,7 @@
              (else
               (let ((roots (root prime)))
               (let* ((low (car roots)) (high (car (cdr roots))) (lowsq (* low low)) (highsq (* high high)))
-                (writer(append (list prime low high) (iter x (+ n 1)))))))))))
+                (append (list prime low high) (iter x (+ n 1))))))))))
         (iter x 0))
 
 ; This function just recursively loops to see if there exists a number that
@@ -69,7 +70,6 @@
   (lambda (x)
     (let ((p (open-output-file "output.txt")))
       (let f ((ls x))
-        (filter (lambda (f) (equal? f "#<void>")))
         (if (filter f)
             (remove f)
             (if ((if (not (null? ls))
