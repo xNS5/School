@@ -4,7 +4,6 @@
   (lambda (x)
     (+ (* 4 x) 1)))
 
-
 ; This function recursively loops to determine if a number in the range of x and y is a prime.
 ; First it checks to see that the value of 4x+1 for some x can find an integer square root.
 ; If the number returned is an integer, then it is not a prime number and the function increments the counter
@@ -18,17 +17,14 @@
    (define (iter x n)
      (define prime (alg n))
      (cond
-        ((< prime x) (iter x (+ n 1)))
-        ((integer? (sqrt prime)) (iter x (+ n 1)))
+        ((or (< prime x) (integer? (sqrt prime))) (iter x (+ n 1)))
         ((< prime y)
            (cond
              ((send-help prime) (iter x (+ n 1)))
              (else
                   (let ((roots (root prime)))
                     (let* ((low (car roots)) (high (car (cdr roots))) (lowsq (* low low)) (highsq (* high high)))
-                     (display (list prime low high))
-                      (newline)
-                      (iter x (+ n 1)))))))))
+                      (writer (append (list prime low high) (iter x (+ n 1)))))))))))
         (iter x 0))
 
 ; This function just recursively loops to see if there exists a number that
@@ -69,22 +65,20 @@
         (cons x (z (read n)))))))
 
 ;Write data
-(define writer
+(define (writer x)
   (let ((p (open-output-file "output.txt")))
-  (let f ((ls list-to-be-printed))
-    (if (not (null? ls))
-        (begin
-          (write (car ls) p)
-          (newline p)
-          (f (cdr ls)))))
-  (close-output-port p)))
-
+  (let f ((ls x))
+     (if (not (null? ls))
+         (begin
+         (write (car ls) p)
+         (f (cdr ls)))))
+  (close-output-port p))
 
 
 ;Main function
 (caller (car reader) (car (cdr reader)))
 
-(writer (1 2 3))
+
 
 
 
