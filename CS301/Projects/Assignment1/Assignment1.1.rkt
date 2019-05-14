@@ -14,7 +14,7 @@
 ; function to determine which two numbers when squared equal the 'prime' number. 
 ; Stage 2
 (define (caller x y n)
-  (define my-file (open-output-file "output.txt"))
+  (define my-file (open-output-file #:mode 'text #:exists 'append "output.txt"))
      (define prime (alg n))
      (cond
        ((> prime y) (close-output-port my-file) '())
@@ -24,10 +24,14 @@
              ((send-help prime 2) (caller x y (+ n 1)))
              (else
               (let* ((roots (root prime prime)) (low (car roots)) (high (car (cdr roots))) (result (list prime low high)))
-                (display (number->string prime) my-file)
+                (write (number->string prime) my-file)
+                (write " " my-file)
                 (display (number->string low) my-file)
+                (write " " my-file)
                 (display (number->string high) my-file)
-                (caller x y (+ n 1))))))))
+                (write "\r\n" my-file)
+                (caller x y (+ n 1)))))))
+  (close-output-port my-file))
            
                 
 
