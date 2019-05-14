@@ -15,15 +15,15 @@
 ; Stage 2
 (define (caller x y n)
      (define prime (alg n))
-     (cond  
+     (cond
+       ((> prime y) '())
         ((or(< prime x) (integer? (sqrt prime))) (caller x y (+ n 1)))
         ((<= prime y)
            (cond
              ((send-help prime 2) (caller x y (+ n 1)))
              (else
               (let* ((roots (root prime prime)) (low (car roots)) (high (car (cdr roots))) (result (list prime low high)))
-                (let ((result (append (cons (caller x y (+ n 1)) (cons prime (cons low (cons high (cons "\r\n" '()))))))))
-                  (writer (cdr result)))))))))
+                (let ((result (cons prime (cons low (cons high (cons (caller x y (+ n 1)) '()))))))
            
                 
 
@@ -36,6 +36,12 @@
       ((eqv? x n) #f)
       ((eqv? 0 (modulo x n)) #t)
       (else (send-help x (+ n 1)))))
+
+;Stage 2 helper -- flatten lists
+(define (flatten x)
+  (cond ((null? x) '())
+        ((pair? x) (append (flatten (car x)) (flatten (cdr x))))
+        (else (list x))))
 
 ; This function finds two numbers that, when suqared,
 ; sum up to the target number. It finds the difference between it
@@ -60,11 +66,23 @@
           (close-input-port n))
         (cons x (z (read n)))))))
 
-;Writer
-(define writer
+;Display list for debugging
+(define (display-list lst)
+  (let loop ((lst lst))
+    (cond
+    ((pair? lst)
+      (display (car lst))
+      (display " ")
+      (loop (cdr lst))
+  (newline)))))
+
+;Test
+
+(define test
   (lambda (x)
-    (cdr x)))
-    
+    (write x)))
+        
+
 ;Main function call
 (caller (car reader) (car (cdr reader)) 0)
 
