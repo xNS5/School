@@ -22,8 +22,8 @@
              ((send-help prime 2) (caller x y (+ n 1)))
              (else
               (let* ((roots (root prime prime)) (low (car roots)) (high (car (cdr roots))) (result (list prime low high)))
-                (let ((result (append (cons (caller x y (+ n 1)) '()) (cons prime (cons low (cons high '()))))))
-                  (display result))))))))
+                (let ((result (append (cons (caller x y (+ n 1)) (cons prime (cons low (cons high (cons "\r\n" '()))))))))
+                  (writer (cdr result)))))))))
            
                 
 
@@ -60,6 +60,11 @@
           (close-input-port n))
         (cons x (z (read n)))))))
 
+;Writer
+(define writer
+  (lambda (x)
+    (cdr x)))
+    
 ;Main function call
 (caller (car reader) (car (cdr reader)) 0)
 
