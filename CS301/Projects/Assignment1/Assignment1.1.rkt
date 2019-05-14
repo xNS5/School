@@ -14,16 +14,20 @@
 ; function to determine which two numbers when squared equal the 'prime' number. 
 ; Stage 2
 (define (caller x y n)
+  (define my-file (open-output-file "output.txt"))
      (define prime (alg n))
      (cond
-       ((> prime y) '())
+       ((> prime y) (close-output-port my-file) '())
         ((or(< prime x) (integer? (sqrt prime))) (caller x y (+ n 1)))
         ((<= prime y)
            (cond
              ((send-help prime 2) (caller x y (+ n 1)))
              (else
               (let* ((roots (root prime prime)) (low (car roots)) (high (car (cdr roots))) (result (list prime low high)))
-                (let ((result (cons prime (cons low (cons high (cons (caller x y (+ n 1)) '()))))))
+                (display (number->string prime) my-file)
+                (display (number->string low) my-file)
+                (display (number->string high) my-file)
+                (caller x y (+ n 1))))))))
            
                 
 
@@ -37,11 +41,6 @@
       ((eqv? 0 (modulo x n)) #t)
       (else (send-help x (+ n 1)))))
 
-;Stage 2 helper -- flatten lists
-(define (flatten x)
-  (cond ((null? x) '())
-        ((pair? x) (append (flatten (car x)) (flatten (cdr x))))
-        (else (list x))))
 
 ; This function finds two numbers that, when suqared,
 ; sum up to the target number. It finds the difference between it
@@ -77,11 +76,6 @@
   (newline)))))
 
 ;Test
-
-(define test
-  (lambda (x)
-    (write x)))
-        
 
 ;Main function call
 (caller (car reader) (car (cdr reader)) 0)
