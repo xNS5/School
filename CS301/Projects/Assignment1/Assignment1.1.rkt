@@ -3,7 +3,7 @@
 ;This function reads in data from a text file.
 ;Read data
 (define reader
-  (let ((n (open-input-file "range.txt")))
+  (let ((n (open-input-file "range")))
   (let z ((x (read n)))
     (if (eof-object? x)
         (begin
@@ -26,7 +26,7 @@
 ; "Completed".
 ; Stage 2
 (define (caller x y n)
-  (define my-file (open-output-file #:mode 'text #:exists 'append "primes4np1.txt"))
+  (define my-file (open-output-file #:mode 'text #:exists 'append "primes4np1"))
      (define prime (alg n))
      (cond
        ((> prime y) (caller x y (- n 1)))
@@ -35,7 +35,7 @@
            (cond
              ((send-help prime 2) (caller x y (- n 1)))
              (else
-              (let* ((roots (root prime prime)) (low (car roots)) (high (car (cdr roots))) (result (list prime low high)))
+              (let* ((roots (root prime prime)) (low (car roots)) (high (car (cdr roots))))
                 (display (string-append (number->string prime) " ") my-file)
                 (display (string-append (number->string low) " ") my-file)
                 (display (string-append (number->string high) "\r\n") my-file)
@@ -58,7 +58,7 @@
 
 ; This function finds two numbers that, when suqared, sums up to the target number. It determines if a number less than the target is a perfect square, then
 ; determines if the difference is a perfect square. If the difference isn't a perfect square, then it continues until it finds a perfect square whose difference
-; is a perfect square. Once it finds two numbers that, when squared, sum up to the target it returns a list containing the square roots of both numbers. 
+; is a perfect square. Once it finds two numbers that are perfect squares that add up to the target x, it retuns a list of the square roots of those two numbers. 
 ; Stage 3
 (define (root x y)
     (let ((diff (- x y)))
@@ -67,7 +67,7 @@
       (else (root x (- y 1))))))
 
 
-;Main function call
+; Main function call
 (caller (car reader) (car (cdr reader)) (car (cdr reader)))
 
 
