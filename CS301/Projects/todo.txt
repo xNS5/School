@@ -12,5 +12,7 @@ in reverse.
 Solution: 
     Instead of iterating from zero, iterate from the top (or y)
 
-
 Fix two squares function -- COMPLETED
+
+Issue: I don't know if I should drop #lang r5rs at the top of the file. My program gives me errors when I
+it
