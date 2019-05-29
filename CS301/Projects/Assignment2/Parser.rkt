@@ -8,14 +8,13 @@
 ;Read data
 
 
-(call-with-input-file "a.txt"
+(call-with-input-file "inp"
   (lambda (input-port)
     (let loop ((x (read-char input-port)))
       (if (not (eof-object? x))
           (begin
             (display x)
-            (loop (read-char input-port)))))))
-
+            (cons (loop (read-char input-port))))))))
 
 (define reader
   (let ((n (open-input-file #:mode 'text #:for-module? #t "input")))
@@ -23,6 +22,12 @@
       (cond
         ((eof-object? x) (close-input-port n) '())
         (else (cons x (z (read n))))))))
+
+define (implode lst)
+  (string->symbol
+   (apply string-append
+          (map symbol->string lst))))
+
 
 ;Push and Pop
 ;All I actually do for Pop is the car of a list, so why do I need a function that does that? We'll see. 
