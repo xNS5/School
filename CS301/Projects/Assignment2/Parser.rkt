@@ -21,13 +21,13 @@
 ;along with an empty symbol for 't'.
 (define splitter
   (lambda (str)
-  (let loop ((t '()) (str str))
+  (let iter ((t '()) (lst str))
     (cond
-    ((pair? str)
-        (let ((head (car str)))
+    ((pair? lst)
+        (let ((head (car lst)))
           (cond
-          ((or (char=? head #\space) (char=? head #\newline)) (cons (reverse t) (loop '() (cdr str))))
-          (else (loop (cons (car str) t) (cdr str))))))
+          ((or (char=? head #\space) (char=? head #\newline)) (cons (reverse t) (iter '() (cdr lst))))
+          (else (iter (cons (car lst) t) (cdr lst))))))
      ((null? t) (list (reverse t)))))))
 
 ;string-split
