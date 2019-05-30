@@ -1,51 +1,63 @@
-
 ;Opening 3 file ports
-(define my-file (open-output-file #:mode 'text #:exists 'append "parsestack"))
-;(define my-file (open-output-file #:mode 'text #:exists 'append "inputstream"))
-;(define my-file (open-output-file #:mode 'text #:exists 'append "comment"))
+;(define parse-file (open-output-file #:mode 'text #:exists 'append "parsestack"))
+;(define inputstream-file (open-output-file #:mode 'text #:exists 'append "inputstream"))
+;(define comment-file (open-output-file #:mode 'text #:exists 'append "comment"))
 
-;This function reads in data from a text file.
 ;Read data
-
-
-(call-with-input-file "inp"
-  (lambda (input-port)
-    (let loop ((x (read-char input-port)))
-      (if (not (eof-object? x))
-          (begin
-            (display x)
-            (cons (loop (read-char input-port))))))))
-
+;This function reads in data from a text file. It reads in the data and constructs a list of characters.
 (define reader
-  (let ((n (open-input-file #:mode 'text #:for-module? #t "input")))
-  (let z ((x (read n)))
+  (let ((n (open-input-file #:mode 'text "input")))
+  (let z ((x (read-char n)))
       (cond
         ((eof-object? x) (close-input-port n) '())
-        (else (cons x (z (read n))))))))
+        (else (cons x (z (read-char n))))))))
 
-define (implode lst)
-  (string->symbol
-   (apply string-append
-          (map symbol->string lst))))
+;Splitter
+;This function splits up a list of characters into a list of individual words.
+;It takes in a list of strings, and assigns them to the 'loop' inside of the splitter function.
+;t in this case is an accumulator variable.
+;If str is a pair, then it grabs the car of the str list and assigns it the variable head.
+;If the character 'head' is a #\space or a #\newline character, it recursively calls 'loop' with the cdr of str
+;along with an empty symbol for 't'.
+(define splitter
+  (lambda (str)
+  (let loop ((t '()) (str str))
+    (cond
+    ((pair? str)
+        (let ((head (car str)))
+          (cond
+          ((or (char=? head #\space) (char=? head #\newline)) (cons (reverse t) (loop '() (cdr str))))
+          (else (loop (cons (car str) t) (cdr str))))))
+     ((null? t) (list (reverse t)))))))
 
+;string-split
+;Driver function for splitter.
+(define (string-split str)
+  (map list->string (splitter (string->list str))))
+
+;Assigning the output of string-split to a variable.
+(define input (string-split (list->string reader)))
 
 ;Push and Pop
-;All I actually do for Pop is the car of a list, so why do I need a function that does that? We'll see. 
+;Push adds the value to the top of the list, 
 ;Syntax: src, dest
-(define pop
-  (lambda (stack)
+(define (pop stack)
     (if (null? stack)
-        '()
-        (car stack))))
+        "Error: Null Stack"
+        (car stack)))
 
-(define push
-  (lambda (stack val)
+;Syntax: Stack, val
+;Stack is a list, val is an int
+(define (push val stack)
     (if (or (null? stack) (null? val))
-        '()
-        (append stack val))))
-  
+        (cond
+          ((null? stack) "Error:  Null Stack")
+          ((null? val) "Error: Null Value"))
+        (append (list val) stack)))
+
+;Parse
 ;Main Function
 (define parse
-  (let ((input reader))
-    (display input)))
+  (display input))
+    
 
