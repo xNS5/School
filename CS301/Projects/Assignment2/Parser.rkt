@@ -1,5 +1,6 @@
 ;note to self: Include $$ in test files
 ;Use Define instead of a list
+;Upper case letters are the ids
 
 
 ;Opening 3 file ports
@@ -59,9 +60,13 @@
           ((null? val) "Error: Null Value"))
         (append (list val) stack)))
 
+(define program
+  (lambda (nonterm lst)))
+
+(define 
+
 ;Parse
 ;Main Function
 (define parse
-  (display input))
-    
-
+  (lambda (input)
+    (
