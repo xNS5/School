@@ -1,4 +1,5 @@
 ;note to self: Include $$ in test files
+;Use Define instead of a list
 
 
 ;Opening 3 file ports
@@ -31,7 +32,7 @@
           (cond
           ((or (char=? head #\space) (char=? head #\newline)) (cons (reverse t) (iter '() (cdr lst))))
           (else (iter (cons (car lst) t) (cdr lst))))))
-     ((null? t) (list (reverse t)))))))
+     (else (list (reverse t)))))))
 
 ;string-split
 ;Driver function for splitter.
