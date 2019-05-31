@@ -1,3 +1,6 @@
+;note to self: Include $$ in test files
+
+
 ;Opening 3 file ports
 ;(define parse-file (open-output-file #:mode 'text #:exists 'append "parsestack"))
 ;(define inputstream-file (open-output-file #:mode 'text #:exists 'append "inputstream"))
