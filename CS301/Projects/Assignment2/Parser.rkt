@@ -43,7 +43,7 @@
 ;Assigning the output of string-split to a variable.
 (define input (string-split (list->string reader)))
 
-;Push and Pop
+;Push, Pop and Empty?
 ;Push adds the value to the top of the list, 
 ;Syntax: src, dest
 (define (pop stack)
@@ -59,7 +59,9 @@
           ((null? stack) "Error:  Null Stack")
           ((null? val) "Error: Null Value"))
         (append (list val) stack)))
-
+;Syntax: Stack
+(define (empty? stack)
+  (or (null? stack) (eqv? (car stack) "$$") (eqv? (length stack) 0)))
 
 ;Parse Table Functions
 (define program
@@ -99,17 +101,11 @@
     (display "Tacos")))
 
 
-
-
 ;Parse
 ;Main Function
 (define parse
   (lambda (lst)
     (display lst)))
-      
-
-(parse input)
-
 
 
 
