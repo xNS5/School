@@ -60,13 +60,61 @@
           ((null? val) "Error: Null Value"))
         (append (list val) stack)))
 
-(define program
-  (lambda (nonterm lst)))
 
-(define 
+;Parse Table Functions
+(define program
+  (lambda (x)
+    (display "Pizza")))
+
+(define stmt_list
+  (lambda (x)
+    (display "Turkey")))
+
+(define expr
+  (lambda (x)
+    (display "Apples")))
+
+(define term_tail
+  (lambda (x)
+    (display "Banana")))
+
+(define tail
+  (lambda (x)
+    (display "Pork")))
+
+(define factor_tail
+  (lambda (x)
+    (display "Sausage")))
+
+(define factor
+  (lambda (x)
+    (display "burritos")))
+
+(define add_op
+  (lambda (x)
+    (display "Pulled Pork")))
+
+(define mult_op
+  (lambda (x)
+    (display "Tacos")))
+
+
+
 
 ;Parse
 ;Main Function
 (define parse
-  (lambda (input)
-    (
+  (lambda (lst)
+    (display lst)))
+      
+
+(parse input)
+
+
+
+
+
+
+
+
+      
