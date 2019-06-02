@@ -2,7 +2,7 @@
 ;Use Define instead of a list
 ;Upper case letters are the ids
 
-
+;================================================================================
 ;Opening 3 file ports
 ;(define parse-file (open-output-file #:mode 'text #:exists 'append "parsestack"))
 ;(define inputstream-file (open-output-file #:mode 'text #:exists 'append "inputstream"))
@@ -17,6 +17,7 @@
         ((eof-object? x) (close-input-port n) '())
         (else (cons x (z (read-char n))))))))
 
+;================================================================================
 ;Splitter
 ;This function splits up a list of characters into a list of individual words.
 ;It takes in a list of strings, and assigns them to the 'loop' inside of the splitter function.
@@ -43,14 +44,9 @@
 ;Assigning the output of string-split to a variable.
 (define input (string-split (list->string reader)))
 
-;Push, Pop and Empty?
-;Push adds the value to the top of the list, 
-;Syntax: src, dest
-(define (pop stack)
-    (if (null? stack)
-        "Error: Null Stack"
-        (car stack)))
-
+;================================================================================
+;Push, Pop, and Empty? functions
+;Push
 ;Syntax: Stack, val
 ;Stack is a list, val is an int
 (define (push val stack)
@@ -59,10 +55,12 @@
           ((null? stack) "Error:  Null Stack")
           ((null? val) "Error: Null Value"))
         (append (list val) stack)))
+
 ;Syntax: Stack
 (define (empty? stack)
   (or (null? stack) (eqv? (car stack) "$$") (eqv? (length stack) 0)))
 
+;================================================================================
 ;Parse Table Functions
 (define program
   (lambda (x)
@@ -100,17 +98,15 @@
   (lambda (x)
     (display "Tacos")))
 
-
+;================================================================================
 ;Parse
 ;Main Function
 (define parse
   (lambda (lst)
-    (display lst)))
-
-
-
-
-
-
-
-      
+    ;Insert somewhere here to write "initial stack contents"
+    (let* ((p_stack (cons "$$" '())) (infile lst))
+      (let iter ((stk p_stack) (t infile))
+        (let ((head (car t)))
+          ;Write head to the text file
+          )))))
+(parse input)
