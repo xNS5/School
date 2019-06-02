@@ -27,14 +27,14 @@
 ;along with an empty symbol for 't'.
 (define splitter
   (lambda (str)
-  (let iter ((t '()) (lst str))
-    (cond
-    ((pair? lst)
-        (let ((head (car lst)))
-          (cond
-          ((or (char=? head #\space) (char=? head #\newline)) (cons (reverse t) (iter '() (cdr lst))))
-          (else (iter (cons (car lst) t) (cdr lst))))))
-     (else (list (reverse t)))))))
+    (let iter ((t '()) (lst str))
+      (cond
+        ((pair? lst)
+         (let ((head (car lst)))
+           (cond
+             ((or (char=? head #\space) (char=? head #\newline)) (cons (reverse t) (iter '() (cdr lst))))
+             (else (iter (cons (car lst) t) (cdr lst))))))
+        (else (list (reverse t)))))))
 
 ;string-split
 ;Driver function for splitter.
@@ -64,11 +64,13 @@
 ;Parse Table Functions
 (define program
   (lambda (x)
-    (display "Pizza")))
+    (cond
+      ((or (string=? x "id") (string=? x "read") (string=? x "write")) #t) ;Include a write to file,
+      (else "Syntax Error"))))
 
 (define stmt_list
   (lambda (x)
-    (display "Turkey")))
+   (display "yada yada")))
 
 (define expr
   (lambda (x)
@@ -103,10 +105,14 @@
 ;Main Function
 (define parse
   (lambda (lst)
-    ;Insert somewhere here to write "initial stack contents"
-    (let* ((p_stack (cons "$$" '())) (infile lst))
-      (let iter ((stk p_stack) (t infile))
-        (let ((head (car t)))
-          ;Write head to the text file
-          )))))
+    (let* ((p_stack (list "program" "$$")) (infile lst))
+      (if (not (eq? (program (car infile)) #t))
+          "Error" ;Writes p_stack to parse stack and exits
+          (begin
+            (let ((p_stack (cons "stmt_list" (cdr p_stack))))
+               (let iter ((stk p_stack) (t infile))
+                 (let ((head (car t)) (next (car (cdr t))) (nonterm (car stk)))
+                   
+               
+    
 (parse input)

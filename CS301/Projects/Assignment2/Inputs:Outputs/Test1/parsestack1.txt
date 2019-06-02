@@ -1,4 +1,5 @@
-program $$  
+
+program $$ 
 stmt_list $$  
 stmt stmt_list $$  
 read id stmt_list $$  
