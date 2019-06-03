@@ -1,0 +1,60 @@
+program $$  
+stmt_list $$  
+stmt stmt_list $$  
+id := expr stmt_list $$  
+:= expr stmt_list $$  
+expr stmt_list $$  
+term term_tail stmt_list $$  
+factor factor_tail term_tail stmt_list $$  
+( expr ) factor_tail term_tail stmt_list $$  
+expr ) factor_tail term_tail stmt_list $$  
+term term_tail ) factor_tail term_tail stmt_list $$  
+factor factor_tail term_tail ) factor_tail term_tail stmt_list $$  
+id factor_tail term_tail ) factor_tail term_tail stmt_list $$  
+factor_tail term_tail ) factor_tail term_tail stmt_list $$  
+term_tail ) factor_tail term_tail stmt_list $$  
+add_op term term_tail ) factor_tail term_tail stmt_list $$  
++ term term_tail ) factor_tail term_tail stmt_list $$  
+term term_tail ) factor_tail term_tail stmt_list $$  
+factor factor_tail term_tail ) factor_tail term_tail stmt_list $$  
+id factor_tail term_tail ) factor_tail term_tail stmt_list $$  
+factor_tail term_tail ) factor_tail term_tail stmt_list $$  
+term_tail ) factor_tail term_tail stmt_list $$  
+) factor_tail term_tail stmt_list $$  
+factor_tail term_tail stmt_list $$  
+mult_op factor factor_tail term_tail stmt_list $$  
+* factor factor_tail term_tail stmt_list $$  
+factor factor_tail term_tail stmt_list $$  
+id factor_tail term_tail stmt_list $$  
+factor_tail term_tail stmt_list $$  
+mult_op factor factor_tail term_tail stmt_list $$  
+/ factor factor_tail term_tail stmt_list $$  
+factor factor_tail term_tail stmt_list $$  
+( expr ) factor_tail term_tail stmt_list $$  
+expr ) factor_tail term_tail stmt_list $$  
+term term_tail ) factor_tail term_tail stmt_list $$  
+factor factor_tail term_tail ) factor_tail term_tail stmt_list $$  
+id factor_tail term_tail ) factor_tail term_tail stmt_list $$  
+factor_tail term_tail ) factor_tail term_tail stmt_list $$  
+term_tail ) factor_tail term_tail stmt_list $$  
+add_op term term_tail ) factor_tail term_tail stmt_list $$  
++ term term_tail ) factor_tail term_tail stmt_list $$  
+term term_tail ) factor_tail term_tail stmt_list $$  
+factor factor_tail term_tail ) factor_tail term_tail stmt_list $$  
+number factor_tail term_tail ) factor_tail term_tail stmt_list $$  
+factor_tail term_tail ) factor_tail term_tail stmt_list $$  
+term_tail ) factor_tail term_tail stmt_list $$  
+) factor_tail term_tail stmt_list $$  
+factor_tail term_tail stmt_list $$  
+term_tail stmt_list $$  
+stmt_list $$  
+stmt stmt_list $$  
+write expr stmt_list $$  
+expr stmt_list $$  
+term term_tail stmt_list $$  
+factor factor_tail term_tail stmt_list $$  
+id factor_tail term_tail stmt_list $$  
+factor_tail term_tail stmt_list $$  
+term_tail stmt_list $$  
+stmt_list $$  
+$$  

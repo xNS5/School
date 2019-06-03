@@ -3,4 +3,3 @@ a.out
 a.out.dSYM
 *.class
 *.rkt~
-*.rkt#
