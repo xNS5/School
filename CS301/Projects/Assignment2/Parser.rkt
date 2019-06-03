@@ -31,6 +31,9 @@
          (let ((head (car lst)))
            (cond
              ((or (char=? head #\space) (char=? head #\newline)) (cons (reverse t) (iter '() (cdr lst))))
+             ((and (not (eq? '() t)) (char=? head #\))) (cons t (iter (list #\)) (cdr lst))))
+             ((char=? head #\() (cons (list head) (iter '() (cdr lst))))
+             ((char=? head #\)) (cons (list head) (iter '() (cdr lst))))
              (else (iter (cons (car lst) t) (cdr lst))))))
         (else (list (reverse t)))))))
 
@@ -45,7 +48,7 @@
 ;================================================================================
 ;Push, Pop, and Empty? functions
 ;Push
-;Syntax: Stack, val
+;Syntax: val, stack
 ;Stack is a list, val is an int
 (define (push val stack)
     (if (or (null? stack) (null? val))
@@ -76,8 +79,8 @@
   (lambda (p_stack infile)
     (let ((head (car p_stack)))
       (cond
-        ((string=? head "program") "program")
-        ((string=? head "stmt_list") "stmt_list")
+        ((string=? head "program") (program p_stack))
+        ((string=? head "stmt_list") (stmt_list p_stack))
         ((string=? head "stmt") "stmt")
         ((string=? head "expr") "expr")
         ((string=? head "term_tail") "term_tail")
@@ -89,8 +92,8 @@
 
 ;1
 (define program
-  (lambda (stk head) ;write production 1
-    (stmt_list (push "stmt_list" (cdr stk)) head)))
+  (lambda (stk) ;write production 1
+    (push "stmt_list" (cdr stk))))
     
 ;2
 (define stmt_list
@@ -143,5 +146,6 @@
 (define parse
   (lambda (lst)
     (let ((p_stack (list "program" "$$")) (infile lst))
-      (table p_stack infile))))
-      
+      (table (table p_stack infile) infile))))
+
+(parse input)
