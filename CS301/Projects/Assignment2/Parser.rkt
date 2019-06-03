@@ -1,6 +1,4 @@
-;note to self: Include $$ in test files
-;Use Define instead of a list
-;Upper case letters are the ids
+;Write program that just writes p_stack to file
 
 ;================================================================================
 ;Opening 3 file ports
@@ -60,59 +58,53 @@
 (define (empty? stack)
   (or (null? stack) (eqv? (car stack) "$$") (eqv? (length stack) 0)))
 
+;Syntax: input
+(define (letter? val)
+  (if (= 1 (string-length val))
+      (begin
+        (let ((char_val (car (string->list val))))
+              (if (and (char? char_val) (char-alphabetic? char_val))
+                  #t
+                  #f)))
+      #f))
+
+
 ;================================================================================
 ;Parse Table Functions
+;Make a first and follow function
+(define table
+  (lambda (p_stack infile)
+    (let ((head (car p_stack)))
+      (cond
+        ((string=? head "program") "program")
+        ((string=? head "stmt_list") "stmt_list")
+        ((string=? head "stmt") "stmt")
+        ((string=? head "expr") "expr")
+        ((string=? head "term_tail") "term_tail")
+        ((string=? head "term") "term")
+        ((string=? head "factor_tail") "factor_tail")
+        ((string=? head "factor") "factor")
+        ((string=? head "add_op") "add_op")
+        ((string=? head "mult_op") "mult_op")))))
+
+;1
 (define program
-  (lambda (x)
-    (cond
-      ((or (string=? x "id") (string=? x "read") (string=? x "write")) #t) ;Include a write to file,
-      (else "Syntax Error"))))
-
+  (lambda (stk head) ;write production 1
+    (stmt_list (push "stmt_list" (cdr stk)) head)))
+    
+;2
 (define stmt_list
-  (lambda (x)
-   (display "yada yada")))
-
-(define expr
-  (lambda (x)
-    (display "Apples")))
-
-(define term_tail
-  (lambda (x)
-    (display "Banana")))
-
-(define tail
-  (lambda (x)
-    (display "Pork")))
-
-(define factor_tail
-  (lambda (x)
-    (display "Sausage")))
-
-(define factor
-  (lambda (x)
-    (display "burritos")))
-
-(define add_op
-  (lambda (x)
-    (display "Pulled Pork")))
-
-(define mult_op
-  (lambda (x)
-    (display "Tacos")))
+  (lambda (stk head) ;write production 2
+    (display stk)))
+;3
+(define stmt_read
+  (lambda  
 
 ;================================================================================
 ;Parse
 ;Main Function
 (define parse
   (lambda (lst)
-    (let* ((p_stack (list "program" "$$")) (infile lst))
-      (if (not (eq? (program (car infile)) #t))
-          "Error" ;Writes p_stack to parse stack and exits
-          (begin
-            (let ((p_stack (cons "stmt_list" (cdr p_stack))))
-               (let iter ((stk p_stack) (t infile))
-                 (let ((head (car t)) (next (car (cdr t))) (nonterm (car stk)))
-                   
-               
-    
-(parse input)
+    (let ((p_stack (list "program" "$$")) (infile lst))
+      (table p_stack infile))))
+      
