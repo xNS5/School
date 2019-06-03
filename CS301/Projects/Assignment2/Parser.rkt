@@ -95,10 +95,47 @@
 ;2
 (define stmt_list
   (lambda (stk head) ;write production 2
+    (if (string=? head "$$")
+        "Predict 3"
+        (begin
+          (cond
+            ((letter? head) (push "id" (push ":=" stk))) ;Producion 4
+            ((string=? head "read") (push "read" (push "id" stk))) ;Production 5
+            ((string=? head "write") (push "write"(push "expr" stk)))))))) ;Production 6
+;7
+(define expr
+  (lambda (stk)
     (display stk)))
-;3
-(define stmt_read
-  (lambda  
+
+;8 and 9
+(define term_tail
+  (lambda (stk)
+    (display stk)))
+
+;10
+(define term
+  (lambda (stk)
+    (display stk)))
+
+;11 and 12
+(define factor_tail
+  (lambda (stk)
+    (display stk)))
+
+;13 14 and 15
+(define factor
+  (lambda (stk)
+    (display stk)))
+
+;16 and 17
+(define add_op
+  (lambda (stk)
+    (display stk)))
+
+;18 and 19
+(define mult_op
+  (lambda (stk)
+    (display stk)))
 
 ;================================================================================
 ;Parse
