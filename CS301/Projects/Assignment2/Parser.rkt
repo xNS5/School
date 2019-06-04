@@ -32,8 +32,7 @@
            (cond
              ((or (char=? head #\space) (char=? head #\newline)) (cons (reverse t) (iter '() (cdr lst))))
              ((and (not (eq? '() t)) (char=? head #\))) (cons t (iter (list #\)) (cdr lst))))
-             ((char=? head #\() (cons (list head) (iter '() (cdr lst))))
-             ((char=? head #\)) (cons (list head) (iter '() (cdr lst))))
+             ((or (char=? head #\() (char=? head #\))) (cons (list head) (iter '() (cdr lst))))
              (else (iter (cons (car lst) t) (cdr lst))))))
         (else (list (reverse t)))))))
 
@@ -46,7 +45,7 @@
 (define input (string-split (list->string reader)))
 
 ;================================================================================
-;Push, Pop, and Empty? functions
+;Push, Pop, and letter? functions
 ;Push
 ;Syntax: val, stack
 ;Stack is a list, val is an int
@@ -97,14 +96,18 @@
     
 ;2
 (define stmt_list
-  (lambda (stk head) ;write production 2
-    (if (string=? head "$$")
-        "Predict 3"
+  (lambda (stk) ;write production 2
+    (let ((top-of-stk (car stk)))
+    (if (string=? top-of-stk "$$")
+        "Error"
         (begin
-          (cond
-            ((letter? head) (push "id" (push ":=" stk))) ;Producion 4
-            ((string=? head "read") (push "read" (push "id" stk))) ;Production 5
-            ((string=? head "write") (push "write"(push "expr" stk)))))))) ;Production 6
+          (push "stmt" stk))))))
+;4
+(define stmt_id
+  (lambda (x)
+    (cond
+      ((
+
 ;7
 (define expr
   (lambda (stk)
@@ -146,6 +149,6 @@
 (define parse
   (lambda (lst)
     (let ((p_stack (list "program" "$$")) (infile lst))
-      (table (table p_stack infile) infile))))
+      (
 
 (parse input)
