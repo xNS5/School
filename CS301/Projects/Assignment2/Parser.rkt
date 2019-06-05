@@ -3,9 +3,9 @@
 
 ;================================================================================
 ;Opening 3 file ports
-(define parse-file (open-output-file #:mode 'text #:exists 'append "parsestack"))
-;(define inputstream-file (open-output-file #:mode 'text #:exists 'append "inputstream"))
-(define comment-file (open-output-file #:mode 'text #:exists 'append "comment"))
+(define parse-file (open-output-file  #:exists 'append "parsestack"))
+(define inputstream-file (open-output-file #:exists 'append "inputstream"))
+(define comment-file (open-output-file #:exists 'append "comment"))
 
 (display "intial stack contents\r\n" comment-file)
 
@@ -36,8 +36,6 @@
          (let ((head (car lst)))
            (cond
              ((or (char=? head #\space) (char=? head #\newline)) (cons (reverse t) (iter '() (cdr lst))))
-             ((char=? head #\() (cons (list head) (iter '() (cdr lst))))
-             ((and (not (eq? '() t)) (char=? head #\))) (cons (reverse t) (iter (list #\)) (cdr lst))))
              (else (iter (cons (car lst) t) (cdr lst))))))
         (else (list (reverse t)))))))
 
@@ -169,8 +167,6 @@
          (push "write" (push "expr" (cdr stk)))))
       (else (push "error" stk)))))
        
-      
-
 ;7
 (define expr
   (lambda (stk token)
@@ -191,7 +187,7 @@
        (begin
          (print-stack stk)
          (print-predict "8") ;production 8
-         (push "add_op" (push "term" stk)))))
+         (push "add_op" (push "term" stk))))
       ((or (string=? token "$$") (id? token) (string=? token "read") (string=? token "write") (string=? token ")"))
        (begin
          (print-stack stk)
@@ -214,16 +210,16 @@
 (define factor_tail
   (lambda (stk token)
     (cond
-    ((or (id? token) (string=? token "read") (string=? token "write") (string=? token ")") (string=? token "+") (string=? token "-") (string=? token "$$"))
-     (begin
-       (print-stack stk)
-       (print-predict "11")
-       (cdr stk)));production 11
     ((or (string=? token "*") (string=? token "/"))
      (begin
        (print-stack stk)
-       (print-predict "12") ;production 12
+       (print-predict "11") ;production 11
        (push "mult_op" (push "factor" (push "factor_tail" (cdr stk))))))
+    ((or (string=? token "$$")(id? token) (string=? token "read") (string=? token "write") (string=? token ")") (string=? token "+") (string=? token "-"))
+      (begin
+       (print-stack stk)
+       (print-predict "12")
+       (cdr stk)));production 12
     (else (push "error" stk)))))
 
 ;13 14 and 15
