@@ -99,12 +99,12 @@
         ((string=? head "stmt_list") (stmt_list p_stack token))
         ((string=? head "stmt") (stmt p_stack token))
         ((string=? head "expr") (expr p_stack token))
-        ((string=? head "term_tail") "term_tail")
+        ((string=? head "term_tail") (term_tail p_stack token))
         ((string=? head "term") (term p_stack token))
-        ((string=? head "factor_tail") "factor_tail")
+        ((string=? head "factor_tail") (factor_tail p_stack token))
         ((string=? head "factor") (factor p_stack token))
-        ((string=? head "add_op") "add_op")
-        ((string=? head "mult_op") "mult_op")))))
+        ((string=? head "add_op") (add_op p_stack token))
+        ((string=? head "mult_op") (mult_op p_stack token))))))
 
 ;1
 (define program
@@ -142,15 +142,15 @@
 (define term_tail
   (lambda (stk token)
     (cond
-      ((or (string=? token "+") (string=? token "-")) (push "add_op" stk)) ;production 8
-      ((or (id? token) (string=? token "read") (string=? token "write") (string=? token ")")) (cdr stk)); production 9
+      ((or (string=? token "+") (string=? token "-")) (push "add_op" (push "term" (cdr stk)))) ;production 8
+      ((or (string=? token "$$") (id? token) (string=? token "read") (string=? token "write") (string=? token ")")) (cdr stk)); production 9
       (else "Syntax Error: term_tail"))))
 
 ;10
 (define term
   (lambda (stk token)
     (cond
-      ((or (id? token) (string=? token "(") (integer? (string->number token))) (push "factor" (push "factor_tail" stk)))
+      ((or (id? token) (string=? token "(") (integer? (string->number token))) (push "factor" (push "factor_tail" (cdr stk))))
       (else "Syntax error: term"))))
 
 ;11 and 12
@@ -158,7 +158,7 @@
   (lambda (stk token)
     (cond
     ((or (id? token) (string=? token "read") (string=? token "write") (string=? token ")") (string=? token "+") (string=? token "-") (string=? token "$$")) (cdr stk));production 11
-    ((or (string=? token "*") (string=? token "/")) (push "mult_op" stk));production 12
+    ((or (string=? token "*") (string=? token "/")) (push "mult_op" (push "factor" (cdr stk))));production 12
     (else "Syntax Error: factor_tail"))))
 
 ;13 14 and 15
@@ -166,23 +166,23 @@
   (lambda (stk token)
     (cond
       ((string=? token "(") (push "(" (push "expr" (push ")")))) ;production 13
-      ((id? token) (push "id" stk)) ;production 14
-      ((integer? (string->number token)) (push "number" stk))))) ;production 15
+      ((id? token) (push "id" (cdr stk))) ;production 14
+      ((integer? (string->number token)) (push token stk))))) ;production 15
 
 ;16 and 17
 (define add_op
   (lambda (stk token)
     (cond
-      ((string=? token "+") (push "+" stk)) ;production 16
-      ((string=? token "-") (push "-" stk)) ;production 17
+      ((string=? token "+") (push "+" (cdr stk))) ;production 16
+      ((string=? token "-") (push "-" (cdr stk))) ;production 17
       (else "Syntax error: add_op"))))
 
 ;18 and 19
 (define mult_op
   (lambda (stk token)
     (cond
-      ((string=? token "*") (push "*" stk)) ;production 18
-      ((string=? token "/") (push "/" stk)) ;production 19
+      ((string=? token "*") (push "*" (cdr stk))) ;production 18
+      ((string=? token "/") (push "/" (cdr stk))) ;production 19
       (else "Syntax error: mult_op"))))
 
 ;================================================================================

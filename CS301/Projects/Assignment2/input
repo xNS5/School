@@ -1,6 +1,6 @@
 read A
 read B
 C := A + B
-write sum
-write sum / 2
+write C
+write C / 2
 $$
