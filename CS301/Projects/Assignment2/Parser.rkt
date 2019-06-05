@@ -92,24 +92,23 @@
 ;Parse Table Functions
 ;Make a first and follow function
 (define table
-  (lambda (p_stack infile)
-    (let ((head (car p_stack)) (token (car infile)))
+  (lambda (p_stack token)
+    (let ((head (car p_stack)))
       (cond
         ((string=? head "program") (program p_stack token))
         ((string=? head "stmt_list") (stmt_list p_stack token))
         ((string=? head "stmt") (stmt p_stack token))
-        ((string=? head "expr") "expr")
+        ((string=? head "expr") (expr p_stack token))
         ((string=? head "term_tail") "term_tail")
-        ((string=? head "term") "term")
+        ((string=? head "term") (term p_stack token))
         ((string=? head "factor_tail") "factor_tail")
-        ((string=? head "factor") "factor")
+        ((string=? head "factor") (factor p_stack token))
         ((string=? head "add_op") "add_op")
         ((string=? head "mult_op") "mult_op")))))
 
 ;1
 (define program
   (lambda (stk token) ;write production 1
-    (display "Production 1\r\n")
     (cond
     ((or (id? token) (string=? token "read") (string=? token "write") (string=? token "$$")) (push "stmt_list" (cdr stk)))
      (else "Syntax Error: program"))))
@@ -121,6 +120,8 @@
        ((or (id? token) (string=? token "read") (string=? token "write")) (push "stmt" stk))
        ((string=? token "$$") (cdr stk)) ;production 3
        (else "Syntax error: stmt_list"))))
+
+
 ;4-6
 (define stmt
   (lambda (stk token)
@@ -133,9 +134,6 @@
 ;7
 (define expr
   (lambda (stk token)
-         (display stk)
-     (newline)
-     (display token)
     (cond
       ((or (id? token) (string=? token "(") (integer? (string->number token))) (push "term" (push "term_tail" (cdr stk))))
       (else "Syntax error: expr"))))
@@ -191,9 +189,13 @@
 ;Parse
 ;Main Function
 (define parse
-  (lambda (lst)
-    (let ((p_stack (list "program" "$$")) (infile lst))
-      (table p_stack infile))))
+  (lambda (p_stack input)
+    (let ((stack_head (car p_stack)) (input_head (car input)))
+      (cond
+        ((or (and (string=? stack_head "id") (id? input_head)) (string=? stack_head input_head))
+         (display " ")
+         (display input_head)
+         (parse (cdr p_stack) (cdr input)))
+        (else(parse (table p_stack input_head) input))))))
         
-
-(parse input)
+(parse (list "program" "$$") input)
