@@ -45,7 +45,8 @@
 (define input (string-split (list->string reader)))
 
 ;================================================================================
-;Push, Pop, and letter? functions
+;Helper functions
+
 ;Push
 ;Syntax: val, stack
 ;Stack is a list, val is an int
@@ -56,12 +57,14 @@
           ((null? val) "Error: Null Value"))
         (append (list val) stack)))
 
+;empty?
 ;Syntax: Stack
 (define (empty? stack)
   (or (null? stack) (eqv? (car stack) "$$") (eqv? (length stack) 0)))
 
+;id?
 ;Syntax: input
-(define (letter? val)
+(define (id? val)
   (if (= 1 (string-length val))
       (begin
         (let ((char_val (car (string->list val))))
@@ -69,18 +72,32 @@
                   #t
                   #f)))
       #f))
-
+;valid?
+;Head of the parse stack
+(define valid?
+  (lambda (x)
+    (cond
+      ((string=? x "id") #t)
+      ((string=? x "read") #t)
+      ((string=? x "write") #t)
+      ((string=? x "(") #t)
+      ((string=? x ")") #t)
+      ((string=? x "*") #t)
+      ((string=? x "+") #t)
+      ((string=? x "/") #t)
+      ((string=? x ":=") #t)
+      (else #f))))
 
 ;================================================================================
 ;Parse Table Functions
 ;Make a first and follow function
 (define table
   (lambda (p_stack infile)
-    (let ((head (car p_stack)))
+    (let ((head (car p_stack)) (token (car infile)))
       (cond
-        ((string=? head "program") (program p_stack))
-        ((string=? head "stmt_list") (stmt_list p_stack))
-        ((string=? head "stmt") "stmt")
+        ((string=? head "program") (program p_stack token))
+        ((string=? head "stmt_list") (stmt_list p_stack token))
+        ((string=? head "stmt") (stmt p_stack token))
         ((string=? head "expr") "expr")
         ((string=? head "term_tail") "term_tail")
         ((string=? head "term") "term")
@@ -91,57 +108,84 @@
 
 ;1
 (define program
-  (lambda (stk) ;write production 1
-    (push "stmt_list" (cdr stk))))
+  (lambda (stk token) ;write production 1
+    (display "Production 1\r\n")
+    (cond
+    ((or (id? token) (string=? token "read") (string=? token "write") (string=? token "$$")) (push "stmt_list" (cdr stk)))
+     (else "Syntax Error: program"))))
     
 ;2
 (define stmt_list
-  (lambda (stk) ;write production 2
-    (let ((top-of-stk (car stk)))
-    (if (string=? top-of-stk "$$")
-        "Error"
-        (begin
-          (push "stmt" stk))))))
-;4
-(define stmt_id
-  (lambda (x)
+  (lambda (stk token) ;write production 2
+     (cond
+       ((or (id? token) (string=? token "read") (string=? token "write")) (push "stmt" stk))
+       ((string=? token "$$") (cdr stk)) ;production 3
+       (else "Syntax error: stmt_list"))))
+;4-6
+(define stmt
+  (lambda (stk token)
     (cond
-      ((
+      ((id? token) (push "id" (push ":=" (push "expr" (cdr stk))))) ;production 4
+      ((string=? token "read") (push "read" (push "id" (cdr stk)))) ;production 5 
+      ((string=? token "write") (push "write" (push "expr" (cdr stk)))) ;production 6
+      (else "Syntax Error: stmt"))))
 
 ;7
 (define expr
-  (lambda (stk)
-    (display stk)))
+  (lambda (stk token)
+         (display stk)
+     (newline)
+     (display token)
+    (cond
+      ((or (id? token) (string=? token "(") (integer? (string->number token))) (push "term" (push "term_tail" (cdr stk))))
+      (else "Syntax error: expr"))))
 
 ;8 and 9
 (define term_tail
-  (lambda (stk)
-    (display stk)))
+  (lambda (stk token)
+    (cond
+      ((or (string=? token "+") (string=? token "-")) (push "add_op" stk)) ;production 8
+      ((or (id? token) (string=? token "read") (string=? token "write") (string=? token ")")) (cdr stk)); production 9
+      (else "Syntax Error: term_tail"))))
 
 ;10
 (define term
-  (lambda (stk)
-    (display stk)))
+  (lambda (stk token)
+    (cond
+      ((or (id? token) (string=? token "(") (integer? (string->number token))) (push "factor" (push "factor_tail" stk)))
+      (else "Syntax error: term"))))
 
 ;11 and 12
 (define factor_tail
-  (lambda (stk)
-    (display stk)))
+  (lambda (stk token)
+    (cond
+    ((or (id? token) (string=? token "read") (string=? token "write") (string=? token ")") (string=? token "+") (string=? token "-") (string=? token "$$")) (cdr stk));production 11
+    ((or (string=? token "*") (string=? token "/")) (push "mult_op" stk));production 12
+    (else "Syntax Error: factor_tail"))))
 
 ;13 14 and 15
 (define factor
-  (lambda (stk)
-    (display stk)))
+  (lambda (stk token)
+    (cond
+      ((string=? token "(") (push "(" (push "expr" (push ")")))) ;production 13
+      ((id? token) (push "id" stk)) ;production 14
+      ((integer? (string->number token)) (push "number" stk))))) ;production 15
 
 ;16 and 17
 (define add_op
-  (lambda (stk)
-    (display stk)))
+  (lambda (stk token)
+    (cond
+      ((string=? token "+") (push "+" stk)) ;production 16
+      ((string=? token "-") (push "-" stk)) ;production 17
+      (else "Syntax error: add_op"))))
 
 ;18 and 19
 (define mult_op
-  (lambda (stk)
-    (display stk)))
+  (lambda (stk token)
+    (cond
+      ((string=? token "*") (push "*" stk)) ;production 18
+      ((string=? token "/") (push "/" stk)) ;production 19
+      (else "Syntax error: mult_op"))))
 
 ;================================================================================
 ;Parse
@@ -149,6 +193,7 @@
 (define parse
   (lambda (lst)
     (let ((p_stack (list "program" "$$")) (infile lst))
-      (
+      (table p_stack infile))))
+        
 
 (parse input)
