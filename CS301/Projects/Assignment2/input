@@ -1,6 +1,5 @@
 read A
 read B
 C := A + B
-write C
-write C / 2
+D := C / 2
 $$

@@ -158,14 +158,14 @@
   (lambda (stk token)
     (cond
     ((or (id? token) (string=? token "read") (string=? token "write") (string=? token ")") (string=? token "+") (string=? token "-") (string=? token "$$")) (cdr stk));production 11
-    ((or (string=? token "*") (string=? token "/")) (push "mult_op" (push "factor" (cdr stk))));production 12
+    ((or (string=? token "*") (string=? token "/")) (push "mult_op" (push "factor" (push "factor_tail" (cdr stk)))));production 12
     (else "Syntax Error: factor_tail"))))
 
 ;13 14 and 15
 (define factor
   (lambda (stk token)
     (cond
-      ((string=? token "(") (push "(" (push "expr" (push ")")))) ;production 13
+      ((string=? token "(") (push "(" (push "expr" (push ")" (cdr stk))))) ;production 13
       ((id? token) (push "id" (cdr stk))) ;production 14
       ((integer? (string->number token)) (push token (cdr stk)))))) ;production 15
 
@@ -192,6 +192,7 @@
   (lambda (p_stack input)
     (let ((stack_head (car p_stack)) (input_head (car input)))
       (cond
+        ((string=? input_head "") (parse p_stack (cdr input)))
         ((or (and (string=? stack_head "id") (id? input_head)) (string=? stack_head input_head))
          (if (and (string=? stack_head "$$") (string=? input_head "$$"))
              (begin
