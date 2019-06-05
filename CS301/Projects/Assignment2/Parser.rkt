@@ -1,4 +1,5 @@
 ;Write program that just writes p_stack to file
+;Notes: Check out Splitter and make sure everything makes sense.
 
 ;================================================================================
 ;Opening 3 file ports
@@ -33,8 +34,8 @@
          (let ((head (car lst)))
            (cond
              ((or (char=? head #\space) (char=? head #\newline)) (cons (reverse t) (iter '() (cdr lst))))
-             ((and (not (eq? '() t)) (char=? head #\))) (cons t (iter (list #\)) (cdr lst))))
-             ((or (char=? head #\() (char=? head #\))) (cons (list head) (iter '() (cdr lst))))
+             ((char=? head #\() (cons (list head) (iter '() (cdr lst))))
+             ((and (not (eq? '() t)) (char=? head #\))) (cons (reverse t) (iter (list #\)) (cdr lst))))
              (else (iter (cons (car lst) t) (cdr lst))))))
         (else (list (reverse t)))))))
 
@@ -51,18 +52,13 @@
 
 ;Push
 ;Syntax: val, stack
-;Stack is a list, val is an int
+;Stack is a list, val is not a list
 (define (push val stack)
     (if (or (null? stack) (null? val))
         (cond
           ((null? stack) "Error:  Null Stack")
           ((null? val) "Error: Null Value"))
         (append (list val) stack)))
-
-;empty?
-;Syntax: Stack
-(define (empty? stack)
-  (or (null? stack) (eqv? (car stack) "$$") (eqv? (length stack) 0)))
 
 ;id?
 ;Syntax: input
@@ -74,22 +70,6 @@
                   #t
                   #f)))
       #f))
-;valid?
-;Head of the parse stack
-(define valid?
-  (lambda (x)
-    (cond
-      ((string=? x "id") #t)
-      ((string=? x "read") #t)
-      ((string=? x "write") #t)
-      ((string=? x "(") #t)
-      ((string=? x ")") #t)
-      ((string=? x "*") #t)
-      ((string=? x "+") #t)
-      ((string=? x "/") #t)
-      ((string=? x ":=") #t)
-      (else #f))))
-
 ;================================================================================
 ;Parse Table Functions
 ;Make a first and follow function
@@ -194,7 +174,7 @@
   (lambda (p_stack input)
     (let ((stack_head (car p_stack)) (input_head (car input)))
       (cond
-        ((string=? input_head "") (parse p_stack (cdr input)))
+        ;((eq? 0 (string-length input_head)) (parse p_stack (cdr input)))
         ((or (and (string=? stack_head "id") (id? input_head)) (string=? stack_head input_head))
          (if (and (string=? stack_head "$$") (string=? input_head "$$"))
              (begin
