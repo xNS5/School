@@ -23,6 +23,8 @@
 ;If str is a pair, then it grabs the car of the str list and assigns it the variable head.
 ;If the character 'head' is a #\space or a #\newline character, it recursively calls 'loop' with the cdr of str
 ;along with an empty symbol for 't'.
+;It treats the #\( character similar to a #\space or #\newline character. If it detects either '(' or ')' then
+;it loops again and creates a separate entry in a list. 
 (define splitter
   (lambda (str)
     (let iter ((t '()) (lst str))
