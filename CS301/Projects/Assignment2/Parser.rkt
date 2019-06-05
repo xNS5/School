@@ -167,7 +167,7 @@
     (cond
       ((string=? token "(") (push "(" (push "expr" (push ")")))) ;production 13
       ((id? token) (push "id" (cdr stk))) ;production 14
-      ((integer? (string->number token)) (push token stk))))) ;production 15
+      ((integer? (string->number token)) (push token (cdr stk)))))) ;production 15
 
 ;16 and 17
 (define add_op
@@ -193,9 +193,14 @@
     (let ((stack_head (car p_stack)) (input_head (car input)))
       (cond
         ((or (and (string=? stack_head "id") (id? input_head)) (string=? stack_head input_head))
-         (display " ")
-         (display input_head)
-         (parse (cdr p_stack) (cdr input)))
+         (if (and (string=? stack_head "$$") (string=? input_head "$$"))
+             (begin
+               (display " ")
+               (display input_head))
+             (begin
+               (display " ")
+               (display input_head)
+               (parse (cdr p_stack) (cdr input)))))
         (else(parse (table p_stack input_head) input))))))
         
 (parse (list "program" "$$") input)
