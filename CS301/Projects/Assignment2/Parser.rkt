@@ -3,9 +3,9 @@
 
 ;================================================================================
 ;Opening 3 file ports
-(define parse-file (open-output-file  #:exists 'append "parsestack"))
-(define inputstream-file (open-output-file #:exists 'append "inputstream"))
-(define comment-file (open-output-file #:exists 'append "comment"))
+(define parse-file (open-output-file #:mode 'text #:exists 'replace "parsestack"))
+(define inputstream-file (open-output-file #:mode 'text #:exists 'replace "inputstream"))
+(define comment-file (open-output-file #:mode 'text #:exists 'replace  "comment"))
 
 (display "intial stack contents\r\n" comment-file)
 
@@ -17,6 +17,8 @@
       (cond
         ((eof-object? x) (close-input-port n) '())
         (else (cons x (z (read-char n))))))))
+
+
 
 ;================================================================================
 ;Splitter
@@ -92,13 +94,36 @@
 (define (print-input inp)
   (display (string-append inp "\r\n") inputstream-file))
 
+;Passes the stack and the current token to the
+(define print-all
+  (lambda (stk inpt val)
+  (print-stack stk)
+  (print-input inpt)
+  (print-predict val)))
+
+;Prints out the "swap _" string to text file
+;Syntax: input, can be any type, I guess?
+(define swap
+  (lambda (x)
+    (cond
+      ((id? x) "id")
+      ((integer? (string->number x)) "number")
+      (else x))))
+
+;Closes the output ports
+;Syntax: none
+(define (close-ports)
+  (close-output-port parse-file)
+  (close-output-port inputstream-file)
+  (close-output-port comment-file))
+
 ;Error handler
 ;Syntax: parse stack and the current head token
 (define (error-handler p_stack token)
   (print-stack p_stack)
-  (display token inputstream-file)
-  (display (string-append "syntax error: " (car p_stack)) parse-file))
-  
+  (print-input token)
+  (display (string-append "syntax error\r\n") comment-file)
+  (close-ports))
 
 ;================================================================================
 ;Parse Table Functions
@@ -124,9 +149,8 @@
     (cond
     ((or (id? token) (string=? token "read") (string=? token "write") (string=? token "$$"))
      (begin
-       (print-stack stk)
-       (print-predict "1") ;write production 1
-     (push "stmt_list" (cdr stk))))
+       (print-all stk token "1") ;write production 1
+       (push "stmt_list" (cdr stk))))
      (else (push "error" stk)))))
     
 ;2
@@ -135,35 +159,29 @@
      (cond
        ((or (id? token) (string=? token "read") (string=? token "write"))
         (begin
-        (print-stack stk)
-        (print-predict "2") ;production 2
+        (print-all stk token "2") ;production 2
         (push "stmt" stk)))
        ((string=? token "$$")
         (begin
-        (print-stack stk)
-        (print-predict "3") ;production 3
+        (print-all stk token "3") ;production 3
         (cdr stk)))
        (else (push "error" stk)))))
-
-
+  
 ;4-6
 (define stmt
   (lambda (stk token)
     (cond
       ((id? token)
        (begin
-         (print-stack stk)
-         (print-predict "4") ;production 4
+         (print-all stk token "4") ;production 4
          (push "id" (push ":=" (push "expr" (cdr stk)))))) 
       ((string=? token "read")
        (begin
-         (print-stack stk)
-         (print-predict "5") ;production 5 
+         (print-all stk token "5") ;production 5 
          (push "read" (push "id" (cdr stk)))))
       ((string=? token "write")
        (begin
-         (print-stack stk)
-         (print-predict "6") ;production 6
+         (print-all stk token "6") ;production 6
          (push "write" (push "expr" (cdr stk)))))
       (else (push "error" stk)))))
        
@@ -173,26 +191,22 @@
     (cond
       ((or (id? token) (string=? token "(") (integer? (string->number token)))
        (begin
-         (print-stack stk)
-         (print-predict "7")
+         (print-all stk token "7")
          (push "term" (push "term_tail" (cdr stk)))))
       (else (push "error" stk)))))
 
-;Issue in 8
 ;8 and 9
 (define term_tail
   (lambda (stk token)
     (cond
       ((or (string=? token "+") (string=? token "-"))
        (begin
-         (print-stack stk)
-         (print-predict "8") ;production 8
+         (print-all stk token "8") ;production 8 
          (push "add_op" (push "term" stk))))
       ((or (string=? token "$$") (id? token) (string=? token "read") (string=? token "write") (string=? token ")"))
        (begin
-         (print-stack stk)
-         (print-predict "9")
-         (cdr stk))); production 9
+         (print-all stk token "9") ;production 9
+         (cdr stk)))
       (else (push "error" stk)))))
 
 ;10
@@ -201,8 +215,7 @@
     (cond
       ((or (id? token) (string=? token "(") (integer? (string->number token)))
        (begin
-         (print-stack stk)
-         (print-predict "10") ;production 10
+         (print-all stk token "10") ;production 10
          (push "factor" (push "factor_tail" (cdr stk)))))
       (else (push "error" stk)))))
 
@@ -212,14 +225,12 @@
     (cond
     ((or (string=? token "*") (string=? token "/"))
      (begin
-       (print-stack stk)
-       (print-predict "11") ;production 11
+       (print-all stk token "11") ;production 11
        (push "mult_op" (push "factor" (push "factor_tail" (cdr stk))))))
     ((or (string=? token "$$")(id? token) (string=? token "read") (string=? token "write") (string=? token ")") (string=? token "+") (string=? token "-"))
       (begin
-       (print-stack stk)
-       (print-predict "12")
-       (cdr stk)));production 12
+       (print-all stk token "12") ;production 12
+       (cdr stk)))
     (else (push "error" stk)))))
 
 ;13 14 and 15
@@ -228,19 +239,16 @@
     (cond
       ((string=? token "(")
        (begin
-       (print-stack stk)
-       (print-predict "13") ;production 13
+       (print-all stk token "13") ;production 13
        (push "(" (push "expr" (push ")" (cdr stk))))))
       ((id? token)
        (begin
-         (print-stack stk)
-         (print-predict "14") ;production 14
+         (print-all stk token "14") ;production 14
          (push "id" (cdr stk))))
       ((integer? (string->number token))
        (begin
-         (print-stack stk)
-         (print-predict "15")  ;production 15
-         (push token (cdr stk))))
+         (print-all stk token "15")  ;production 15
+         (push "number" (cdr stk))))
       (else (push "error" stk)))))
 
 ;16 and 17
@@ -249,13 +257,11 @@
     (cond
       ((string=? token "+")
        (begin
-         (print-stack stk)
-         (print-predict "16") ;production 16
+         (print-all stk token "16") ;production 16
          (push "+" (cdr stk)))) 
       ((string=? token "-")
        (begin
-         (print-stack stk)
-         (print-predict "17") ;production 17
+         (print-all stk token "17") ;production 17
          (push "-" (cdr stk)))) 
       (else (push "error" stk)))))
 
@@ -265,13 +271,11 @@
     (cond
       ((string=? token "*")
        (begin
-         (print-stack stk)
-         (print-predict "18") ;production 18
+         (print-all stk token "18") ;production 18
          (push "*" (cdr stk)))) 
       ((string=? token "/")
        (begin
-         (print-stack stk)
-         (print-predict "19") ;production 19
+         (print-all stk token "19") ;production 19
          (push "/" (cdr stk))))
       (else (push "error" stk)))))
 
@@ -280,21 +284,21 @@
 ;Main Function
 (define parse
   (lambda (p_stack input)
-    (let ((stack_head (car p_stack)) (input_head (car input)))
+    (let ((stack_head (car p_stack)) (input_head (car input))) ;Defining the tops of the two stacks. 
       (cond
-        ((string=? stack_head "error") (error-handler p_stack input_head))
-        ((or (and (string=? stack_head "id") (id? input_head)) (string=? stack_head input_head))
-              (if (and (string=? stack_head "$$") (string=? input_head "$$"))
-                  (begin
-                    (print-stack p_stack)
-                    (display " ")
-                    (display input_head)) ;Close input ports here. 
-                   (begin
-                     (print-stack p_stack)
-                     (display input_head)
-                     (display " ")
-                     (display (string-append (string-append "match " input_head) "\r\n") comment-file)
-                     (parse (cdr p_stack) (cdr input)))))
+        ((or (string=? stack_head "error") (string=? stack_head "parse error")) (error-handler (cdr p_stack) input_head)) ;If there is an error of some sort, "error" or "parse error" will be
+        ;pushed to the parse stack
+        ((and (string=? stack_head "$$") (string=? input_head "$$")) ;Checks to see if both stacks are empty. 
+         (begin
+           (print-stack p_stack)
+           (print-input input_head)
+           (close-ports))) ;close-ports is a function that does just ah
+        ((or (and (string=? stack_head "id") (id? input_head)) (and (string=? stack_head "number") (integer? (string->number input_head))) (string=? stack_head input_head))
+          (begin
+            (print-stack p_stack)
+            (print-input input_head)
+            (display (string-append (string-append "match " (swap input_head)) "\r\n") comment-file)
+            (parse (cdr p_stack) (cdr input))))
         (else(parse (table p_stack input_head) input))))))
         
 (parse (list "program" "$$") input)
