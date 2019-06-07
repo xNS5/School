@@ -1,4 +1,3 @@
-read A
-read B
-write ( A - ( B / 2 ) )
+C := ( A + B ) * D / ( E + Butts )
+write C
 $$
