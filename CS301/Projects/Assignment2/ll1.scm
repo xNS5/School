@@ -20,7 +20,7 @@
 ;Using "read" didn't preserve the case of the letters, but making it into a char list did. 
 (define reader
   (let ((port (open-input-file #:mode 'text "input")))
-  (let iter ((val (read-char port)))
+    (let iter ((val (read-char port)))
       (cond
         ((eof-object? val) (close-input-port port) '())
         (else (cons val (iter (read-char port))))))))
@@ -36,9 +36,9 @@
     (let iter ((lst str) (concat '()))
       (cond
         ((not (pair? lst))
-          (list (reverse concat)))
-         (else
-          (let ((head (car lst)))
+         (list (reverse concat)))
+        (else
+         (let ((head (car lst)))
            (cond
              ((or (char=? head #\space) (char=? head #\newline)) (cons (reverse concat) (iter (cdr lst) '())))
              (else (iter (cdr lst) (cons (car lst) concat))))))))))
@@ -56,18 +56,18 @@
 ;Syntax: string, list
 ;Pushes a value to the top of the parse stack. 
 (define (push val stack)
-    (if (or (null? stack) (null? val))
-        (error-handler stack val)
-        (append (list val) stack)))
+  (if (or (null? stack) (null? val))
+      (error-handler stack val)
+      (append (list val) stack)))
 
 ;id?
 ;Syntax: string
 ;Checks to see if a letter is a valid Id. Otherwise returns false.
 (define (id? val)
-     (if (= 1 (string-length val))
-        (let ((char_val (car (string->list val))))
-              (if (and (char? char_val) (char-upper-case? char_val) (char-alphabetic? char_val)) #t #f))
-        #f))
+  (if (= 1 (string-length val))
+      (let ((char_val (car (string->list val))))
+        (if (and (char? char_val) (char-upper-case? char_val) (char-alphabetic? char_val)) #t #f))
+      #f))
 
 ;Print-stack
 ;Syntax: list
@@ -85,7 +85,7 @@
 ;Syntax: number
 ;Prints the production number to the 'comment' file.
 (define (print-predict inp)
-    (display (string-append (string-append "predict " inp) "\r\n") comment-file))
+  (display (string-append (string-append "predict " inp) "\r\n") comment-file))
 
 ;Print-input
 ;Syntax: string (top of the input file)
@@ -158,36 +158,36 @@
 (define program
   (lambda (stk token) 
     (cond
-    ((or (id? token) (string=? token "read") (string=? token "write") (string=? token "$$"))
+      ((or (id? token) (string=? token "read") (string=? token "write") (string=? token "$$"))
        (print-all stk token "1") ;write production 1
        (push "stmt_list" (cdr stk)))
-     (else (push "error" stk)))))
+      (else (push "error" stk)))))
     
 ;2-3
 (define stmt_list
   (lambda (stk token)
-     (cond
-       ((or (id? token) (string=? token "read") (string=? token "write"))
-        (print-all stk token "2") ;production 2
-        (push "stmt" (push "stmt_list" (cdr stk))))
-       ((string=? token "$$")
-        (print-all stk token "3") ;production 3
-        (cdr stk))
-       (else (push "error" stk)))))
+    (cond
+      ((or (id? token) (string=? token "read") (string=? token "write"))
+       (print-all stk token "2") ;production 2
+       (push "stmt" (push "stmt_list" (cdr stk))))
+      ((string=? token "$$")
+       (print-all stk token "3") ;production 3
+       (cdr stk))
+      (else (push "error" stk)))))
   
 ;4-6
 (define stmt
   (lambda (stk token)
     (cond
       ((id? token)
-         (print-all stk token "4") ;production 4
-         (push "id" (push ":=" (push "expr" (cdr stk)))))
+       (print-all stk token "4") ;production 4
+       (push "id" (push ":=" (push "expr" (cdr stk)))))
       ((string=? token "read")
-         (print-all stk token "5") ;production 5 
-         (push "read" (push "id" (cdr stk))))
+       (print-all stk token "5") ;production 5 
+       (push "read" (push "id" (cdr stk))))
       ((string=? token "write")
-         (print-all stk token "6") ;production 6
-         (push "write" (push "expr" (cdr stk))))
+       (print-all stk token "6") ;production 6
+       (push "write" (push "expr" (cdr stk))))
       (else (push "error" stk)))))
        
 ;7
@@ -205,11 +205,11 @@
   (lambda (stk token)
     (cond
       ((or (string=? token "+") (string=? token "-"))
-         (print-all stk token "8") ;production 8 
-         (push "add_op" (push "term" (push "term_tail" (cdr stk)))))
+       (print-all stk token "8") ;production 8 
+       (push "add_op" (push "term" (push "term_tail" (cdr stk)))))
       ((or (string=? token "$$") (id? token) (string=? token "read") (string=? token "write") (string=? token ")"))
-         (print-all stk token "9") ;production 9
-         (cdr stk))
+       (print-all stk token "9") ;production 9
+       (cdr stk))
       (else (push "error" stk)))))
 
 ;10
@@ -217,8 +217,8 @@
   (lambda (stk token)
     (cond
       ((or (id? token) (string=? token "(") (integer? (string->number token)))
-         (print-all stk token "10") ;production 10
-         (push "factor" (push "factor_tail" (cdr stk))))
+       (print-all stk token "10") ;production 10
+       (push "factor" (push "factor_tail" (cdr stk))))
       (else (push "error" stk)))))
 
 ;11 and 12
@@ -226,11 +226,11 @@
   (lambda (stk token)
     (cond
     ((or (string=? token "*") (string=? token "/"))
-       (print-all stk token "11") ;production 11
-       (push "mult_op" (push "factor" (push "factor_tail" (cdr stk)))))
+     (print-all stk token "11") ;production 11
+     (push "mult_op" (push "factor" (push "factor_tail" (cdr stk)))))
     ((or (string=? token "$$") (id? token) (string=? token "read") (string=? token "write") (string=? token ")") (string=? token "+") (string=? token "-"))
-       (print-all stk token "12") ;production 12
-       (cdr stk))
+     (print-all stk token "12") ;production 12
+     (cdr stk))
     (else (push "error" stk)))))
 
 ;13 14 and 15
@@ -241,11 +241,11 @@
        (print-all stk token "13") ;production 13
        (push "(" (push "expr" (push ")" (cdr stk)))))
       ((id? token)
-         (print-all stk token "14") ;production 14
-         (push "id" (cdr stk)))
+       (print-all stk token "14") ;production 14
+       (push "id" (cdr stk)))
       ((integer? (string->number token))
-         (print-all stk token "15") ;production 15
-         (push "number" (cdr stk)))
+       (print-all stk token "15") ;production 15
+       (push "number" (cdr stk)))
       (else (push "error" stk)))))
 
 ;16 and 17
@@ -253,11 +253,11 @@
   (lambda (stk token)
     (cond
       ((string=? token "+")
-         (print-all stk token "16") ;production 16
-         (push "+" (cdr stk))) 
+       (print-all stk token "16") ;production 16
+       (push "+" (cdr stk))) 
       ((string=? token "-")
-         (print-all stk token "17") ;production 17
-         (push "-" (cdr stk)))
+       (print-all stk token "17") ;production 17
+       (push "-" (cdr stk)))
       (else (push "error" stk)))))
 
 ;18 and 19
@@ -265,11 +265,11 @@
   (lambda (stk token)
     (cond
       ((string=? token "*")
-         (print-all stk token "18") ;production 18
-         (push "*" (cdr stk)))
+       (print-all stk token "18") ;production 18
+       (push "*" (cdr stk)))
       ((string=? token "/")
-         (print-all stk token "19") ;production 19
-         (push "/" (cdr stk)))
+       (print-all stk token "19") ;production 19
+       (push "/" (cdr stk)))
       (else (push "error" stk)))))
 
 ;================================================================================
@@ -283,17 +283,17 @@
 ;If there is no indication of an error, the program evaluates the input
 (define parse
   (lambda (p_stack input)
-     (let ((stack_head (car p_stack)) (input_head (car input))) ;Defining the tops of the two stacks. 
-       (cond
-         ((string=? stack_head "error") (error-handler (cdr p_stack) input_head)) ;Checks to see if the top of the parse stack is "error" meaning there was an error somewhere. 
-         ((or (and (string=? stack_head "id") (id? input_head)) (and (string=? stack_head "number") (integer? (string->number input_head))) (string=? stack_head input_head))
-          (print-stack p_stack)
-          (print-input input_head)
-          (if (and (string=? stack_head "$$") (string=? input_head "$$")) ;Checks to see if both stacks are empty.
-               (close-ports)
-               (begin
-                 (display (string-append (string-append "match " (swap input_head)) "\r\n") comment-file) ;calls 'swap', returns 'id' or 'number' if passed an id or a number, otherwise returns input_head
-                 (parse (cdr p_stack) (cdr input)))))
-         (else (parse (table p_stack input_head) input))))))
+    (let ((stack_head (car p_stack)) (input_head (car input))) ;Defining the tops of the two stacks. 
+      (cond
+        ((string=? stack_head "error") (error-handler (cdr p_stack) input_head)) ;Checks to see if the top of the parse stack is "error" meaning there was an error somewhere. 
+        ((or (and (string=? stack_head "id") (id? input_head)) (and (string=? stack_head "number") (integer? (string->number input_head))) (string=? stack_head input_head))
+         (print-stack p_stack)
+         (print-input input_head)
+         (if (and (string=? stack_head "$$") (string=? input_head "$$")) ;Checks to see if both stacks are empty.
+             (close-ports)
+             (begin
+               (display (string-append (string-append "match " (swap input_head)) "\r\n") comment-file) ;calls 'swap', returns 'id' or 'number' if passed an id or a number, otherwise returns input_head
+               (parse (cdr p_stack) (cdr input)))))
+        (else (parse (table p_stack input_head) input))))))
 
 (parse (list "program" "$$") input)
