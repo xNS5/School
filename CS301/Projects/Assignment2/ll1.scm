@@ -188,7 +188,7 @@
        (push (list "read" "id") (cdr stk)))
       ((string=? token "write")
        (print-all stk token "6") ;production 6
-       (push (list "write" "expr") (cdr stk))))
+       (push (list "write" "expr") (cdr stk)))
       (else (push "error" stk)))))
        
 ;7
