@@ -1,5 +1,4 @@
 read A
 read B
-C := A + B
-D := C / 2
+write ( A - ( B / 2 ) )
 $$
