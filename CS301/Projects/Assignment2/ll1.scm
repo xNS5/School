@@ -6,42 +6,6 @@
 ;Notes: numbers instead of non-terminals
 
 ;================================================================================
-;Defining non-terminals
-;================================================================================
-(define (prod-lookup inpt)
-  (cond
-    ((= inpt 1) 'program)
-    ((<= 2 inpt 3) 'stmt_list)
-    ((<= 4 inpt 6) 'stmt)
-    ((= inpt 7) 'expr)
-    ((<= 8 inpt 9) 'term_tail)
-    ((= inpt 10) 'term)
-    ((<= 11 inpt 12) 'factor_tail)
-    ((<= 13 inpt 15) 'factor)
-    ((<= 16 inpt 17) 'add_op)
-    ((<= 18 inpt 19) 'mult_op)
-    (else 99)))
-
-(define ('program) 1)
-(define ('stmt_list x) (if(= x 3) 3 2))
-
-(define (token-lookup inpt)
-  (cond
-    ((id? inpt) 20)
-    ((num? inpt) 21)
-    ((string=? inpt "read") 22)
-    ((string=? inpt "write") 23)
-    ((string=? inpt ":=") 24)
-    ((string=? inpt "(") 25)
-    ((string=? inpt ")") 26)
-    ((string=? inpt "+") 27)
-    ((string=? inpt "-") 28)
-    ((string=? inpt "*") 29)
-    ((string=? inpt "/") 30)
-    ((string=? inpt "$$") 31)
-    (else 99)))
-
-;================================================================================
 ;File operations
 ;================================================================================
 ;Opening 3 file ports
@@ -81,20 +45,8 @@
 
 ;Driver function for stitcher
 ;Sytax: input from 'reader' function
-;Takes the output from 'reader' which spits out a char list of characters from the input text file
-(define input (map list->string (stitcher reader)))
-
-;input-vals
-;Returns a list of numbers representing the text input
-(define input-vals
-  (lambda (input)
-    (let iter ((lst input))
-      (let ((head (car lst)))
-        (if (null? head)
-            '()
-            (cons (token-lookup head) (iter (cdr lst))))))))
-
-(input-vals (list "read" "write" "taco"))
+;Takes the output from 'reader, pipes it to stitcher, and converts the completed list to a list of symbols
+(define input (map string->symbol (map list->string (stitcher reader))))
 
 ;================================================================================
 ;Helper functions
@@ -118,6 +70,8 @@
       (let ((char_val (car (string->list val))))
         (if (and (char? char_val) (char-upper-case? char_val) (char-alphabetic? char_val)) #t #f))
       #f))
+
+(id? 'A)
 
 ;Print-stack
 ;Syntax: list
@@ -183,6 +137,53 @@
    (print-input token)
    (display "syntax error\r\n" comment-file)
    (close-ports))
+
+;================================================================================
+;Defining non-terminals
+;================================================================================
+(define (prod-lookup inpt)
+  (cond
+    ((= inpt 1) "program")
+    ((<= 2 inpt 3) "stmt_list")
+    ((<= 4 inpt 6) "stmt")
+    ((= inpt 7) "expr")
+    ((<= 8 inpt 9) 'term_tail)
+    ((= inpt 10) 'term)
+    ((<= 11 inpt 12) 'factor_tail)
+    ((<= 13 inpt 15) 'factor)
+    ((<= 16 inpt 17) 'add_op)
+    ((<= 18 inpt 19) 'mult_op)
+    (else 99)))
+
+(define (token-lookup inpt)
+  (cond
+    ((id? inpt) 1)
+    ((num? inpt) 2)
+    ((string=? inpt "read") 3)
+    ((string=? inpt "write") 4)
+    ((string=? inpt ":=") 5)
+    ((string=? inpt "(") 6)
+    ((string=? inpt ")") 7)
+    ((string=? inpt "+") 8)
+    ((string=? inpt "-") 9)
+    ((string=? inpt "*") 10)
+    ((string=? inpt "/") 11)
+    ((string=? inpt "$$") 12)
+    (else 99)))
+
+
+(define ('id) 20)
+(define ('number) 21)
+(define ('read) 22)
+(define ('write) 23)
+(define (':=) 24)
+(define ('open_paren) 25)
+(define ('close_paren) 26)
+(define ('+) 27)
+(define ('-) 28)
+(define ('*) 29)
+(define ('/) 30)
+(define ('$$) 31)
       
 ;================================================================================
 ;Parse Table Functions
@@ -214,7 +215,7 @@
   (lambda (stk token) 
     (cond
       ((or (= token 1) (= token 3) (= token 4) (= token 13))
-       (print-all stk token ('program)) ;write production 1
+       (print-all stk token (prod-lookup 1)) ;write production 1
        (push ('stmt_list) (cdr stk)))
       (else (push 99 stk)))))
     
