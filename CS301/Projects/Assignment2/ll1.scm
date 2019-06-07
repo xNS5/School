@@ -75,12 +75,12 @@
 ;Syntax: list
 ;Prints the current parse stack to the parse file. 
 (define print-stack
-  (lambda (x)
-    (let ((st_head (car x)))
+  (lambda (stk)
+    (let ((st_head (car stk)))
       (if (not (string=? st_head "$$"))
           (begin
             (display (string-append st_head " ") parse-file)
-            (print-stack (cdr x)))
+            (print-stack (cdr stk)))
           (display (string-append st_head "\r\n") parse-file)))))
 
 ;Print-predict
@@ -98,21 +98,20 @@
 ;Print-all
 ;Syntax: list, list, int
 ;Driver function for print functions. Passes the stack, input token, and production number to their respective functions.
-(define print-all
-  (lambda (stk inpt val)
+(define (print-all stk inpt val)
   (print-stack stk)
   (print-input inpt)
-  (print-predict val)))
+  (print-predict val))
 
 ;Swap
 ;Syntax: string
 ;If the value of x is an id or an integer, this function returns "id" or "number" which gets pused to the parse stack.
 (define swap
-  (lambda (x)
+  (lambda (token)
     (cond
-      ((id? x) "id")
-      ((integer? (string->number x)) "number")
-      (else x))))
+      ((id? token) "id")
+      ((integer? (string->number token)) "number")
+      (else token))))
 
 ;Close-ports
 ;Syntax: none
