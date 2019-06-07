@@ -3,6 +3,23 @@
 ;Assignment 2
 ;This function parses an inputted text file and determines whether the input
 ;matches the LL1 grammar.
+;Notes: numbers instead of non-terminals
+
+;================================================================================
+;Defining non-terminals
+;================================================================================
+(define (prod-lookup num)
+  (cond
+    ((= num 1) "program")
+    ((or (= num 2) (= num 3)) "stmt_list")
+    ((<= 4 num 6) "stmt")
+    ((= num 7) "expr")
+    ((or (= num 8) (= num 9)) "term_tail")
+    ((= num 10) "term")
+    ((or (= num 11) (= num 12)) "factor_tail")
+    ((<= 13 num 15) "factor")
+    ((or (= num 16) (= num 17)) "add_op")
+    ((or (= num 18) (= num 19)) "mult_op")
 
 ;================================================================================
 ;File operations
@@ -133,144 +150,7 @@
 ;================================================================================
 ;Parse Table Functions
 ;================================================================================
-;Syntax: list, string
-;The table function looks up the current non-terminal and moves to its corresponding function.
-;If the current token is a valid production, it returns nonterminals pushed to the stack.
-;If it isn't a valid production, "error" is pushed to the stack and the program goes to error-handler and quits. 
-(define table
-  (lambda (p_stack token)
-    (let ((head (car p_stack)))
-      (cond
-        ((string=? head "program") (program p_stack token))
-        ((string=? head "stmt_list") (stmt_list p_stack token))
-        ((string=? head "stmt") (stmt p_stack token))
-        ((string=? head "expr") (expr p_stack token))
-        ((string=? head "term_tail") (term_tail p_stack token))
-        ((string=? head "term") (term p_stack token))
-        ((string=? head "factor_tail") (factor_tail p_stack token))
-        ((string=? head "factor") (factor p_stack token))
-        ((string=? head "add_op") (add_op p_stack token))
-        ((string=? head "mult_op") (mult_op p_stack token))
-        (else (push "error" p_stack))))))
 
-;Productions
-;1
-(define program
-  (lambda (stk token) 
-    (cond
-      ((or (id? token) (string=? token "read") (string=? token "write") (string=? token "$$"))
-       (print-all stk token "1") ;write production 1
-       (push "stmt_list" (cdr stk)))
-      (else (push "error" stk)))))
-    
-;2-3
-(define stmt_list
-  (lambda (stk token)
-    (cond
-      ((or (id? token) (string=? token "read") (string=? token "write"))
-       (print-all stk token "2") ;production 2
-       (push (list "stmt" "stmt_list") (cdr stk)))
-      ((string=? token "$$")
-       (print-all stk token "3") ;production 3
-       (cdr stk))
-      (else (push "error" stk)))))
-  
-;4-6
-(define stmt
-  (lambda (stk token)
-    (cond
-      ((id? token)
-       (print-all stk token "4") ;production 4
-       (push (list "id" ":=" "expr") (cdr stk)))
-      ((string=? token "read")
-       (print-all stk token "5") ;production 5 
-       (push (list "read" "id") (cdr stk)))
-      ((string=? token "write")
-       (print-all stk token "6") ;production 6
-       (push (list "write" "expr") (cdr stk)))
-      (else (push "error" stk)))))
-       
-;7
-(define expr
-  (lambda (stk token)
-    (cond
-      ((or (id? token) (string=? token "(") (integer? (string->number token)))
-       (begin
-         (print-all stk token "7") ;production 7
-         (push (list "term" "term_tail") (cdr stk))))
-      (else (push "error" stk)))))
-
-;8 and 9
-(define term_tail
-  (lambda (stk token)
-    (cond
-      ((or (string=? token "+") (string=? token "-"))
-       (print-all stk token "8") ;production 8 
-       (push (list "add_op" "term" "term_tail") (cdr stk)))
-      ((or (string=? token "$$") (id? token) (string=? token "read") (string=? token "write") (string=? token ")"))
-       (print-all stk token "9") ;production 9
-       (cdr stk))
-      (else (push "error" stk)))))
-
-;10
-(define term
-  (lambda (stk token)
-    (cond
-      ((or (id? token) (string=? token "(") (integer? (string->number token)))
-       (print-all stk token "10") ;production 10
-       (push (list "factor" "factor_tail") (cdr stk)))
-      (else (push "error" stk)))))
-
-;11 and 12
-(define factor_tail
-  (lambda (stk token)
-    (cond
-    ((or (string=? token "*") (string=? token "/"))
-     (print-all stk token "11") ;production 11
-     (push (list "mult_op" "factor" "factor_tail") (cdr stk)))
-    ((or (string=? token "$$") (id? token) (string=? token "read") (string=? token "write") (string=? token ")") (string=? token "+") (string=? token "-"))
-     (print-all stk token "12") ;production 12
-     (cdr stk))
-    (else (push "error" stk)))))
-
-;13 14 and 15
-(define factor
-  (lambda (stk token)
-    (cond
-      ((string=? token "(")
-       (print-all stk token "13") ;production 13
-       (push (list "(" "expr" ")") (cdr stk)))
-      ((id? token)
-       (print-all stk token "14") ;production 14
-       (push "id" (cdr stk)))
-      ((integer? (string->number token))
-       (print-all stk token "15") ;production 15
-       (push "number" (cdr stk)))
-      (else (push "error" stk)))))
-
-;16 and 17
-(define add_op
-  (lambda (stk token)
-    (cond
-      ((string=? token "+")
-       (print-all stk token "16") ;production 16
-       (push "+" (cdr stk))) 
-      ((string=? token "-")
-       (print-all stk token "17") ;production 17
-       (push "-" (cdr stk)))
-      (else (push "error" stk)))))
-
-;18 and 19
-(define mult_op
-  (lambda (stk token)
-    (cond
-      ((string=? token "*")
-       (print-all stk token "18") ;production 18
-       (push "*" (cdr stk)))
-      ((string=? token "/")
-       (print-all stk token "19") ;production 19
-       (push "/" (cdr stk)))
-      (else (push "error" stk)))))
 
 ;================================================================================
 ;Main Function
@@ -296,4 +176,4 @@
                (parse (cdr p_stack) (cdr input)))))
         (else (parse (table p_stack input_head) input))))))
 
-(parse (list "program" "$$") input)
+(parse (list (program) ($$)) input)
