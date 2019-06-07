@@ -8,18 +8,38 @@
 ;================================================================================
 ;Defining non-terminals
 ;================================================================================
-(define (prod-lookup num)
+(define (prod-lookup inpt)
   (cond
-    ((= num 1) "program")
-    ((or (= num 2) (= num 3)) "stmt_list")
-    ((<= 4 num 6) "stmt")
-    ((= num 7) "expr")
-    ((or (= num 8) (= num 9)) "term_tail")
-    ((= num 10) "term")
-    ((or (= num 11) (= num 12)) "factor_tail")
-    ((<= 13 num 15) "factor")
-    ((or (= num 16) (= num 17)) "add_op")
-    ((or (= num 18) (= num 19)) "mult_op")
+    ((= inpt 1) 'program)
+    ((<= 2 inpt 3) 'stmt_list)
+    ((<= 4 inpt 6) 'stmt)
+    ((= inpt 7) 'expr)
+    ((<= 8 inpt 9) 'term_tail)
+    ((= inpt 10) 'term)
+    ((<= 11 inpt 12) 'factor_tail)
+    ((<= 13 inpt 15) 'factor)
+    ((<= 16 inpt 17) 'add_op)
+    ((<= 18 inpt 19) 'mult_op)
+    (else 99)))
+
+(define ('program) 1)
+(define ('stmt_list x) (if(= x 3) 3 2))
+
+(define (token-lookup inpt)
+  (cond
+    ((id? inpt) 20)
+    ((num? inpt) 21)
+    ((string=? inpt "read") 22)
+    ((string=? inpt "write") 23)
+    ((string=? inpt ":=") 24)
+    ((string=? inpt "(") 25)
+    ((string=? inpt ")") 26)
+    ((string=? inpt "+") 27)
+    ((string=? inpt "-") 28)
+    ((string=? inpt "*") 29)
+    ((string=? inpt "/") 30)
+    ((string=? inpt "$$") 31)
+    (else 99)))
 
 ;================================================================================
 ;File operations
@@ -52,8 +72,7 @@
   (lambda (str)
     (let iter ((lst str) (concat '()))
       (cond
-        ((not (pair? lst))
-         (list (reverse concat)))
+        ((not (pair? lst)) (list (reverse concat)))
         (else
          (let ((head (car lst)))
            (cond
@@ -64,6 +83,18 @@
 ;Sytax: input from 'reader' function
 ;Takes the output from 'reader' which spits out a char list of characters from the input text file
 (define input (map list->string (stitcher reader)))
+
+;input-vals
+;Returns a list of numbers representing the text input
+(define input-vals
+  (lambda (input)
+    (let iter ((lst input))
+      (let ((head (car lst)))
+        (if (null? head)
+            '()
+            (cons (token-lookup head) (iter (cdr lst))))))))
+
+(input-vals (list "read" "write" "taco"))
 
 ;================================================================================
 ;Helper functions
@@ -94,7 +125,7 @@
 (define print-stack
   (lambda (stk)
     (let ((st_head (car stk)))
-      (if (not (string=? st_head "$$"))
+      (if (not (= st_head  ))
           (begin
             (display (string-append st_head " ") parse-file)
             (print-stack (cdr stk)))
@@ -115,7 +146,7 @@
 ;Print-all
 ;Syntax: list, list, int
 ;Driver function for print functions. Passes the stack, input token, and production number to their respective functions.
-(define (print-all stk inpt val)
+(define (print-all stk inpt  val)
   (print-stack stk)
   (print-input inpt)
   (print-predict val))
@@ -129,6 +160,12 @@
       ((id? token) "id")
       ((integer? (string->number token)) "number")
       (else token))))
+
+;num?
+;Syntax: string
+;Checks to see if a string can be converted to an integer
+(define (num? int)
+  (integer? (string->number int)))
 
 ;Close-ports
 ;Syntax: none
@@ -151,6 +188,144 @@
 ;Parse Table Functions
 ;================================================================================
 
+;Syntax: list, string
+;The table function looks up the current non-terminal and moves to its corresponding function.
+;If the current token is a valid production, it returns nonterminals pushed to the stack.
+;If it isn't a valid production, "error" is pushed to the stack and the program goes to error-handler and quits. 
+(define table
+  (lambda (p_stack token)
+    (let ((head (car p_stack)))
+      (cond
+        ((= head 1) (program p_stack token))
+        ((<= 2 head 3) (stmt_list p_stack token))
+        ((<= 4 head 6) (stmt p_stack token))
+        ((= head 7) (expr p_stack token))
+        ((<= 8 head 9) (term_tail p_stack token))
+        ((= head 10) (term p_stack token))
+        ((<= 11 head 12) (factor_tail p_stack token))
+        ((<= 13 head 15) (factor p_stack token))
+        ((<= 16 head 17) (add_op p_stack token))
+        ((<= 18 head 19) (mult_op p_stack token))
+        (else (push 99 p_stack))))))
+
+;Productions
+;1
+(define program
+  (lambda (stk token) 
+    (cond
+      ((or (= token 1) (= token 3) (= token 4) (= token 13))
+       (print-all stk token ('program)) ;write production 1
+       (push ('stmt_list) (cdr stk)))
+      (else (push 99 stk)))))
+    
+;2-3
+(define stmt_list
+  (lambda (stk token)
+    (cond
+      ((or (id? token) (string=? token "read") (string=? token "write"))
+       (print-all stk token "2") ;production 2
+       (push (list ('stmt) ('stmt_list)) (cdr stk)))
+      ((string=? token )
+       (print-all stk token 3) ;production 3
+       (cdr stk))
+      (else (push 99 stk)))))
+  
+;4-6
+(define stmt
+  (lambda (stk token)
+    (cond
+      ((id? token)
+       (print-all stk token "4") ;production 4
+       (push (list "id" ":=" "expr") (cdr stk)))
+      ((string=? token "read")
+       (print-all stk token "5") ;production 5 
+       (push (list "read" "id") (cdr stk)))
+      ((string=? token "write")
+       (print-all stk token "6") ;production 6
+       (push (list "write" "expr") (cdr stk)))
+      (else (push "error" stk)))))
+       
+;7
+(define expr
+  (lambda (stk token)
+    (cond
+      ((or (id? token) (string=? token "(") (integer? (string->number token)))
+       (begin
+         (print-all stk token "7") ;production 7
+         (push (list "term" "term_tail") (cdr stk))))
+      (else (push "error" stk)))))
+
+;8 and 9
+(define term_tail
+  (lambda (stk token)
+    (cond
+      ((or (string=? token "+") (string=? token "-"))
+       (print-all stk token "8") ;production 8 
+       (push (list "add_op" "term" "term_tail") (cdr stk)))
+      ((or (string=? token "$$") (id? token) (string=? token "read") (string=? token "write") (string=? token ")"))
+       (print-all stk token "9") ;production 9
+       (cdr stk))
+      (else (push "error" stk)))))
+
+;10
+(define term
+  (lambda (stk token)
+    (cond
+      ((or (id? token) (string=? token "(") (integer? (string->number token)))
+       (print-all stk token "10") ;production 10
+       (push (list "factor" "factor_tail") (cdr stk)))
+      (else (push "error" stk)))))
+
+;11 and 12
+(define factor_tail
+  (lambda (stk token)
+    (cond
+    ((or (string=? token "*") (string=? token "/"))
+     (print-all stk token "11") ;production 11
+     (push (list "mult_op" "factor" "factor_tail") (cdr stk)))
+    ((or (string=? token "$$") (id? token) (string=? token "read") (string=? token "write") (string=? token ")") (string=? token "+") (string=? token "-"))
+     (print-all stk token "12") ;production 12
+     (cdr stk))
+    (else (push "error" stk)))))
+
+;13 14 and 15
+(define factor
+  (lambda (stk token)
+    (cond
+      ((string=? token "(")
+       (print-all stk token "13") ;production 13
+       (push (list "(" "expr" ")") (cdr stk)))
+      ((id? token)
+       (print-all stk token "14") ;production 14
+       (push "id" (cdr stk)))
+      ((integer? (string->number token))
+       (print-all stk token "15") ;production 15
+       (push "number" (cdr stk)))
+      (else (push "error" stk)))))
+
+;16 and 17
+(define add_op
+  (lambda (stk token)
+    (cond
+      ((string=? token "+")
+       (print-all stk token "16") ;production 16
+       (push "+" (cdr stk))) 
+      ((string=? token "-")
+       (print-all stk token "17") ;production 17
+       (push "-" (cdr stk)))
+      (else (push "error" stk)))))
+
+;18 and 19
+(define mult_op
+  (lambda (stk token)
+    (cond
+      ((string=? token "*")
+       (print-all stk token "18") ;production 18
+       (push "*" (cdr stk)))
+      ((string=? token "/")
+       (print-all stk token "19") ;production 19
+       (push "/" (cdr stk)))
+      (else (push "error" stk)))))
 
 ;================================================================================
 ;Main Function
@@ -165,15 +340,14 @@
   (lambda (p_stack input)
     (let ((stack_head (car p_stack)) (input_head (car input))) ;Defining the tops of the two stacks. 
       (cond
-        ((string=? stack_head "error") (error-handler (cdr p_stack) input_head)) ;Checks to see if the top of the parse stack is "error" meaning there was an error somewhere. 
+        ((= stack_head 99) (error-handler (cdr p_stack) input_head)) ;Checks to see if the top of the parse stack is "error" meaning there was an error somewhere. 
         ((or (and (string=? stack_head "id") (id? input_head)) (and (string=? stack_head "number") (integer? (string->number input_head))) (string=? stack_head input_head))
          (print-stack p_stack)
          (print-input input_head)
-         (if (and (string=? stack_head "$$") (string=? input_head "$$")) ;Checks to see if both stacks are empty.
+         (if (and (= stack_head 12) (= input_head 12)) ;Checks to see if both stacks are empty.
              (close-ports)
              (begin
                (display (string-append (string-append "match " (swap input_head)) "\r\n") comment-file) ;calls 'swap', returns 'id' or 'number' if passed an id or a number, otherwise returns input_head
                (parse (cdr p_stack) (cdr input)))))
         (else (parse (table p_stack input_head) input))))))
 
-(parse (list (program) ($$)) input)
