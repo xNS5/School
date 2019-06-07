@@ -54,11 +54,13 @@
 
 ;Push
 ;Syntax: string, list
-;Pushes a value to the top of the parse stack. 
+;If val or stack is null, goes to the error handler.
+;If val is a pair, appends val to stack. Otherwise it puts val in a list and appends to stack. 
 (define (push val stack)
-  (if (or (null? stack) (null? val))
-      (error-handler stack val)
-      (append (list val) stack)))
+  (cond
+    ((or (null? stack) (null? val)) (error-handler stack val))
+    ((pair? val) (append val stack))
+    (else (append (list val) stack))))
 
 ;id?
 ;Syntax: string
@@ -153,7 +155,6 @@
         (else (push "error" p_stack))))))
 
 ;Productions
-
 ;1
 (define program
   (lambda (stk token) 
@@ -169,7 +170,7 @@
     (cond
       ((or (id? token) (string=? token "read") (string=? token "write"))
        (print-all stk token "2") ;production 2
-       (push "stmt" (push "stmt_list" (cdr stk))))
+       (push (list "stmt" "stmt_list") (cdr stk)))
       ((string=? token "$$")
        (print-all stk token "3") ;production 3
        (cdr stk))
@@ -181,13 +182,13 @@
     (cond
       ((id? token)
        (print-all stk token "4") ;production 4
-       (push "id" (push ":=" (push "expr" (cdr stk)))))
+       (push (list "id" ":=" "expr") (cdr stk)))
       ((string=? token "read")
        (print-all stk token "5") ;production 5 
-       (push "read" (push "id" (cdr stk))))
+       (push (list "read" "id") (cdr stk)))
       ((string=? token "write")
        (print-all stk token "6") ;production 6
-       (push "write" (push "expr" (cdr stk))))
+       (push (list "write" "expr") (cdr stk))))
       (else (push "error" stk)))))
        
 ;7
@@ -197,7 +198,7 @@
       ((or (id? token) (string=? token "(") (integer? (string->number token)))
        (begin
          (print-all stk token "7") ;production 7
-         (push "term" (push "term_tail" (cdr stk)))))
+         (push (list "term" "term_tail") (cdr stk))))
       (else (push "error" stk)))))
 
 ;8 and 9
@@ -206,7 +207,7 @@
     (cond
       ((or (string=? token "+") (string=? token "-"))
        (print-all stk token "8") ;production 8 
-       (push "add_op" (push "term" (push "term_tail" (cdr stk)))))
+       (push (list "add_op" "term" "term_tail") (cdr stk)))
       ((or (string=? token "$$") (id? token) (string=? token "read") (string=? token "write") (string=? token ")"))
        (print-all stk token "9") ;production 9
        (cdr stk))
@@ -218,7 +219,7 @@
     (cond
       ((or (id? token) (string=? token "(") (integer? (string->number token)))
        (print-all stk token "10") ;production 10
-       (push "factor" (push "factor_tail" (cdr stk))))
+       (push (list "factor" "factor_tail") (cdr stk)))
       (else (push "error" stk)))))
 
 ;11 and 12
@@ -227,7 +228,7 @@
     (cond
     ((or (string=? token "*") (string=? token "/"))
      (print-all stk token "11") ;production 11
-     (push "mult_op" (push "factor" (push "factor_tail" (cdr stk)))))
+     (push (list "mult_op" "factor" "factor_tail") (cdr stk)))
     ((or (string=? token "$$") (id? token) (string=? token "read") (string=? token "write") (string=? token ")") (string=? token "+") (string=? token "-"))
      (print-all stk token "12") ;production 12
      (cdr stk))
@@ -239,7 +240,7 @@
     (cond
       ((string=? token "(")
        (print-all stk token "13") ;production 13
-       (push "(" (push "expr" (push ")" (cdr stk)))))
+       (push (list "(" "expr" ")") (cdr stk)))
       ((id? token)
        (print-all stk token "14") ;production 14
        (push "id" (cdr stk)))

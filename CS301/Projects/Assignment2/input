@@ -1,3 +1,3 @@
-C := ( A + B ) * D / ( E + Butts )
+C := ( A + B ) * D / ( E + 123 )
 write C
 $$
