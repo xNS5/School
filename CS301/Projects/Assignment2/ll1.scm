@@ -4,49 +4,33 @@
 ;This function parses an inputted text file and determines whether the input
 ;matches the LL1 grammar.
 ;Notes: numbers instead of non-terminals
-
 ;================================================================================
-;File operations
+;Defining terminals
 ;================================================================================
-;Opening 3 file ports
-(define parse-file (open-output-file #:mode 'text #:exists 'replace "parsestack"))
-(define inputstream-file (open-output-file #:mode 'text #:exists 'replace "inputstream"))
-(define comment-file (open-output-file #:mode 'text #:exists 'replace  "comment"))
+(define ('id) 20)
+(define ('number) 21)
+(define ('read) 22)
+(define ('write) 23)
+(define (':=) 24)
+(define ('o_paren) 25)
+(define ('c_paren) 26)
+(define ('+) 27)
+(define ('-) 28)
+(define ('*) 29)
+(define ('/) 30)
+(define ('$$) 31)
+(define ('error) 99)
 
-;Writing the "Initial stack contents" to the comment file.
-(display "intial stack contents\r\n" comment-file)
-
-;Read data
-;Reads in data from a text file and constructs a list of chars.
-;Using "read" didn't preserve the case of the letters, but making it into a char list did. 
-(define reader
-  (let ((port (open-input-file #:mode 'text "input")))
-    (let iter ((val (read-char port)))
-      (cond
-        ((eof-object? val) (close-input-port port) '())
-        (else (cons val (iter (read-char port))))))))
-
-;Stitcher
-;Syntax: list
-;Creates a list of strings out of a list of characters. 
-;If str isn't a pair, meaning it reached the end of the available input, it returns whatever is stored in concat.
-;If the character 'head' is a #\space or a #\newline character, it cons the reverse of concat with
-;a recursive call to iter with the input list and an empty concat list.
-(define stitcher
-  (lambda (str)
-    (let iter ((lst str) (concat '()))
-      (cond
-        ((not (pair? lst)) (list (reverse concat)))
-        (else
-         (let ((head (car lst)))
-           (cond
-             ((or (char=? head #\space) (char=? head #\newline)) (cons (reverse concat) (iter (cdr lst) '())))
-             (else (iter (cdr lst) (cons (car lst) concat))))))))))
-
-;Driver function for stitcher
-;Sytax: input from 'reader' function
-;Takes the output from 'reader, pipes it to stitcher, and converts the completed list to a list of symbols
-(define input (map string->symbol (map list->string (stitcher reader))))
+(define (term_swap x)
+  (cond
+    ((= x 25) "(")
+    ((= x 26) ")")
+    (else
+     (cond
+       ((= x 20) 'id)
+       ((= x 21) 'number)
+       ((= x 22) 'read)
+       ((
 
 ;================================================================================
 ;Helper functions
@@ -71,15 +55,15 @@
         (if (and (char? char_val) (char-upper-case? char_val) (char-alphabetic? char_val)) #t #f))
       #f))
 
-(id? 'A)
-
 ;Print-stack
 ;Syntax: list
 ;Prints the current parse stack to the parse file. 
 (define print-stack
   (lambda (stk)
-    (let ((st_head (car stk)))
-      (if (not (= st_head  ))
+    (if (<= 20 (car stk) 31)
+        (define st_head (token-lookup (car stk)))
+        (define st_head (prod-lookup (car stk)))
+      (if (not (= st_head "$$"))
           (begin
             (display (string-append st_head " ") parse-file)
             (print-stack (cdr stk)))
@@ -137,57 +121,20 @@
    (print-input token)
    (display "syntax error\r\n" comment-file)
    (close-ports))
-
-;================================================================================
-;Defining non-terminals
-;================================================================================
-(define (prod-lookup inpt)
-  (cond
-    ((= inpt 1) "program")
-    ((<= 2 inpt 3) "stmt_list")
-    ((<= 4 inpt 6) "stmt")
-    ((= inpt 7) "expr")
-    ((<= 8 inpt 9) 'term_tail)
-    ((= inpt 10) 'term)
-    ((<= 11 inpt 12) 'factor_tail)
-    ((<= 13 inpt 15) 'factor)
-    ((<= 16 inpt 17) 'add_op)
-    ((<= 18 inpt 19) 'mult_op)
-    (else 99)))
-
-(define (token-lookup inpt)
-  (cond
-    ((id? inpt) 1)
-    ((num? inpt) 2)
-    ((string=? inpt "read") 3)
-    ((string=? inpt "write") 4)
-    ((string=? inpt ":=") 5)
-    ((string=? inpt "(") 6)
-    ((string=? inpt ")") 7)
-    ((string=? inpt "+") 8)
-    ((string=? inpt "-") 9)
-    ((string=? inpt "*") 10)
-    ((string=? inpt "/") 11)
-    ((string=? inpt "$$") 12)
-    (else 99)))
-
-
-(define ('id) 20)
-(define ('number) 21)
-(define ('read) 22)
-(define ('write) 23)
-(define (':=) 24)
-(define ('open_paren) 25)
-(define ('close_paren) 26)
-(define ('+) 27)
-(define ('-) 28)
-(define ('*) 29)
-(define ('/) 30)
-(define ('$$) 31)
       
 ;================================================================================
 ;Parse Table Functions
 ;================================================================================
+; 1 Program
+; 2, 3 stmt_list
+; 4, 5, 6 stmt
+; 7 expr
+; 8, 9 term_tail
+; 10 term
+; 11, 12  factor_tail
+; 13, 14, 15 factor
+; 16, 17 add_op
+; 18, 19
 
 ;Syntax: list, string
 ;The table function looks up the current non-terminal and moves to its corresponding function.
@@ -216,7 +163,7 @@
     (cond
       ((or (= token 1) (= token 3) (= token 4) (= token 13))
        (print-all stk token (prod-lookup 1)) ;write production 1
-       (push ('stmt_list) (cdr stk)))
+       (push 2 (cdr stk)))
       (else (push 99 stk)))))
     
 ;2-3
@@ -224,9 +171,9 @@
   (lambda (stk token)
     (cond
       ((or (id? token) (string=? token "read") (string=? token "write"))
-       (print-all stk token "2") ;production 2
-       (push (list ('stmt) ('stmt_list)) (cdr stk)))
-      ((string=? token )
+       (print-all stk token 2) ;production 2
+       (push 2 (cdr stk)))
+      ((= token )
        (print-all stk token 3) ;production 3
        (cdr stk))
       (else (push 99 stk)))))
@@ -339,10 +286,10 @@
 ;If there is no indication of an error, the program evaluates the input
 (define parse
   (lambda (p_stack input)
-    (let ((stack_head (car p_stack)) (input_head (car input))) ;Defining the tops of the two stacks. 
+    (let ((stack_head (car p_stack)) (input_head (car input)) (num_val (token-lookup input_head))) ;Defining the tops of the two stacks. 
       (cond
         ((= stack_head 99) (error-handler (cdr p_stack) input_head)) ;Checks to see if the top of the parse stack is "error" meaning there was an error somewhere. 
-        ((or (and (string=? stack_head "id") (id? input_head)) (and (string=? stack_head "number") (integer? (string->number input_head))) (string=? stack_head input_head))
+        ((or (and (= stack_head 20) (= num_val 20)) (and (= stack_head 21) (= num_val 21)) (= stack_head num_val))
          (print-stack p_stack)
          (print-input input_head)
          (if (and (= stack_head 12) (= input_head 12)) ;Checks to see if both stacks are empty.
