@@ -1,5 +1,5 @@
 read A
 read B
 C := A + B
-D + C / 2
+D := C / ( 2 - ( A - 2 ) )
 $$

@@ -12,6 +12,7 @@
 ;Non-term-lookup
 ;Syntax: int
 ;This function takes in a number and returns the associated non-terminal string name.
+;This function is only called when the program is printing to the parse stack text file.
 (define (non-term-lookup term)
   (cond
     ((= term 1) "program")
@@ -28,6 +29,7 @@
 ;Token-lookup
 ;Syntax: int
 ;This function takes in an integer and spits out the associated token value.
+;This function is only called when the program is printing to the comment text file. 
 (define (token-lookup token)
   (cond
     ((= token 20) "id")
@@ -68,8 +70,8 @@
 ;Syntax: list
 ;Creates a list of strings out of a list of characters. 
 ;If str isn't a pair, meaning it reached the end of the available input, it returns whatever is stored in concat.
-;If the character 'head' is a #\space or a #\newline character, it cons the reverse of concat with
-;a recursive call to iter with the input list and an empty concat list.
+;If the character 'head' is a #\space or a #\newline character, it cons the reverse of concat with a recursive call to iter
+;with the input list and an empty concat list.
 (define stitcher
   (lambda (str)
     (let iter ((lst str) (concat '()))
@@ -92,8 +94,9 @@
 ;================================================================================
 
 ;Get-term -- driver for lookup functions
-;Syntax: symbol
-;This function determines if a number corresponds to an input token or a non-termina
+;Syntax: int
+;This function determines if a number corresponds to an input token or a non-terminal.
+;Tokens are values between 20 and 31, non-terminals are values 1 to 19. 
 (define (get-term x)
   (cond
     ((<= 1 x 19) (non-term-lookup x))
@@ -101,7 +104,7 @@
     (else 99)))
 
 ;Push
-;Syntax: string, list
+;Syntax: int or list
 ;If val or stack is null, goes to the error handler.
 ;If val is a pair, appends val to stack. Otherwise it puts val in a list and appends to stack. 
 (define (push val stack)
@@ -111,7 +114,7 @@
     (else (append (list val) stack))))
 
 ;id?
-;Syntax: string
+;Syntax: symbol
 ;Checks to see if a letter is a valid id.
 (define (id? val)
   (let ((val (symbol->string val)))
@@ -136,8 +139,7 @@
 ;Syntax: number
 ;Prints the production number to the 'comment' file.
 (define (print-predict inp)
-  (display (string-append "predict " (number->string inp)) comment-file)
-  (display "\r\n" comment-file))
+  (display (string-append (string-append "predict " (number->string inp)) "\r\n") comment-file))
 
 ;Print-input
 ;Syntax: string (top of the input file)
@@ -146,21 +148,22 @@
   (display (string-append (symbol->string inp) "\r\n") inputstream-file))
 
 ;Print-all
-;Syntax: list, list, int
+;Syntax: list, symbol, int
 ;Driver function for print functions. Passes the stack, input token, and production number to their respective functions.
-(define (print-all stk inpt  val)
+(define (print-all stk inpt val)
   (print-stack stk)
   (print-input inpt)
   (print-predict val))
 
 ;Swap
 ;Syntax: string
-;If the value of x is an id or an integer, this function returns "id" or "number" which gets pused to the parse stack.
+;If the value of x is an id or an integer, this function returns "id" or "number" if token is an id or a number, otherwise
+;it returns a string version of the symbol.
 (define swap
   (lambda (token)
     (cond
       ((id? token) "id")
-      ((integer? (string->number (symbol->string token))) "number")
+      ((num? token) "number")
       (else (symbol->string token)))))
 
 ;num?
@@ -193,8 +196,8 @@
 ;================================================================================
 (define (token-num token)
   (cond
-    ((id? token) 20) ;ID
-    ((num? token) 21) ;Number
+    ((id? token) 20) ;id 
+    ((num? token) 21) ;number
     ((eq? token 'read) 22)
     ((eq? token 'write) 23)
     ((eq? token ':=) 24)
@@ -212,7 +215,9 @@
 ;The table function looks up the current non-terminal and moves to its corresponding function.
 ;p_stack is the parse stack, input_head is the top of the input list, token is the numeric value of the input head.
 ;At no point is input_head ever evaluated.
-;If at any point the table is given an input that is an invalid token it returns 99, which is the error flag. 
+;If at any point the table is given an input that is an invalid token it returns 99, which is the error flag.
+;If a production has the same non terminal, they'll be within the same function (e.g 'factor' produces ( expr ), id, or literal (number)
+;And all of those productions are in the same function.s
 ;================================================================================
 
 ;table
@@ -375,13 +380,13 @@
 ;================================================================================
 ;Main Function
 ;This function takes in a list containing 1 31 (which are the numbers associated with "program" and "$$") and another list that is the text input.
-;It first grabs the heads of the two lists, and makes sure that they aren't any values that indicate that there was an error somewhere in the parsing of the file.
+;It first grabs the heads of the two lists and makes sure that they aren't any values that indicate that there was an error somewhere in the parsing of the file.
 ;If the program encounters some kind of error in one of the productions, 99 gets pushed to the parse stack which is an error. It gets evaluated and the error handler is called. 
 ;If the input from the text file is invalid, then num_head will be a non-integer value which represents an error and the program quits.
 ;If there is no indication of an error, the program evaluates the input.
 ;First the parse stack and the text file input gets passed to 'parse', then once it has gone through and checked the input, it passes it to an internal 'iter' loop which
 ;attempts to match the top of the parse stack and the input list. If it doesn't match, the stack, the top of the input list, and the number associated with that input token
-;is passed to the table function. That function returns a parse stack list and that gets passed to the iter loop
+;is passed to the table function. That function returns a parse stack list and that gets passed to the iter loop.
 ;If it is a match, the cdr of both input files is passed to parse. 
 ;================================================================================
 
