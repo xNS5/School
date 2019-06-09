@@ -3,7 +3,45 @@
 ;Assignment 2
 ;This function parses an inputted text file and determines whether the input
 ;matches the LL1 grammar.
-;Notes: numbers instead of non-terminals
+
+;================================================================================
+;Lookup tables
+;================================================================================
+
+;Non-term-lookup
+;Syntax: int
+;This function takes in a number and spits out the associated non-terminal string name.
+;Returns 99 if the input isn't valid
+(define (non-term-lookup term)
+  (cond
+    ((= term 1) "program")
+    ((<= 2 term 3) "stmt_list")
+    ((<= 4 term 6) "stmt")
+    ((= term 7) "expr")
+    ((<= 8 term 9) "term_tail")
+    ((= term 10) "term")
+    ((<= 11 term 12) "factor_tail")
+    ((<= 13 term 15) "factor")
+    ((<= 16 term 17) "add_op")
+    ((<= 18 term 19) "mult_op")))
+
+;Token-lookup
+;Syntax: int
+;This function takes in an integer and spits out the associated token value.
+(define (token-lookup token)
+  (cond
+    ((= token 20) "id")
+    ((= token 21) "number")
+    ((= token 22) "read")
+    ((= token 23) "write")
+    ((= token 24) ":=")
+    ((= token 25) "(")
+    ((= token 26) ")")
+    ((= token 27) "+")
+    ((= token 28) "-")
+    ((= token 29) "*")
+    ((= token 30) "/")
+    ((= token 31) "$$")))
 
 ;================================================================================
 ;File operations
@@ -48,38 +86,6 @@
 ;Sytax: input from 'reader' function
 ;Takes the output from 'reader' which spits out a char list of characters from the input text file
 (define input (map string->symbol (map list->string (stitcher reader))))
-
-;================================================================================
-;Lookup tables
-;================================================================================
-
-(define (non-term-lookup term)
-  (cond
-    ((= term 1) "program")
-    ((<= 2 term 3) "stmt_list")
-    ((<= 4 term 6) "stmt")
-    ((= term 7) "expr")
-    ((<= 8 term 9) "term_tail")
-    ((= term 10) "term")
-    ((<= 11 term 12) "factor_tail")
-    ((<= 13 term 15) "factor")
-    ((<= 16 term 17) "add_op")
-    ((<= 18 term 19) "mult_op")))
-
-(define (token-lookup token)
-  (cond
-    ((= token 20) "id")
-    ((= token 21) "number")
-    ((= token 22) "read")
-    ((= token 23) "write")
-    ((= token 24) ":=")
-    ((= token 25) "(")
-    ((= token 26) ")")
-    ((= token 27) "+")
-    ((= token 28) "-")
-    ((= token 29) "*")
-    ((= token 30) "/")
-    ((= token 31) "$$")))
 
 ;================================================================================
 ;Helper functions
@@ -184,8 +190,9 @@
 ;================================================================================
 (define (token-num token)
   (cond
-    ((id? token) 20)
-    ((num? token) 21)
+    ((or(not (integer? token)) (> token 31)) 99)
+    ((id? token) 20) ;ID
+    ((num? token) 21) ;Number
     ((eq? token 'read) 22)
     ((eq? token 'write) 23)
     ((eq? token ':=) 24)
@@ -200,35 +207,26 @@
 ;================================================================================
 ;Parse Table Functions
 ;================================================================================
-; 1 Program
-; 2, 3 stmt_list
-; 4, 5, 6 stmt
-; 7 expr
-; 8, 9 term_tail
-; 10 term
-; 11, 12  factor_tail
-; 13, 14, 15 factor
-; 16, 17 add_op
-; 18, 19 mult_op
 
-;Syntax: list, string
+;Syntax: list, string, int
 ;The table function looks up the current non-terminal and moves to its corresponding function.
-;If the current token is a valid production, it returns nonterminals pushed to the stack.
-;If it isn't a valid production, "error" is pushed to the stack and the program goes to error-handler and quits. 
+;p_stack is the parse stack, input_head is the top of the input list, token is the numeric value of the input head.
+;At no point is input_head ever evaluated.
+;If at any point the table is given an input that is an invalid token it returns 99, which is the error flag. 
 (define table
   (lambda (p_stack input_head token)
     (let ((head (car p_stack)))
       (cond
         ((= head 1) (program p_stack input_head token))
-        ((<= 2 head 3) (stmt_list p_stack input_head token))
-        ((<= 4 head 6) (stmt p_stack input_head token))
+        ((= head 2) (stmt_list p_stack input_head token))
+        ((= head 4) (stmt p_stack input_head token))
         ((= head 7) (expr p_stack input_head token))
-        ((<= 8 head 9) (term_tail p_stack input_head token))
+        ((= head 8) (term_tail p_stack input_head token))
         ((= head 10) (term p_stack input_head token))
-        ((<= 11 head 12) (factor_tail p_stack input_head token))
-        ((<= 13 head 15) (factor p_stack input_head token))
-        ((<= 16 head 17) (add_op p_stack input_head token))
-        ((<= 18 head 19) (mult_op p_stack input_head token))
+        ((= head 11) (factor_tail p_stack input_head token))
+        ((= head 13) (factor p_stack input_head token))
+        ((= head 16) (add_op p_stack input_head token))
+        ((= head 18) (mult_op p_stack input_head token))
         (else (push 99 p_stack))))))
 
 ;Productions
@@ -306,7 +304,7 @@
     ((<= 29 token 30)
      (print-all stk head 11) ;production 11
      (push (list 18 13 11) (cdr stk)))
-    ((or (= token 26) (= token 20) (= token 21) (= token 23) (= token 31))
+    ((or (= token 20) (<= 22 token 23) (<= 26 token 28) (= token 31))
      (print-all stk head 12) ;production 12
      (cdr stk))
     (else (push 99 stk)))))
@@ -315,13 +313,13 @@
 (define factor
   (lambda (stk head token)
     (cond
-      ((= token 25)
+      ((= token 25) ;Open paren
        (print-all stk head 13) ;production 13
        (push (list 25 7 26) (cdr stk)))
-      ((= token 20)
+      ((= token 20) ;id
        (print-all stk head 14) ;production 14
        (push 20 (cdr stk)))
-      ((= token 21)
+      ((= token 21) ;num
        (print-all stk head 15) ;production 15
        (push 21 (cdr stk)))
       (else (push 99 stk)))))
@@ -342,10 +340,10 @@
 (define mult_op
   (lambda (stk head token)
     (cond
-      ((string=? token 29)
+      ((= token 29)
        (print-all stk head 18) ;production 18
        (push 29 (cdr stk)))
-      ((string=? token 30)
+      ((= token 30)
        (print-all stk head 19) ;production 19
        (push 30 (cdr stk)))
       (else (push 99 stk)))))
@@ -361,7 +359,7 @@
 ;If there is no indication of an error, the program evaluates the input
 (define parse
   (lambda (p_stack input)
-    (let* ((stack_head (car p_stack)) (input_head (car input)) (num_head (token-num input_head))) ;Defining the tops of the two stacks. 
+    (let* ((stack_head (car p_stack)) (input_head (car input)) (num_head (token-num input_head))) ;Defining the tops of the two stacks.
       (cond
         ((= stack_head 99) (error-handler (cdr p_stack) input_head)) ;Checks to see if the top of the parse stack is "error" meaning there was an error somewhere. 
         ((= stack_head num_head)
