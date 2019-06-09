@@ -190,7 +190,6 @@
 ;================================================================================
 (define (token-num token)
   (cond
-    ((or(not (integer? token)) (> token 31)) 99)
     ((id? token) 20) ;ID
     ((num? token) 21) ;Number
     ((eq? token 'read) 22)
@@ -202,11 +201,25 @@
     ((eq? token '-) 28)
     ((eq? token '*) 29)
     ((eq? token '/) 30)
-    ((eq? token '$$) 31)))
+    ((eq? token '$$) 31)
+    (else 'error)))
 
 ;================================================================================
 ;Parse Table Functions
 ;================================================================================
+;20 - id
+;21 - number
+;22 - read
+;23 - write
+;24 - :=
+;25 - (
+;26 - )
+;27 - +
+;28 - -
+;29 - *
+;30 - /
+;31 - $$
+;99 - this means error
 
 ;Syntax: list, string, int
 ;The table function looks up the current non-terminal and moves to its corresponding function.
@@ -231,19 +244,24 @@
 
 ;Productions
 ;1
+;If the program sees an id (20), read (22), write (23), or $$ (31) it prints out the stack, input head, and the production number.
+;Then it pushes stmt_list (2) to the stack and returns it. 
 (define program
   (lambda (stk head token) 
     (cond
-      ((or (= token 20) (= token 23) (= token 24) (= token 31))
+      ((or (= token 20) (<= 22 token 23) (= token 31))
        (print-all stk head 1) ;write production 1
        (push 2 (cdr stk)))
       (else (push 99 stk)))))
     
 ;2-3
+;If the program sees an id, read, or write it prints out the stack, input head, and production number and pushes
+;stmt (4) and stmt_list (2) to the stack and returns it.
+;If the program sees $$ (31) it returns the cdr of the stack. 
 (define stmt_list
   (lambda (stk head token)
     (cond
-      ((or (= token 20) (= token 22) (= token 23))
+      ((or (= token 20) (<= 22 token 23))
        (print-all stk head 2) ;production 2
        (push (list 4 2) (cdr stk)))
       ((= token 31)
@@ -252,6 +270,8 @@
       (else (push 99 stk)))))
   
 ;4-6
+;If the program sees id (20), it prints out the stack, input head, and production number then pushes id (20), := (24), and expr (7) to the stack.
+;The same thing happens with production 5 and 6, except read (22), id (20) and write (23), expr (7) get pushed to the stack respectively.
 (define stmt
   (lambda (stk head token)
     (cond
@@ -267,6 +287,8 @@
       (else (push 99 stk)))))
        
 ;7
+;If the program sees id (20), number (21), '(' (25), it prints out the stack, input head, and production number.
+;It then pushes term (10), and term_tail (8) to the stack. 
 (define expr
   (lambda (stk head token)
     (cond
@@ -277,10 +299,13 @@
       (else (push 99 stk)))))
 
 ;8 and 9
+;If this program sees + (27) or - (28), it prints out the stack, input head, and production number.
+;It then pushes add_op (16), term (10), and term_tail (8) to the stack or the cdr of the stack if it sees
+;$$ (31), number (21), read (22), write (23), or ')' (26)
 (define term_tail
   (lambda (stk head token)
     (cond
-      ((or (= token 27) (= token 28))
+      ((<= 27 token 28)
        (print-all stk head 8) ;production 8 
        (push (list 16 10 8) (cdr stk)))
       ((or (= token 31) (= token 21) (<= 22 token 23) (= token 26))
@@ -289,15 +314,19 @@
       (else (push 99 stk)))))
 
 ;10
+;If this program sees id (20), number (21), or '(' (25),  it prints out the stack, current input head, and production number.
+;Then, factor (13) and factor_tail (11) get pushed to the stack. 
 (define term
   (lambda (stk head token)
     (cond
-      ((or (= token 20) (= token 21) (= token 25))
+      ((or (<= 20 token 21) (= token 25))
        (print-all stk head 10) ;production 10
        (push (list 13 11) (cdr stk)))
       (else (push 99 stk)))))
 
 ;11 and 12
+;If this program sees * (29) or / (30), it prints out the stack, input head, and production number then pushes mult_op (18), factor (13), and factor_tail (11) to the stack.
+;If this program sees id (20), read (22), write (23), ')' (26), + (27), or - (28) it returns the cdr of the stack. 
 (define factor_tail
   (lambda (stk head token)
     (cond
@@ -310,21 +339,24 @@
     (else (push 99 stk)))))
 
 ;13 14 and 15
+;If this program sees '(' (25) it prints out the stack, input head, and production number and pushes '(' (25), expr (7), and ')' 26 to the stack.
+;If this sees id (20) or number (21) it returns id (20) and number (21) respectively.
 (define factor
   (lambda (stk head token)
     (cond
       ((= token 25) ;Open paren
        (print-all stk head 13) ;production 13
        (push (list 25 7 26) (cdr stk)))
-      ((= token 20) ;id
+      ((= token 20)
        (print-all stk head 14) ;production 14
        (push 20 (cdr stk)))
-      ((= token 21) ;num
+      ((= token 21)
        (print-all stk head 15) ;production 15
        (push 21 (cdr stk)))
       (else (push 99 stk)))))
 
 ;16 and 17
+;If the program sees an addition or subtraction operation, it returns + (27) or - (28) respectively.
 (define add_op
   (lambda (stk head token)
     (cond
@@ -337,6 +369,7 @@
       (else (push 99 stk)))))
 
 ;18 and 19
+;If this program sees a multiplication or division operation, it returns * (29) or / (30) respectively.
 (define mult_op
   (lambda (stk head token)
     (cond
@@ -353,23 +386,34 @@
 ;================================================================================
 ;Parse
 ;Syntax: list, list
-;This function takes in a list containing "program" "$$" and another list that is the text input.
+;This function takes in a list containing 1 31 (which are the numbers associated with "program" and "$$") and another list that is the text input.
 ;It first grabs the heads of the two lists, and makes sure that they aren't any values that indicate that there was an error somewhere in the parsing of the file.
-;If the program encounters some kind of error in one of the productions, "error" gets pushed to the parse stack and the error-handler gets called and the program quits.
-;If there is no indication of an error, the program evaluates the input
+;If the program encounters some kind of error in one of the productions, 99 gets pushed to the parse stack which is an error. It gets evaluated and the error handler is called. 
+;If the input from the text file is invalid, then num_head will be a non-integer value which represents an error and the program quits.
+;If there is no indication of an error, the program evaluates the input.
+;First the parse stack and the text file input gets passed to 'parse', then once it has gone through and checked the input, it passes it to an internal 'iter' loop which
+;attempts to match the top of the parse stack and the input list. If it doesn't match, the stack, the top of the input list, and the number associated with that input token
+;is passed to the table function. That function returns a parse stack list and that gets passed to the iter loop
+;If it is a match, the cdr of both input files is passed to parse. 
+
 (define parse
   (lambda (p_stack input)
-    (let* ((stack_head (car p_stack)) (input_head (car input)) (num_head (token-num input_head))) ;Defining the tops of the two stacks.
-      (cond
-        ((= stack_head 99) (error-handler (cdr p_stack) input_head)) ;Checks to see if the top of the parse stack is "error" meaning there was an error somewhere. 
-        ((= stack_head num_head)
-         (print-stack p_stack)
-         (print-input input_head)
-         (if (and (= stack_head 31) (= num_head 31)) ;Checks to see if both stacks are empty. or $$
-             (close-ports)
-             (begin
-               (display (string-append (string-append "match " (swap input_head)) "\r\n") comment-file) ;calls 'swap', returns 'id' or 'number' if passed an id or a number, otherwise returns input_head
-               (parse (cdr p_stack) (cdr input)))))
-        (else (parse (table p_stack input_head num_head) input))))))
+    (let* ((input_head (car input)) (num_head (token-num input_head)))
+      (if (not (integer? num_head)) ;token-num returns 'error if input_head isn't a valid input. If it is valid, num_head is an integer.
+          (error-handler p_stack input_head)
+          (begin
+            (let iter ((p_stack p_stack))
+              (let ((stack_head (car p_stack)))
+              (cond
+                ((= stack_head 99) (error-handler (cdr p_stack) input_head)) ;Checks to see if the top of the parse stack is "error" meaning there was an error somewhere. 
+                ((= stack_head num_head)
+                 (print-stack p_stack)
+                 (print-input input_head)
+                 (if (and (= stack_head 31) (= num_head 31)) ;Checks to see if both stacks are empty. or $$
+                     (close-ports)
+                     (begin
+                       (display (string-append (string-append "match " (swap input_head)) "\r\n") comment-file) ;calls 'swap', returns 'id' or 'number' if passed an id or a number, otherwise returns input_head
+                       (parse (cdr p_stack) (cdr input)))))
+                (else (iter (table p_stack input_head num_head)))))))))))
 
 (parse (list 1 31) input)
