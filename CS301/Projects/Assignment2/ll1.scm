@@ -207,20 +207,8 @@
 ;================================================================================
 ;Parse Table Functions
 ;================================================================================
-;20 - id
-;21 - number
-;22 - read
-;23 - write
-;24 - :=
-;25 - (
-;26 - )
-;27 - +
-;28 - -
-;29 - *
-;30 - /
-;31 - $$
-;99 - this means error
 
+;table
 ;Syntax: list, string, int
 ;The table function looks up the current non-terminal and moves to its corresponding function.
 ;p_stack is the parse stack, input_head is the top of the input list, token is the numeric value of the input head.
@@ -308,7 +296,7 @@
       ((<= 27 token 28)
        (print-all stk head 8) ;production 8 
        (push (list 16 10 8) (cdr stk)))
-      ((or (= token 31) (= token 21) (<= 22 token 23) (= token 26))
+      ((or (= token 31) (= token 20) (<= 22 token 23) (= token 26))
        (print-all stk head 9) ;production 9
        (cdr stk))
       (else (push 99 stk)))))
@@ -405,14 +393,14 @@
             (let iter ((p_stack p_stack))
               (let ((stack_head (car p_stack)))
               (cond
-                ((= stack_head 99) (error-handler (cdr p_stack) input_head)) ;Checks to see if the top of the parse stack is "error" meaning there was an error somewhere. 
+                ((= stack_head 99) (error-handler (cdr p_stack) input_head)) ; 99 indicates an error
                 ((= stack_head num_head)
                  (print-stack p_stack)
                  (print-input input_head)
-                 (if (and (= stack_head 31) (= num_head 31)) ;Checks to see if both stacks are empty. or $$
+                 (if (and (= stack_head 31) (= num_head 31)) ; 31 is $$
                      (close-ports)
-                     (begin
-                       (display (string-append (string-append "match " (swap input_head)) "\r\n") comment-file) ;calls 'swap', returns 'id' or 'number' if passed an id or a number, otherwise returns input_head
+                     (begin ;swap determines if the input is an id or a number, otherwise it just returns the input_head.
+                       (display (string-append (string-append "match " (swap input_head)) "\r\n") comment-file)
                        (parse (cdr p_stack) (cdr input)))))
                 (else (iter (table p_stack input_head num_head)))))))))))
 
