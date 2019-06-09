@@ -6,12 +6,12 @@
 
 ;================================================================================
 ;Lookup tables
+;These functions take in an integer and return a string associated with that integer.
 ;================================================================================
 
 ;Non-term-lookup
 ;Syntax: int
-;This function takes in a number and spits out the associated non-terminal string name.
-;Returns 99 if the input isn't valid
+;This function takes in a number and returns the associated non-terminal string name.
 (define (non-term-lookup term)
   (cond
     ((= term 1) "program")
@@ -84,13 +84,14 @@
 
 ;Driver function for stitcher
 ;Sytax: input from 'reader' function
-;Takes the output from 'reader' which spits out a char list of characters from the input text file
+;Takes the output from 'reader' which spits out a char list of characters from the input text file and converts the resulting list to a list of symbols
 (define input (map string->symbol (map list->string (stitcher reader))))
 
 ;================================================================================
 ;Helper functions
 ;================================================================================
-;Get-Term driver
+
+;Get-term -- driver for lookup functions
 ;Syntax: symbol
 ;This function determines if a number corresponds to an input token or a non-termina
 (define (get-term x)
@@ -187,6 +188,8 @@
 
 ;================================================================================
 ;Defining terminals
+;This function returns a number associated with a given input token. If 'token' isn't a member of the
+;symbols accepted by this function it returns the symbol 'error. 
 ;================================================================================
 (define (token-num token)
   (cond
@@ -206,14 +209,14 @@
 
 ;================================================================================
 ;Parse Table Functions
-;================================================================================
-
-;table
-;Syntax: list, string, int
 ;The table function looks up the current non-terminal and moves to its corresponding function.
 ;p_stack is the parse stack, input_head is the top of the input list, token is the numeric value of the input head.
 ;At no point is input_head ever evaluated.
 ;If at any point the table is given an input that is an invalid token it returns 99, which is the error flag. 
+;================================================================================
+
+;table
+;Syntax: list, string, int
 (define table
   (lambda (p_stack input_head token)
     (let ((head (car p_stack)))
@@ -296,7 +299,7 @@
       ((<= 27 token 28)
        (print-all stk head 8) ;production 8 
        (push (list 16 10 8) (cdr stk)))
-      ((or (= token 31) (= token 20) (<= 22 token 23) (= token 26))
+      ((or (= token 20) (<= 22 token 23) (= token 26) (= token 31))
        (print-all stk head 9) ;production 9
        (cdr stk))
       (else (push 99 stk)))))
@@ -371,9 +374,6 @@
 
 ;================================================================================
 ;Main Function
-;================================================================================
-;Parse
-;Syntax: list, list
 ;This function takes in a list containing 1 31 (which are the numbers associated with "program" and "$$") and another list that is the text input.
 ;It first grabs the heads of the two lists, and makes sure that they aren't any values that indicate that there was an error somewhere in the parsing of the file.
 ;If the program encounters some kind of error in one of the productions, 99 gets pushed to the parse stack which is an error. It gets evaluated and the error handler is called. 
@@ -383,11 +383,14 @@
 ;attempts to match the top of the parse stack and the input list. If it doesn't match, the stack, the top of the input list, and the number associated with that input token
 ;is passed to the table function. That function returns a parse stack list and that gets passed to the iter loop
 ;If it is a match, the cdr of both input files is passed to parse. 
+;================================================================================
 
+;Parse
+;Syntax: list, list
 (define parse
   (lambda (p_stack input)
     (let* ((input_head (car input)) (num_head (token-num input_head)))
-      (if (not (integer? num_head)) ;token-num returns 'error if input_head isn't a valid input. If it is valid, num_head is an integer.
+      (if (not (integer? num_head))
           (error-handler p_stack input_head)
           (begin
             (let iter ((p_stack p_stack))
