@@ -1,5 +1,0 @@
-Issue: switch nonterminals to numbers instead to speed up evaluation.
-
-Thoughts:
-
-How am I going to deal with productions that have multiple numbers utilizing the top-level definition that he specified?
