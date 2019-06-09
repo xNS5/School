@@ -72,6 +72,8 @@
 ;If str isn't a pair, meaning it reached the end of the available input, it returns whatever is stored in concat.
 ;If the character 'head' is a #\space or a #\newline character, it cons the reverse of concat with a recursive call to iter
 ;with the input list and an empty concat list.
+;In the event it sees a #\space or #\newline character and the list concat is empty, it calls iter again until it sees something that isn't
+;a space or a newline to avoid input like "read                 A $$". 
 (define stitcher
   (lambda (str)
     (let iter ((lst str) (concat '()))
@@ -81,6 +83,7 @@
         (else
          (let ((head (car lst)))
            (cond
+             ((and (or (char=? head #\space) (char=? head #\newline)) (null? concat)) (iter (cdr lst) '()))
              ((or (char=? head #\space) (char=? head #\newline)) (cons (reverse concat) (iter (cdr lst) '())))
              (else (iter (cdr lst) (cons (car lst) concat))))))))))
 
@@ -196,8 +199,8 @@
 ;================================================================================
 (define (token-num token)
   (cond
-    ((id? token) 20) ;id 
-    ((num? token) 21) ;number
+    ((id? token) 20)
+    ((num? token) 21)
     ((eq? token 'read) 22)
     ((eq? token 'write) 23)
     ((eq? token ':=) 24)
