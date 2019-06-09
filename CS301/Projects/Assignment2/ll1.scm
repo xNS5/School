@@ -4,37 +4,6 @@
 ;This function parses an inputted text file and determines whether the input
 ;matches the LL1 grammar.
 ;Notes: numbers instead of non-terminals
-;================================================================================
-;Defining terminals and non-terminals
-;================================================================================
-(define (token-lookup x)
-  (cond
-    ((eq? x 'id) 20)
-    ((integer? (string->number (symbol->string x))) 21) ;Essentially 'number
-    ((eq? x 'read) 22)
-    ((eq? x 'write) 23)
-    ((eq? x ':=) 24)
-    ((eq? x '|(|) 25)
-    ((eq? x '|)|) 26)
-    ((eq? x '+) 27)
-    ((eq? x '-) 28)
-    ((eq? x '*) 29)
-    ((eq? x '/) 30)
-    ((eq? x '$$) 31)))
-
-
-(define (non-term-lookup x)
-  (cond
-    ((= x 1) 'program)
-    ((<= 2 x 3) 'stmt_list)
-    ((<= 4 x 6) 'stmt)
-    ((= x 7) 'expr)
-    ((<= 8 x 9) 'term_tail)
-    ((= x 10) 'term)
-    ((<= 11 x 12) 'factor_tail)
-    ((<= 13 x 15) 'factor)
-    ((<= 16 x 17) 'add_op)
-    ((<= 18 x 19) 'mult_op)))
 
 ;================================================================================
 ;File operations
@@ -81,8 +50,48 @@
 (define input (map string->symbol (map list->string (stitcher reader))))
 
 ;================================================================================
+;Lookup tables
+;================================================================================
+
+(define (non-term-lookup term)
+  (cond
+    ((= term 1) "program")
+    ((<= 2 term 3) "stmt_list")
+    ((<= 4 term 6) "stmt")
+    ((= term 7) "expr")
+    ((<= 8 term 9) "term_tail")
+    ((= term 10) "term")
+    ((<= 11 term 12) "factor_tail")
+    ((<= 13 term 15) "factor")
+    ((<= 16 term 17) "add_op")
+    ((<= 18 term 19) "mult_op")))
+
+(define (token-lookup token)
+  (cond
+    ((= token 20) "id")
+    ((= token 21) "number")
+    ((= token 22) "read")
+    ((= token 23) "write")
+    ((= token 24) ":=")
+    ((= token 25) "(")
+    ((= token 26) ")")
+    ((= token 27) "+")
+    ((= token 28) "-")
+    ((= token 29) "*")
+    ((= token 30) "/")
+    ((= token 31) "$$")))
+
+;================================================================================
 ;Helper functions
 ;================================================================================
+;Get-Term driver
+;Syntax: symbol
+;This function determines if a number corresponds to an input token or a non-termina
+(define (get-term x)
+  (cond
+    ((<= 1 x 19) (non-term-lookup x))
+    ((<= 20 x 31) (token-lookup x))
+    (else 99)))
 
 ;Push
 ;Syntax: string, list
@@ -98,33 +107,36 @@
 ;Syntax: string
 ;Checks to see if a letter is a valid id.
 (define (id? val)
-  (if (= 1 (string-length val))
-      (let ((char_val (car (string->list val))))
-        (if (and (char? char_val) (char-upper-case? char_val) (char-alphabetic? char_val)) #t #f))
-      #f))
+  (let ((val (symbol->string val)))
+        (if (= 1 (string-length val))
+            (let ((char_val (car (string->list val))))
+              (if (and (char? char_val) (char-upper-case? char_val) (char-alphabetic? char_val)) #t #f))
+            #f)))
 
 ;Print-stack
 ;Syntax: list
 ;Prints the current parse stack to the parse file. 
 (define print-stack
   (lambda (stk)
-      (if (not (= st_head "$$"))
+    (let* ((head (car stk)) (stk_head (get-term head)))
+      (if (not (= head 31))
           (begin
-            (display (string-append st_head " ") parse-file)
+            (display (string-append stk_head " ") parse-file)
             (print-stack (cdr stk)))
-          (display (string-append st_head "\r\n") parse-file))))
+          (display (string-append stk_head "\r\n") parse-file)))))
 
 ;Print-predict
 ;Syntax: number
 ;Prints the production number to the 'comment' file.
 (define (print-predict inp)
-  (display (string-append (string-append "predict " inp) "\r\n") comment-file))
+  (display (string-append "predict " (number->string inp)) comment-file)
+  (display "\r\n" comment-file))
 
 ;Print-input
 ;Syntax: string (top of the input file)
 ;Prints the current top of the input stack to the inputstream text file
 (define (print-input inp)
-  (display (string-append inp "\r\n") inputstream-file))
+  (display (string-append (symbol->string inp) "\r\n") inputstream-file))
 
 ;Print-all
 ;Syntax: list, list, int
@@ -134,15 +146,6 @@
   (print-input inpt)
   (print-predict val))
 
-;Get-Term driver
-;Syntax: symbol
-;This function determines if a number corresponds to an input token or a non-termina
-(define (get-term x)
-  (cond
-    ((<= 1 x 19) (non-term-lookup x))
-    ((<= 20 x 31) (token-lookup x))
-    (else 99)))
-
 ;Swap
 ;Syntax: string
 ;If the value of x is an id or an integer, this function returns "id" or "number" which gets pused to the parse stack.
@@ -150,14 +153,14 @@
   (lambda (token)
     (cond
       ((id? token) "id")
-      ((integer? (string->number token)) "number")
-      (else token))))
+      ((integer? (string->number (symbol->string token))) "number")
+      (else (symbol->string token)))))
 
 ;num?
 ;Syntax: string
 ;Checks to see if a string can be converted to an integer
 (define (num? int)
-  (integer? (string->number int)))
+  (integer? (string->number (symbol->string int))))
 
 ;Close-ports
 ;Syntax: none
@@ -175,7 +178,25 @@
    (print-input token)
    (display "syntax error\r\n" comment-file)
    (close-ports))
-      
+
+;================================================================================
+;Defining terminals
+;================================================================================
+(define (token-num token)
+  (cond
+    ((id? token) 20)
+    ((num? token) 21)
+    ((eq? token 'read) 22)
+    ((eq? token 'write) 23)
+    ((eq? token ':=) 24)
+    ((eq? token '|(|) 25)
+    ((eq? token '|)|) 26)
+    ((eq? token '+) 27)
+    ((eq? token '-) 28)
+    ((eq? token '*) 29)
+    ((eq? token '/) 30)
+    ((eq? token '$$) 31)))
+
 ;================================================================================
 ;Parse Table Functions
 ;================================================================================
@@ -195,137 +216,137 @@
 ;If the current token is a valid production, it returns nonterminals pushed to the stack.
 ;If it isn't a valid production, "error" is pushed to the stack and the program goes to error-handler and quits. 
 (define table
-  (lambda (p_stack token)
+  (lambda (p_stack input_head token)
     (let ((head (car p_stack)))
       (cond
-        ((= head 1) (program p_stack token))
-        ((<= 2 head 3) (stmt_list p_stack token))
-        ((<= 4 head 6) (stmt p_stack token))
-        ((= head 7) (expr p_stack token))
-        ((<= 8 head 9) (term_tail p_stack token))
-        ((= head 10) (term p_stack token))
-        ((<= 11 head 12) (factor_tail p_stack token))
-        ((<= 13 head 15) (factor p_stack token))
-        ((<= 16 head 17) (add_op p_stack token))
-        ((<= 18 head 19) (mult_op p_stack token))
+        ((= head 1) (program p_stack input_head token))
+        ((<= 2 head 3) (stmt_list p_stack input_head token))
+        ((<= 4 head 6) (stmt p_stack input_head token))
+        ((= head 7) (expr p_stack input_head token))
+        ((<= 8 head 9) (term_tail p_stack input_head token))
+        ((= head 10) (term p_stack input_head token))
+        ((<= 11 head 12) (factor_tail p_stack input_head token))
+        ((<= 13 head 15) (factor p_stack input_head token))
+        ((<= 16 head 17) (add_op p_stack input_head token))
+        ((<= 18 head 19) (mult_op p_stack input_head token))
         (else (push 99 p_stack))))))
 
 ;Productions
 ;1
 (define program
-  (lambda (stk token) 
+  (lambda (stk head token) 
     (cond
-      ((or (= token 21) (= token 23) (= token 24) (= token 31))
-       (print-all stk token (prod-lookup 1)) ;write production 1
+      ((or (= token 20) (= token 23) (= token 24) (= token 31))
+       (print-all stk head 1) ;write production 1
        (push 2 (cdr stk)))
       (else (push 99 stk)))))
     
 ;2-3
 (define stmt_list
-  (lambda (stk token)
+  (lambda (stk head token)
     (cond
       ((or (= token 20) (= token 22) (= token 23))
-       (print-all stk token 2) ;production 2
-       (push 2 (cdr stk)))
+       (print-all stk head 2) ;production 2
+       (push (list 4 2) (cdr stk)))
       ((= token 31)
-       (print-all stk token 3) ;production 3
+       (print-all stk head 3) ;production 3
        (cdr stk))
       (else (push 99 stk)))))
   
 ;4-6
 (define stmt
-  (lambda (stk token)
+  (lambda (stk head token)
     (cond
       ((= token 20)
-       (print-all stk token 4) ;production 4
+       (print-all stk head 4) ;production 4
        (push (list 20 24 7) (cdr stk)))
       ((= token 22)
-       (print-all stk token 5) ;production 5 
+       (print-all stk head 5) ;production 5 
        (push (list 22 20) (cdr stk)))
       ((= token 23)
-       (print-all stk token 6) ;production 6
+       (print-all stk head 6) ;production 6
        (push (list 23 7) (cdr stk)))
       (else (push 99 stk)))))
        
 ;7
 (define expr
-  (lambda (stk token)
+  (lambda (stk head token)
     (cond
       ((or (<= 20 token 21) (= token 25))
        (begin
-         (print-all stk token 7) ;production 7
+         (print-all stk head 7) ;production 7
          (push (list 10 8) (cdr stk))))
       (else (push 99 stk)))))
 
 ;8 and 9
 (define term_tail
-  (lambda (stk token)
+  (lambda (stk head token)
     (cond
       ((or (= token 27) (= token 28))
-       (print-all stk token 8) ;production 8 
+       (print-all stk head 8) ;production 8 
        (push (list 16 10 8) (cdr stk)))
       ((or (= token 31) (= token 21) (<= 22 token 23) (= token 26))
-       (print-all stk token 9) ;production 9
+       (print-all stk head 9) ;production 9
        (cdr stk))
       (else (push 99 stk)))))
 
 ;10
 (define term
-  (lambda (stk token)
+  (lambda (stk head token)
     (cond
       ((or (= token 20) (= token 21) (= token 25))
-       (print-all stk token 10) ;production 10
+       (print-all stk head 10) ;production 10
        (push (list 13 11) (cdr stk)))
       (else (push 99 stk)))))
 
 ;11 and 12
 (define factor_tail
-  (lambda (stk token)
+  (lambda (stk head token)
     (cond
     ((<= 29 token 30)
-     (print-all stk token 11) ;production 11
+     (print-all stk head 11) ;production 11
      (push (list 18 13 11) (cdr stk)))
     ((or (= token 26) (= token 20) (= token 21) (= token 23) (= token 31))
-     (print-all stk token 12) ;production 12
+     (print-all stk head 12) ;production 12
      (cdr stk))
     (else (push 99 stk)))))
 
 ;13 14 and 15
 (define factor
-  (lambda (stk token)
+  (lambda (stk head token)
     (cond
       ((= token 25)
-       (print-all stk token 13) ;production 13
+       (print-all stk head 13) ;production 13
        (push (list 25 7 26) (cdr stk)))
       ((= token 20)
-       (print-all stk token 14) ;production 14
+       (print-all stk head 14) ;production 14
        (push 20 (cdr stk)))
       ((= token 21)
-       (print-all stk token 15) ;production 15
+       (print-all stk head 15) ;production 15
        (push 21 (cdr stk)))
       (else (push 99 stk)))))
 
 ;16 and 17
 (define add_op
-  (lambda (stk token)
+  (lambda (stk head token)
     (cond
       ((= token 27)
-       (print-all stk token 16) ;production 16
+       (print-all stk head 16) ;production 16
        (push 27 (cdr stk))) 
       ((= token 28)
-       (print-all stk token 17) ;production 17
+       (print-all stk head 17) ;production 17
        (push 28 (cdr stk)))
       (else (push 99 stk)))))
 
 ;18 and 19
 (define mult_op
-  (lambda (stk token)
+  (lambda (stk head token)
     (cond
       ((string=? token 29)
-       (print-all stk token 18) ;production 18
+       (print-all stk head 18) ;production 18
        (push 29 (cdr stk)))
       ((string=? token 30)
-       (print-all stk token 19) ;production 19
+       (print-all stk head 19) ;production 19
        (push 30 (cdr stk)))
       (else (push 99 stk)))))
 
@@ -340,15 +361,17 @@
 ;If there is no indication of an error, the program evaluates the input
 (define parse
   (lambda (p_stack input)
-    (let ((stack_head (car p_stack)) (input_head (car input)) (num_head (token-lookup input_head))) ;Defining the tops of the two stacks. 
+    (let* ((stack_head (car p_stack)) (input_head (car input)) (num_head (token-num input_head))) ;Defining the tops of the two stacks. 
       (cond
         ((= stack_head 99) (error-handler (cdr p_stack) input_head)) ;Checks to see if the top of the parse stack is "error" meaning there was an error somewhere. 
         ((= stack_head num_head)
          (print-stack p_stack)
          (print-input input_head)
-         (if (and (= stack_head 31) (= input_head 31)) ;Checks to see if both stacks are empty.
+         (if (and (= stack_head 31) (= num_head 31)) ;Checks to see if both stacks are empty. or $$
              (close-ports)
              (begin
                (display (string-append (string-append "match " (swap input_head)) "\r\n") comment-file) ;calls 'swap', returns 'id' or 'number' if passed an id or a number, otherwise returns input_head
                (parse (cdr p_stack) (cdr input)))))
-        (else (parse (table p_stack input_head) input))))))
+        (else (parse (table p_stack input_head num_head) input))))))
+
+(parse (list 1 31) input)
