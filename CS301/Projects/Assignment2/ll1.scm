@@ -11,7 +11,6 @@
 
 ;Non-term-lookup
 ;Syntax: int
-;This function takes in a number and returns the associated non-terminal string name.
 ;This function is only called when the program is printing to the parse stack text file.
 (define (non-term-lookup term)
   (cond
@@ -28,7 +27,6 @@
 
 ;Token-lookup
 ;Syntax: int
-;This function takes in an integer and spits out the associated token value.
 ;This function is only called when the program is printing to the comment text file. 
 (define (token-lookup token)
   (cond
@@ -48,17 +46,15 @@
 ;================================================================================
 ;File operations
 ;================================================================================
+
 ;Opening 3 file ports
 (define parse-file (open-output-file #:mode 'text #:exists 'replace "parsestack"))
 (define inputstream-file (open-output-file #:mode 'text #:exists 'replace "inputstream"))
 (define comment-file (open-output-file #:mode 'text #:exists 'replace  "comment"))
-
-;Writing the "Initial stack contents" to the comment file.
 (display "intial stack contents\r\n" comment-file)
 
 ;Read data
 ;Reads in data from a text file and constructs a list of chars.
-;Using "read" didn't preserve the case of the letters, but making it into a char list did. 
 (define reader
   (let ((port (open-input-file #:mode 'text "input")))
     (let iter ((val (read-char port)))
@@ -70,10 +66,9 @@
 ;Syntax: list
 ;Creates a list of strings out of a list of characters. 
 ;If str isn't a pair, meaning it reached the end of the available input, it returns whatever is stored in concat.
-;If the character 'head' is a #\space or a #\newline character, it cons the reverse of concat with a recursive call to iter
-;with the input list and an empty concat list.
-;In the event it sees a #\space or #\newline character and the list concat is empty, it calls iter again until it sees something that isn't
-;a space or a newline to avoid input like "read                 A $$". 
+;If the character 'head' is a #\space or a #\newline character, it cons the reverse of concat with a recursive call to iter with the cdr of the input and an
+;empty concat list. If the character 'head' is a #\space or a #\newline character AND concat is null, which means that there is more than 1 #\space or #\newline
+;character, it loops until it finds something to add to 'concat'.
 (define stitcher
   (lambda (str)
     (let iter ((lst str) (concat '()))
@@ -89,7 +84,8 @@
 
 ;Driver function for stitcher
 ;Sytax: input from 'reader' function
-;Takes the output from 'reader' which spits out a char list of characters from the input text file and converts the resulting list to a list of symbols
+;Takes the output from 'reader' which spits out a char list of characters from the input text file and converts the resulting list to a list of symbols.
+;My reasoning for this is because instead of evaluating strings, all I would have to do is determine if they point to the same place in memory.
 (define input (map string->symbol (map list->string (stitcher reader))))
 
 ;================================================================================
@@ -145,7 +141,7 @@
   (display (string-append (string-append "predict " (number->string inp)) "\r\n") comment-file))
 
 ;Print-input
-;Syntax: string (top of the input file)
+;Syntax: string
 ;Prints the current top of the input stack to the inputstream text file
 (define (print-input inp)
   (display (string-append (symbol->string inp) "\r\n") inputstream-file))
@@ -160,8 +156,7 @@
 
 ;Swap
 ;Syntax: string
-;If the value of x is an id or an integer, this function returns "id" or "number" if token is an id or a number, otherwise
-;it returns a string version of the symbol.
+;If the value of x is an id or an integer, this function returns "id" or "number" if token is an id or a number, otherwise it converts the symbol to a string.
 (define swap
   (lambda (token)
     (cond
@@ -193,10 +188,13 @@
    (close-ports))
 
 ;================================================================================
-;Defining terminals
+;Terminals
 ;This function returns a number associated with a given input token. If 'token' isn't a member of the
 ;symbols accepted by this function it returns the symbol 'error. 
 ;================================================================================
+
+;Token-num
+;Syntax: symbol
 (define (token-num token)
   (cond
     ((id? token) 20)
@@ -217,10 +215,7 @@
 ;Parse Table Functions
 ;The table function looks up the current non-terminal and moves to its corresponding function.
 ;p_stack is the parse stack, input_head is the top of the input list, token is the numeric value of the input head.
-;At no point is input_head ever evaluated.
 ;If at any point the table is given an input that is an invalid token it returns 99, which is the error flag.
-;If a production has the same non terminal, they'll be within the same function (e.g 'factor' produces ( expr ), id, or literal (number)
-;And all of those productions are in the same function.s
 ;================================================================================
 
 ;table
@@ -241,7 +236,11 @@
         ((= head 18) (mult_op p_stack input_head token))
         (else (push 99 p_stack))))))
 
+
+;=====================================
 ;Productions
+;=====================================
+
 ;1
 ;If the program sees an id (20), read (22), write (23), or $$ (31) it prints out the stack, input head, and the production number.
 ;Then it pushes stmt_list (2) to the stack and returns it. 
@@ -286,21 +285,20 @@
       (else (push 99 stk)))))
        
 ;7
-;If the program sees id (20), number (21), '(' (25), it prints out the stack, input head, and production number.
+;If the program sees id (20), number (21), ( (25), it prints out the stack, input head, and production number.
 ;It then pushes term (10), and term_tail (8) to the stack. 
 (define expr
   (lambda (stk head token)
     (cond
       ((or (<= 20 token 21) (= token 25))
-       (begin
          (print-all stk head 7) ;production 7
-         (push (list 10 8) (cdr stk))))
+         (push (list 10 8) (cdr stk)))
       (else (push 99 stk)))))
 
 ;8 and 9
 ;If this program sees + (27) or - (28), it prints out the stack, input head, and production number.
 ;It then pushes add_op (16), term (10), and term_tail (8) to the stack or the cdr of the stack if it sees
-;$$ (31), number (21), read (22), write (23), or ')' (26)
+;$$ (31), number (21), read (22), write (23), or ) (26)
 (define term_tail
   (lambda (stk head token)
     (cond
@@ -313,7 +311,7 @@
       (else (push 99 stk)))))
 
 ;10
-;If this program sees id (20), number (21), or '(' (25),  it prints out the stack, current input head, and production number.
+;If this program sees id (20), number (21), or ( (25),  it prints out the stack, current input head, and production number.
 ;Then, factor (13) and factor_tail (11) get pushed to the stack. 
 (define term
   (lambda (stk head token)
@@ -325,7 +323,7 @@
 
 ;11 and 12
 ;If this program sees * (29) or / (30), it prints out the stack, input head, and production number then pushes mult_op (18), factor (13), and factor_tail (11) to the stack.
-;If this program sees id (20), read (22), write (23), ')' (26), + (27), or - (28) it returns the cdr of the stack. 
+;If this program sees id (20), read (22), write (23), ) (26), + (27), or - (28) it returns the cdr of the stack. 
 (define factor_tail
   (lambda (stk head token)
     (cond
@@ -338,12 +336,12 @@
     (else (push 99 stk)))))
 
 ;13 14 and 15
-;If this program sees '(' (25) it prints out the stack, input head, and production number and pushes '(' (25), expr (7), and ')' 26 to the stack.
-;If this sees id (20) or number (21) it returns id (20) and number (21) respectively.
+;If this program sees ( (25) it prints out the stack, input head, and production number and pushes ( (25), expr (7), and ) 26 to the stack.
+;If this sees id (20) or number (21), it returns id (20) and number (21) respectively.
 (define factor
   (lambda (stk head token)
     (cond
-      ((= token 25) ;Open paren
+      ((= token 25)
        (print-all stk head 13) ;production 13
        (push (list 25 7 26) (cdr stk)))
       ((= token 20)
@@ -383,13 +381,9 @@
 ;================================================================================
 ;Main Function
 ;This function takes in a list containing 1 31 (which are the numbers associated with "program" and "$$") and another list that is the text input.
-;It first grabs the heads of the two lists and makes sure that they aren't any values that indicate that there was an error somewhere in the parsing of the file.
-;If the program encounters some kind of error in one of the productions, 99 gets pushed to the parse stack which is an error. It gets evaluated and the error handler is called. 
-;If the input from the text file is invalid, then num_head will be a non-integer value which represents an error and the program quits.
-;If there is no indication of an error, the program evaluates the input.
-;First the parse stack and the text file input gets passed to 'parse', then once it has gone through and checked the input, it passes it to an internal 'iter' loop which
-;attempts to match the top of the parse stack and the input list. If it doesn't match, the stack, the top of the input list, and the number associated with that input token
-;is passed to the table function. That function returns a parse stack list and that gets passed to the iter loop.
+;First, the parse stack and the text file input gets passed to 'parse'. If the input isn't valid, a symbol 'error is returned, otherwise a number is returned.
+;Then it attempts to match the top of the parse stack and the input list. If it doesn't match, the stack, the top of the input list, and the number associated with that
+;input token is passed to the table function. That function returns a parse stack and that gets passed to the iter loop.
 ;If it is a match, the cdr of both input files is passed to parse. 
 ;================================================================================
 

@@ -1,1 +1,3 @@
-r      ead
+C := ( A + B ) * D / ( E + 1234 )
+write C
+$$
