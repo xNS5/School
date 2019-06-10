@@ -65,10 +65,10 @@
 ;Stitcher
 ;Syntax: list
 ;Creates a list of strings out of a list of characters. 
-;If str isn't a pair, meaning it reached the end of the available input, it returns whatever is stored in concat.
-;If the character 'head' is a #\space or a #\newline character, it cons the reverse of concat with a recursive call to iter with the cdr of the input and an
-;empty concat list. If the character 'head' is a #\space or a #\newline character AND concat is null, which means that there is more than 1 #\space or #\newline
-;character, it loops until it finds something to add to 'concat'.
+;If lst isn't a pair, it returns whatever is stored in concat. If the character 'head' is a #\space or a #\newline character,
+;it cons the reverse of concat with a recursive call to iter with the cdr of the input and an empty concat list. If the character 'head' is a
+; #\space or a #\newline character AND concat is null, which means that there is more than 1 #\space or #\newline character, it loops until it
+;finds something to add to 'concat'.
 (define stitcher
   (lambda (str)
     (let iter ((lst str) (concat '()))
@@ -85,7 +85,6 @@
 ;Driver function for stitcher
 ;Sytax: input from 'reader' function
 ;Takes the output from 'reader' which spits out a char list of characters from the input text file and converts the resulting list to a list of symbols.
-;My reasoning for this is because instead of evaluating strings, all I would have to do is determine if they point to the same place in memory.
 (define input (map string->symbol (map list->string (stitcher reader))))
 
 ;================================================================================
@@ -117,10 +116,10 @@
 ;Checks to see if a letter is a valid id.
 (define (id? val)
   (let ((val (symbol->string val)))
-        (if (= 1 (string-length val))
-            (let ((char_val (car (string->list val))))
-              (if (and (char? char_val) (char-upper-case? char_val) (char-alphabetic? char_val)) #t #f))
-            #f)))
+    (if (= 1 (string-length val))
+        (let ((char_val (car (string->list val))))
+          (if (and (char? char_val) (char-upper-case? char_val) (char-alphabetic? char_val)) #t #f))
+        #f)))
 
 ;Print-stack
 ;Syntax: list
@@ -190,12 +189,12 @@
 ;================================================================================
 ;Terminals
 ;This function returns a number associated with a given input token. If 'token' isn't a member of the
-;symbols accepted by this function it returns the symbol 'error. 
+;symbols accepted by this program it returns the symbol 'error. 
 ;================================================================================
 
-;Token-num
+;token->num
 ;Syntax: symbol
-(define (token-num token)
+(define (token->num token)
   (cond
     ((id? token) 20)
     ((num? token) 21)
@@ -224,11 +223,11 @@
   (lambda (p_stack input_head token)
     (let ((head (car p_stack)))
       (cond
-        ((= head 1) (program p_stack input_head token))
-        ((= head 2) (stmt_list p_stack input_head token))
-        ((= head 4) (stmt p_stack input_head token))
-        ((= head 7) (expr p_stack input_head token))
-        ((= head 8) (term_tail p_stack input_head token))
+        ((= head 1)  (program p_stack input_head token))
+        ((= head 2)  (stmt_list p_stack input_head token))
+        ((= head 4)  (stmt p_stack input_head token))
+        ((= head 7)  (expr p_stack input_head token))
+        ((= head 8)  (term_tail p_stack input_head token))
         ((= head 10) (term p_stack input_head token))
         ((= head 11) (factor_tail p_stack input_head token))
         ((= head 13) (factor p_stack input_head token))
@@ -291,8 +290,8 @@
   (lambda (stk head token)
     (cond
       ((or (<= 20 token 21) (= token 25))
-         (print-all stk head 7) ;production 7
-         (push (list 10 8) (cdr stk)))
+       (print-all stk head 7) ;production 7
+       (push (list 10 8) (cdr stk)))
       (else (push 99 stk)))))
 
 ;8 and 9
@@ -384,29 +383,29 @@
 ;First, the parse stack and the text file input gets passed to 'parse'. If the input isn't valid, a symbol 'error is returned, otherwise a number is returned.
 ;Then it attempts to match the top of the parse stack and the input list. If it doesn't match, the stack, the top of the input list, and the number associated with that
 ;input token is passed to the table function. That function returns a parse stack and that gets passed to the iter loop.
-;If it is a match, the cdr of both input files is passed to parse. 
+;If it is a match, the cdr of both input files is passed to parse.
 ;================================================================================
 
 ;Parse
 ;Syntax: list, list
 (define parse
   (lambda (p_stack input)
-    (let* ((input_head (car input)) (num_head (token-num input_head)))
+    (let* ((input_head (car input)) (num_head (token->num input_head)))
       (if (not (integer? num_head))
           (error-handler p_stack input_head)
           (begin
             (let iter ((p_stack p_stack))
               (let ((stack_head (car p_stack)))
-              (cond
-                ((= stack_head 99) (error-handler (cdr p_stack) input_head)) ; 99 indicates an error
-                ((= stack_head num_head)
-                 (print-stack p_stack)
-                 (print-input input_head)
-                 (if (and (= stack_head 31) (= num_head 31)) ; 31 is $$
-                     (close-ports)
-                     (begin ;swap determines if the input is an id or a number, otherwise it just returns the input_head.
-                       (display (string-append (string-append "match " (swap input_head)) "\r\n") comment-file)
-                       (parse (cdr p_stack) (cdr input)))))
-                (else (iter (table p_stack input_head num_head)))))))))))
+                (cond
+                  ((= stack_head 99) (error-handler (cdr p_stack) input_head)) ; 99 indicates an error
+                  ((= stack_head num_head)
+                   (print-stack p_stack)
+                   (print-input input_head)
+                   (if (and (= stack_head 31) (= num_head 31)) ; 31 is $$
+                       (close-ports)
+                       (begin ;swap determines if the input is an id or a number, then returns a string corresponding to the inputted symbol.
+                         (display (string-append (string-append "match " (swap input_head)) "\r\n") comment-file)
+                         (parse (cdr p_stack) (cdr input)))))
+                  (else (iter (table p_stack input_head num_head)))))))))))
 
 (parse (list 1 31) input)
