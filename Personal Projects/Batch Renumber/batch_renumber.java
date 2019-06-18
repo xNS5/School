@@ -1,30 +1,20 @@
-import java.util.*;
 import java.io.*;
 import javax.swing.*;
 
 
 
-public class batch_renumber{
+public class batch_renumber extends JFrame{
 
    public static void main(String[] args){
+      container cont = new container();
+      cont.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      cont.setSize(500, 500);
 
-      JFrame frame = new JFrame();
-      JFileChooser jfc = new JFileChooser("/users/michaelkennedy/Pictures/Photography/");
-      jfc.setDialogTitle("Open a Folder to Convert: ");
-      int returnValue = jfc.showOpenDialog(null);
-      button = new JButton("Test");
-
-      if (returnValue == JFileChooser.APPROVE_OPTION) {
-         File selectedFile = jfc.getSelectedFile();
-
-      }
-
-      if (returnValue == JFileChooser.CANCEL_OPTION){
-         System.exit(0);
-      }
+      JButton button1 = new JButton("Choose Folder");
+      JButton button2 = new JButtin("Convert");
 
 
 
-
+      cont.setVisible(true);
    }
 }
