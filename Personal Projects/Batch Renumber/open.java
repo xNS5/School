@@ -2,8 +2,7 @@ import javax.swing.JFileChooser;
 
 public class open {
 
-    public static String open() {
-
+     static String open() {
         JFileChooser jfc = new JFileChooser("/users/michaelkennedy/Pictures/Photography/");
         jfc.setDialogTitle("Choose a directory to save your file: ");
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
