@@ -1,5 +1,3 @@
-import org.jetbrains.annotations.NotNull;
-
 import java.io.*;
 import java.lang.String;
 import java.util.HashMap;
@@ -7,7 +5,7 @@ import java.util.Scanner;
 
 public class filter implements FileFilter{
 
-    public boolean accept (@NotNull File file){
+    public boolean accept (File file){
         if(file.getName().equals(".DS_Store")){
             file.delete();
         }
@@ -17,7 +15,7 @@ public class filter implements FileFilter{
         return false;
     }
 
-    private boolean extension(@NotNull File file){
+    private boolean extension(File file){
         try {
             String fileName = file.getName();
             HashMap<String, Boolean> hmap = new HashMap<>();
@@ -31,7 +29,7 @@ public class filter implements FileFilter{
             else return false;
         }
         catch(FileNotFoundException e){
-            new err(e.getMessage());
+            new Err(e.getMessage());
         }
         return false;
     }

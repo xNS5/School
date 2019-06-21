@@ -1,17 +1,16 @@
 import javax.swing.*;
-import java.awt.*;
 
 public class batch_renumber{
 
    public static void main(String[] args){
-       try {
-           final container cont = new container();
-           cont.setResizable(false);
 
+       try {
+           final Container cont = new Container("Batch Renumber");
+           cont.setResizable(false);
            JTextField jf1 = new JTextField(40);
            JTextField jf2 = new JTextField(36);
            JTextField jf3 = new JTextField(2);
-           cont.setSize(750, 100);
+           cont.setSize(750, 150);
 
            JButton button1 = new JButton("Choose Folder");
            JButton button2 = new JButton("Convert");
@@ -28,22 +27,22 @@ public class batch_renumber{
            cont.add(button3);
            cont.setVisible(true);
 
-           button1.addActionListener(e -> jf1.setText(open.open()));
+           button1.addActionListener(e -> jf1.setText(Open.Open()));
            button2.addActionListener(e -> {
                if (jf1.getText().trim().length() == 0) {
-                   new err("Error: No file detected\r\n");
+                   new Err("Error: No file detected\r\n");
                } else if ((jf2.getText().trim().length() == 0) || (jf3.getText().trim().length() == 0)){
-                   new err("Error: Please fill in both new name and number fields\r\n");
+                   new Err("Error: Please fill in both new name and number fields\r\n");
                } else if (Integer.parseInt(jf3.getText()) < 0){
-                   new err("Error: Number must be at least zero\r\n");
+                   new Err("Error: Number must be at least zero\r\n");
                } else {
-                   new convert(jf1.getText(), jf2.getText(), Integer.parseInt(jf3.getText()));
+                   new Convert(jf1.getText(), jf2.getText(), Integer.parseInt(jf3.getText()));
                }
            });
+           button3.addActionListener(e->{new Editor();});
        }
        catch(Exception e){
           System.out.println(e.getMessage());
        }
-
    }
 }
