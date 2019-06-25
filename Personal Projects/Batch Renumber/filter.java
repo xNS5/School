@@ -29,7 +29,8 @@ public class filter implements FileFilter{
             else return false;
         }
         catch(FileNotFoundException e){
-            new Err(e.getMessage());
+            e.printStackTrace();
+            new Err("Extension: " + e.toString());
         }
         return false;
     }

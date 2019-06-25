@@ -12,14 +12,17 @@ import java.awt.*;
 
 
 public class Editor extends JFrame {
-    private static String dir;
+    private static String dir =  System.getProperty("user.dir") + "/br_config/filter";
     private static JTextArea jt;
     private static JFrame mainFrame;
 
-    Editor() {
+    public static void main(String[] args){
+        Editor();
+    }
+
+    static void Editor() {
         try {
             //File, Scanner and a StringBuilder
-            dir = "/users/michaelkennedy/Computer Science/Github/CS/Personal Projects/Batch Renumber/br_config/filter";
             File filter_file = new File(dir);
             Scanner sc = new Scanner(filter_file);
             StringBuilder sb = new StringBuilder();
@@ -44,9 +47,10 @@ public class Editor extends JFrame {
             layout.setAutoCreateContainerGaps(true);
 
             //Adding info from filter file to a stringbuilder.
-            while (sc.hasNextLine()) {
+            while (sc.hasNext()) {
                 sb.append(sc.next() + "\r\n");
             }
+
             jt.setText(sb.toString());
 
             //Here's the funky part, this chunk of code is how the different parts get aligned properly.
@@ -77,7 +81,8 @@ public class Editor extends JFrame {
             });
 
         } catch (Exception e) {
-           new Err(e.getMessage());
+            e.printStackTrace();
+           new Err("Editor: " + e.toString());
         }
     }
 

@@ -1,8 +1,11 @@
 import javax.swing.*;
+import java.util.Scanner;
+import java.io.File;
 
 public class batch_renumber{
 
-    private static String dir;
+    private static String default_dir_path = System.getProperty("user.dir")+"/br_config/init";
+    private static String path;
 
    public static void main(String[] args){
 
@@ -11,6 +14,18 @@ public class batch_renumber{
            final Container cont = new Container("Batch Renumber");
            JPanel panel = new JPanel();
            cont.setResizable(false);
+           Scanner sc = new Scanner(new File(default_dir_path));
+
+           if(sc.hasNextLine()){
+               String temp_str =  sc.next();
+               File temp_file = new File(temp_str);
+               if(temp_file.isDirectory()){
+                   path = temp_str;
+               }
+           }
+           else{
+               path = "~/";
+           }
 
            // jf1 = folder to be converted, jf2 = name to rename the files to, jf3 is the number to iterate up from.
            JTextField jf1 = new JTextField(40);
@@ -37,7 +52,7 @@ public class batch_renumber{
            cont.setVisible(true);
 
            //ActionListeners with lambda expressions.
-           button1.addActionListener(e -> jf1.setText(Open.Open()));
+           button1.addActionListener(e -> jf1.setText(Open.Open(path)));
            button2.addActionListener(e -> {
                if (jf1.getText().trim().length() == 0) {
                    new Err("Error: No file detected\r\n");
@@ -49,12 +64,15 @@ public class batch_renumber{
                    new Convert(jf1.getText(), jf2.getText(), Integer.parseInt(jf3.getText()));
                }
            });
-           button3.addActionListener(e->{
-               new Editor();
+           button3.addActionListener(e-> new Editor());
+           button4.addActionListener(e-> {
+               path = Dir.dir();
            });
        }
        catch(Exception e){
-          new Err(e.getMessage());
+           e.printStackTrace();
+         new Err("Batch Renumber: " + e.toString());
+
        }
    }
 }
