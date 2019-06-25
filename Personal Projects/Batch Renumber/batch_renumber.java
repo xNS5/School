@@ -2,19 +2,27 @@ import javax.swing.*;
 
 public class batch_renumber{
 
+    private static String dir;
+
    public static void main(String[] args){
 
        try {
+           // Creating the container for the main window
            final Container cont = new Container("Batch Renumber");
+           JPanel panel = new JPanel();
            cont.setResizable(false);
+
+           // jf1 = folder to be converted, jf2 = name to rename the files to, jf3 is the number to iterate up from.
            JTextField jf1 = new JTextField(40);
            JTextField jf2 = new JTextField(36);
            JTextField jf3 = new JTextField(2);
            cont.setSize(750, 150);
 
+           //Creating new JButtons
            JButton button1 = new JButton("Choose Folder");
            JButton button2 = new JButton("Convert");
            JButton button3 = new JButton("Edit Filter");
+           JButton button4 = new JButton("Default Directory");
 
            cont.add(new JLabel("Import Directory"));
            cont.add(jf1);
@@ -25,8 +33,10 @@ public class batch_renumber{
            cont.add(jf3);
            cont.add(button2);
            cont.add(button3);
+           cont.add(button4);
            cont.setVisible(true);
 
+           //ActionListeners with lambda expressions.
            button1.addActionListener(e -> jf1.setText(Open.Open()));
            button2.addActionListener(e -> {
                if (jf1.getText().trim().length() == 0) {
@@ -39,10 +49,12 @@ public class batch_renumber{
                    new Convert(jf1.getText(), jf2.getText(), Integer.parseInt(jf3.getText()));
                }
            });
-           button3.addActionListener(e->{new Editor();});
+           button3.addActionListener(e->{
+               new Editor();
+           });
        }
        catch(Exception e){
-          System.out.println(e.getMessage());
+          new Err(e.getMessage());
        }
    }
 }

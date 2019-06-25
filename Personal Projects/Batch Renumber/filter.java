@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class filter implements FileFilter{
-
+    //Filters out all of the files? I lowkey forget what I did for this one.
     public boolean accept (File file){
         if(file.getName().equals(".DS_Store")){
             file.delete();

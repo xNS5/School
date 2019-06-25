@@ -1,10 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class err{
-
-     err (String err){
-         final container frame = new container();
+public class Err{
+    //Error popup with a custom message.
+     Err (String err){
+         final Container frame = new Container("Error");
          JButton close = new JButton("Back");
          JButton exit = new JButton("Exit");
          JLabel label = new JLabel(err);

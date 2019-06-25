@@ -1,14 +1,14 @@
-
-
 import java.lang.*;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 
-public class convert {
 
-    convert (String dir, String name, int count) {
+//Class for converting files
+public class Convert {
+
+    Convert (String dir, String name, int count) {
         try {
             File directory = new File(dir);
             filter f = new filter();
@@ -25,7 +25,7 @@ public class convert {
 //            }
 
         } catch (Exception e) {
-            new err(e.getMessage());
+            new Err(e.getMessage());
         }
     }
 
