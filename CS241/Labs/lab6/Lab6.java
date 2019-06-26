@@ -133,5 +133,4 @@ public class Lab6 extends JFrame implements ActionListener{
     public static void main(String[] args) {
         Lab6 frame = new Lab6();
     }
-
 }
