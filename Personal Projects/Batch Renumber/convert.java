@@ -25,7 +25,8 @@ public class Convert {
 //            }
 
         } catch (Exception e) {
-            new Err(e.getMessage());
+            e.printStackTrace();
+            new Err("Convert: " + e.toString());
         }
     }
 

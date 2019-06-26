@@ -22,10 +22,12 @@ public class batch_renumber{
            JMenuBar menuBar = new JMenuBar();
            JMenu menu = new JMenu("File");
 
+           menuBar.add(menu);
+
            JTextField jf1 = new JTextField(40);
            JTextField jf2 = new JTextField(36);
            JTextField jf3 = new JTextField(2);
-           cont.setSize(750, 150);
+           cont.setSize(900, 150);
 
            //Creating new JButtons
            JButton button1 = new JButton("Choose Folder");
@@ -38,65 +40,57 @@ public class batch_renumber{
            JLabel num = new JLabel("#");
 
 
-           layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                   .addGroup(layout.createParallelGroup()
-                           .addComponent(imp)
-                           .addComponent(jf1)
+           layout.setHorizontalGroup(layout.createSequentialGroup()
+                   .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                        .addComponent(imp)
+                        .addComponent(name))
+                   .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                        .addComponent(jf1)
+                        .addComponent(jf2)
+                       .addComponent(num))
+                   .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                            .addComponent(button1)
-                   )
-                   .addGroup(layout.createParallelGroup()
-                           .addComponent(name)
-                           .addComponent(jf2)
-                           .addComponent(num)
-                           .addComponent(jf3)
-                           .addComponent(button2)
-                   )
+                                   .addComponent(jf3)
+                           )
+
+                   .addComponent(button2)
+
            );
 
-           layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                   .addComponent(imp)
-                   .addComponent(jf1)
-                   .addComponent(button1)
-                   .addComponent(name)
-                   .addComponent(jf2)
-                   .addComponent(num)
-                   .addComponent(jf3)
-                   .addComponent(button2)
+           layout.setVerticalGroup(layout.createSequentialGroup()
+                   .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                           .addComponent(imp).addComponent(jf1).addComponent(button1))
+                   .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                           .addComponent(name).addComponent(jf2).addComponent(num).addComponent(jf3).addComponent(button2))
+
            );
 
            panel.setLayout(layout);
            cont.add(panel);
            cont.setVisible(true);
 
-//           cont.add(new JLabel("Import Directory"));
-//           cont.add(jf1);
-//           cont.add(button1);
-//           cont.add(new JLabel("New Name"));
-//           cont.add(jf2);
-//           cont.add(new JLabel("#"));
-//           cont.add(jf3);
-//           cont.add(button2);
-//           cont.add(button3);
-//           cont.add(button4);
-//           cont.setVisible(true);
-
-       try{
-           Scanner sc = new Scanner(new File(default_dir_path));
 
            //ActionListeners with lambda expressions.
            button1.addActionListener(e -> {
-               if (sc.hasNextLine()) {
-                   String temp_str = sc.next();
-                   System.out.println(temp_str);
-                   File temp_file = new File(temp_str);
-                   if (temp_file.isDirectory()) {
-                       path = temp_str;
+               try {
+                   Scanner sc = new Scanner(new File(default_dir_path));
+                   if (sc.hasNextLine()) {
+                       String temp_str = sc.next();
+                       System.out.println(temp_str);
+                       File temp_file = new File(temp_str);
+                       if (temp_file.isDirectory()) {
+                           path = temp_str;
+                       }
+                   } else {
+                       path = "~/";
                    }
-               } else {
-                   path = "~/";
-               }
 
-               jf1.setText(Open.Open(path));
+                   jf1.setText(Open.Open(path));
+               } catch (Exception v) {
+                   v.printStackTrace();
+                   new Err("Batch Renumber: " + v.toString());
+
+               }
            }
 
            );
@@ -116,10 +110,4 @@ public class batch_renumber{
                Dir.dir();
            });
        }
-       catch(Exception e){
-           e.printStackTrace();
-         new Err("Batch Renumber: " + e.toString());
-
-       }
    }
-}
