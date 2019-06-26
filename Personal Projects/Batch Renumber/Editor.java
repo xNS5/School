@@ -16,11 +16,7 @@ public class Editor extends JFrame {
     private static JTextArea jt;
     private static JFrame mainFrame;
 
-    public static void main(String[] args){
-        Editor();
-    }
-
-    static void Editor() {
+     Editor() {
         try {
             //File, Scanner and a StringBuilder
             File filter_file = new File(dir);

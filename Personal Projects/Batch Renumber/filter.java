@@ -10,7 +10,7 @@ public class filter implements FileFilter{
             file.delete();
         }
         else if(file.isFile()){
-            return file.isFile();
+            return extension(file);
         }
         return false;
     }
@@ -19,7 +19,7 @@ public class filter implements FileFilter{
         try {
             String fileName = file.getName();
             HashMap<String, Boolean> hmap = new HashMap<>();
-            Scanner sc = new Scanner(new File("files.txt"));
+            Scanner sc = new Scanner(new File(System.getProperty("user.dir") + "/br_config/filter"));
             while (sc.hasNextLine()) {
                 hmap.put(sc.nextLine(), true);
             }
