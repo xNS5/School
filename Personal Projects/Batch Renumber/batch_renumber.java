@@ -15,25 +15,27 @@ public class batch_renumber{
            final Container cont = new Container("Batch Renumber");
 
            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+           JPanel empty = new JPanel();
            GroupLayout layout = new GroupLayout(panel);
-           layout.setAutoCreateGaps(true);
-           layout.setAutoCreateContainerGaps(true);
 
            JMenuBar menuBar = new JMenuBar();
            JMenu menu = new JMenu("File");
+           JMenuItem filter = new JMenuItem("Edit Filter");
+           JMenuItem default_dir = new JMenuItem("Change Default Directory");
+           menu.add(filter);
+           menu.add(default_dir);
 
            menuBar.add(menu);
 
            JTextField jf1 = new JTextField(40);
            JTextField jf2 = new JTextField(36);
            JTextField jf3 = new JTextField(2);
+
            cont.setSize(900, 150);
 
            //Creating new JButtons
            JButton button1 = new JButton("Choose Folder");
            JButton button2 = new JButton("Convert");
-           JButton button3 = new JButton("Edit Filter");
-           JButton button4 = new JButton("Default Directory");
 
            JLabel imp = new JLabel("Import Directory");
            JLabel name = new JLabel("New Name");
@@ -41,26 +43,33 @@ public class batch_renumber{
 
 
            layout.setHorizontalGroup(layout.createSequentialGroup()
+                   .addComponent(menuBar)
                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                         .addComponent(imp).addComponent(name))
                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                         .addComponent(jf1).addComponent(jf2))
                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                       .addComponent(button1).addComponent(num))
-                   .addComponent(jf3)
-                   .addComponent(button2)
+                           .addComponent(empty).addComponent(num))
+                   .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                           .addComponent(empty).addComponent(jf3, 0, 40, 40))
+                   .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                           .addComponent(button1).addComponent(button2))
            );
 
            layout.setVerticalGroup(layout.createSequentialGroup()
+                   .addComponent(menuBar)
                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                           .addComponent(imp).addComponent(jf1).addComponent(button1))
+                           .addComponent(imp).addComponent(jf1).addComponent(empty).addComponent(empty).addComponent(button1))
                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                           .addComponent(name).addComponent(jf2).addComponent(num).addComponent(jf3)
+                          .addComponent(name).addComponent(jf2).addComponent(num)
                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                                   .addComponent(button2)))
+                               .addComponent(jf3, 0, 30, 40)
+                               .addComponent(button2)))
 
            );
 
+           layout.setAutoCreateGaps(true);
+           layout.setAutoCreateContainerGaps(true);
            panel.setLayout(layout);
            cont.add(panel);
            cont.setVisible(true);
@@ -101,8 +110,8 @@ public class batch_renumber{
                    new Convert(jf1.getText(), jf2.getText(), Integer.parseInt(jf3.getText()));
                }
            });
-           button3.addActionListener(e-> new Editor());
-           button4.addActionListener(e-> {
+           filter.addActionListener(e-> new Editor());
+           default_dir.addActionListener(e-> {
                Dir.dir();
            });
        }
