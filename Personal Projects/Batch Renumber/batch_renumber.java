@@ -28,7 +28,7 @@ public class batch_renumber{
            menuBar.add(menu);
 
            JTextField jf1 = new JTextField(40);
-           JTextField jf2 = new JTextField(36);
+           JTextField jf2 = new JTextField(30);
            JTextField jf3 = new JTextField(2);
 
            cont.setSize(900, 150);
@@ -81,7 +81,6 @@ public class batch_renumber{
                    Scanner sc = new Scanner(new File(default_dir_path));
                    if (sc.hasNextLine()) {
                        String temp_str = sc.next();
-                       System.out.println(temp_str);
                        File temp_file = new File(temp_str);
                        if (temp_file.isDirectory()) {
                            path = temp_str;
