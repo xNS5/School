@@ -42,26 +42,22 @@ public class batch_renumber{
 
            layout.setHorizontalGroup(layout.createSequentialGroup()
                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                        .addComponent(imp)
-                        .addComponent(name))
+                        .addComponent(imp).addComponent(name))
                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                        .addComponent(jf1)
-                        .addComponent(jf2)
-                       .addComponent(num))
+                        .addComponent(jf1).addComponent(jf2))
                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                           .addComponent(button1)
-                                   .addComponent(jf3)
-                           )
-
+                       .addComponent(button1).addComponent(num))
+                   .addComponent(jf3)
                    .addComponent(button2)
-
            );
 
            layout.setVerticalGroup(layout.createSequentialGroup()
                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                            .addComponent(imp).addComponent(jf1).addComponent(button1))
                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                           .addComponent(name).addComponent(jf2).addComponent(num).addComponent(jf3).addComponent(button2))
+                           .addComponent(name).addComponent(jf2).addComponent(num).addComponent(jf3)
+                           .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                                   .addComponent(button2)))
 
            );
 
