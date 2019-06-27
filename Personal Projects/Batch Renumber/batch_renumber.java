@@ -15,7 +15,7 @@ public class batch_renumber{
            final Container cont = new Container("Batch Renumber");
 
            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-           JPanel empty = new JPanel();
+           JPanel empty = new JPanel(); // This is sort of a placeholder to make it easier to place things in the groupLayout
            GroupLayout layout = new GroupLayout(panel);
 
            JMenuBar menuBar = new JMenuBar();
@@ -41,6 +41,8 @@ public class batch_renumber{
            JLabel name = new JLabel("New Name");
            JLabel num = new JLabel("#");
 
+
+           //I fucking hate group layout. So much of a pain.
 
            layout.setHorizontalGroup(layout.createSequentialGroup()
                    .addComponent(menuBar)

@@ -2,40 +2,28 @@ import java.io.*;
 import java.lang.String;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.io.FileFilter;
 
-public class filter implements FileFilter{
-    //Filters out all of the files? I lowkey forget what I did for this one.
-    public boolean accept (File file){
-        if(file.getName().equals(".DS_Store")){
+public class filter implements FileFilter {
+   public boolean accept(File file) {
+        if (file.getName().equals(".DS_Store")) {
             file.delete();
-        }
-        else if(file.isFile()){
-            return extension(file);
+        } else if(file.isFile()) {
+            try {
+                String fileName = file.getName();
+                HashMap<String, Boolean> hmap = new HashMap<>();
+                Scanner sc = new Scanner(new File(System.getProperty("user.dir") + "/br_config/filter"));
+                while (sc.hasNextLine()) {
+                    hmap.put(sc.nextLine(), true);
+                }
+                return hmap.containsKey(fileName.substring(fileName.indexOf(".")));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                new Err("Extension: " + e.toString());
+            }
         }
         return false;
     }
-
-    private boolean extension(File file){
-        try {
-            String fileName = file.getName();
-            HashMap<String, Boolean> hmap = new HashMap<>();
-            Scanner sc = new Scanner(new File(System.getProperty("user.dir") + "/br_config/filter"));
-            while (sc.hasNextLine()) {
-                hmap.put(sc.nextLine(), true);
-            }
-            if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0){
-                return hmap.get(fileName.substring(fileName.lastIndexOf(".") + 1));
-            }
-            else return false;
-        }
-        catch(FileNotFoundException e){
-            e.printStackTrace();
-            new Err("Extension: " + e.toString());
-        }
-        return false;
-    }
-
-
 }
 
 
