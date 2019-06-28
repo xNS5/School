@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Sort{
-    private static File[] Sort(File[] init){
+    static File[] Sort(File[] init){
 
         if (init.length <= 1) {
             return init;
