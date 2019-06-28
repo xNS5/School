@@ -4,6 +4,10 @@ import java.awt.*;
 import java.util.Scanner;
 import java.io.File;
 
+//MAIN TODO: Complete Sort.java.
+//TODO: Complete Convert.java.
+//TODO: Bug tweaks
+
 public class batch_renumber {
 
     private static String default_dir_path = System.getProperty("user.dir") + "/br_config/init";
@@ -15,12 +19,14 @@ public class batch_renumber {
         cont.setSize(900, 150);
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER)), empty = new JPanel(); // This is sort of a placeholder to make it easier to place things in the groupLayout
         GroupLayout layout = new GroupLayout(panel);
+        cont.setResizable(false);
 
         JMenuBar menuBar = new JMenuBar();
         menuBar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         JMenu menu = new JMenu("Settings"), delimiters = new JMenu("Delimiters");
         JMenuItem filter = new JMenuItem("Edit Filter"), default_dir = new JMenuItem("Change Default Directory");
         JCheckBox delimiter1 = new JCheckBox("Delimiter: _ "), delimiter2 = new JCheckBox("Delimiter: . ");
+        delimiter1.setSelected(true);
 
         delimiters.add(delimiter1);
         delimiters.add(delimiter2);
@@ -100,7 +106,8 @@ public class batch_renumber {
             } else if (Integer.parseInt(jf3.getText()) < 0) {
                 new Err("Error: Number must be at least zero\r\n");
             } else {
-                new Convert(jf1.getText(), jf2.getText(), Integer.parseInt(jf3.getText()));
+                System.out.println("Taco!");
+               // new Convert(jf1.getText(), jf2.getText(), delim, Integer.parseInt(jf3.getText()));
             }
         });
 
