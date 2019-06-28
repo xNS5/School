@@ -4,12 +4,12 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 
-
+//TODO: Complete Convert from Editor
 //Class for converting files
 public class Convert{
 
     public static void main(String[] args){
-        convert()
+        convert("/users/michaelkennedy/Pictures/Photography/Roll_1", "img", "_", 0);
     }
     static void convert (String dir, String name, String delim, int count) {
         try {
@@ -17,7 +17,9 @@ public class Convert{
             JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
             JPanel panel = new JPanel();
             JTextArea jt = new JTextArea(20, 20);
-            JButton b1 = new JButton("Done"), b2 = new JButton("Open Output Directory");
+            JScrollPane scrollPane = new JScrollPane(jt);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            JButton b1 = new JButton("Done"), b2 = new JButton("Open");
             JLabel label = new JLabel("Conversion Progress");
 
             mainFrame.setSize(350, 400);
@@ -30,14 +32,14 @@ public class Convert{
 
             layout.setHorizontalGroup(layout.createSequentialGroup()
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                            .addComponent(label).addComponent(jt))
+                            .addComponent(label).addComponent(scrollPane))
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                             .addComponent(b1).addComponent(b2)));
 
             layout.setVerticalGroup(layout.createSequentialGroup()
                     .addComponent(label)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(jt)
+                            .addComponent(scrollPane)
                             .addGroup(layout.createSequentialGroup()
                                     .addComponent(b1).addComponent(b2))));
 
@@ -52,12 +54,20 @@ public class Convert{
             if(dir_list.length == 0){
                 throw new NoSuchFieldException("Error: No pictures in this directory\r\n");
             }
-            Arrays.sort(dir_list);
 
             for (int i = 0; i < dir_list.length; i++) {
-                String extension = getFileExtension(dir_list[i]);
-                File oldFile = dir_list[i];
-                File newFile = new File(dir + name + "_" + count);
+               File oldFile = dir_list[i];
+               String extension = oldFile.getName().substring(oldFile.getName().indexOf("."));
+               String oldFile_name = oldFile.getName();
+               String newFile_name = (name + delim + count + extension);
+               File newFile = new File(dir + "/" + newFile_name);
+
+               if(oldFile.renameTo(newFile)){
+                   jt.append(newFile_name + "       Converted\r\n");
+               }else{
+                   jt.append(oldFile_name + "       Failed\r\n");
+               }
+               count++;
             }
 
         } catch (Exception e) {
