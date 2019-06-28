@@ -10,7 +10,6 @@ public class batch_renumber{
     private static String path;
 
    public static void main(String[] args){
-
            // Creating the container for the main window
            final Container cont = new Container("Batch Renumber");
 
@@ -18,12 +17,24 @@ public class batch_renumber{
            JPanel empty = new JPanel(); // This is sort of a placeholder to make it easier to place things in the groupLayout
            GroupLayout layout = new GroupLayout(panel);
 
+           JMenuBar mainBar = new JMenuBar();
            JMenuBar menuBar = new JMenuBar();
+           menuBar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
            JMenu menu = new JMenu("File");
            JMenuItem filter = new JMenuItem("Edit Filter");
            JMenuItem default_dir = new JMenuItem("Change Default Directory");
+           JMenu delimiters = new JMenu("Delimiters");
+           JCheckBoxMenuItem delimiter1 = new JCheckBoxMenuItem("Delimiter: _ ", new ImageIcon("images/box.gif"));
+           JCheckBoxMenuItem delimiter2 = new JCheckBoxMenuItem("Delimiter: . ");
+
+           delimiters.add(delimiter1);
+           delimiters.add(delimiter2);
+
            menu.add(filter);
            menu.add(default_dir);
+           menu.addSeparator();
+           menu.add(delimiters);
+
 
            menuBar.add(menu);
 
@@ -37,13 +48,12 @@ public class batch_renumber{
            JButton button1 = new JButton("Choose Folder");
            JButton button2 = new JButton("Convert");
 
+
            JLabel imp = new JLabel("Import Directory");
            JLabel name = new JLabel("New Name");
            JLabel num = new JLabel("#");
 
-
            //I fucking hate group layout. So much of a pain.
-
            layout.setHorizontalGroup(layout.createSequentialGroup()
                    .addComponent(menuBar)
                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
@@ -75,7 +85,6 @@ public class batch_renumber{
            panel.setLayout(layout);
            cont.add(panel);
            cont.setVisible(true);
-
 
            //ActionListeners with lambda expressions.
            button1.addActionListener(e -> {

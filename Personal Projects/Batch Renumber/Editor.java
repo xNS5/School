@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,7 +14,7 @@ import java.awt.*;
 public class Editor extends JFrame {
     private static String dir =  System.getProperty("user.dir") + "/br_config/filter";
     private static JTextArea jt;
-    private static JFrame mainFrame;
+    private static Container mainFrame;
 
      Editor() {
         try {
@@ -26,12 +25,8 @@ public class Editor extends JFrame {
 
             //Creating a JFrame container, setting default close operation
             //Also creating a JPanel called ControlPanel, another container
-            mainFrame = new JFrame("Editor");
-            //mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            mainFrame = new Container("Editor");
             JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            mainFrame.setSize(350, 400);
-            mainFrame.add(controlPanel);
-            mainFrame.setResizable(false);
 
             //Adding buttons and stuff
             JPanel panel = new JPanel();
@@ -43,7 +38,11 @@ public class Editor extends JFrame {
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
 
-            //Adding info from filter file to a stringbuilder.
+            mainFrame.setSize(350, 400);
+            mainFrame.add(controlPanel);
+            mainFrame.setResizable(false);
+
+            //Adding info from filter file to a string builder.
             while (sc.hasNext()) {
                 sb.append(sc.next() + "\r\n");
             }
