@@ -3,8 +3,10 @@ import java.io.*;
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 
-//TODO: Complete Convert from Editor
 //Class for converting files
 public class Convert{
 
@@ -57,18 +59,27 @@ public class Convert{
 
             for (int i = 0; i < dir_list.length; i++) {
                File oldFile = dir_list[i];
+                String oldFile_path = oldFile.getAbsolutePath();
                String extension = oldFile.getName().substring(oldFile.getName().indexOf("."));
-               String oldFile_name = oldFile.getName();
-               String newFile_name = (name + delim + count + extension);
+                String oldFile_name = oldFile.getName(), newFile_name = (name + delim + count + extension);
                File newFile = new File(dir + "/" + newFile_name);
 
-               if(oldFile.renameTo(newFile)){
-                   jt.append(newFile_name + "       Converted\r\n");
-               }else{
-                   jt.append(oldFile_name + "       Failed\r\n");
-               }
+                jt.append(oldFile_name + "       Status: " + (oldFile.renameTo(newFile) == true ? " Completed\r\n" : " Failed\r\n"));
                count++;
             }
+
+            b1.addActionListener(e -> {
+                mainFrame.setVisible(false);
+                mainFrame.dispose();
+            });
+            b2.addActionListener(e -> {
+                try {
+                    Desktop.getDesktop().open(directory);
+                } catch (IOException g) {
+                    g.printStackTrace();
+                    new Err("Convert - Open: " + g.toString());
+                }
+            });
 
         } catch (Exception e) {
             e.printStackTrace();
