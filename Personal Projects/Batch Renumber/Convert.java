@@ -50,8 +50,9 @@ public class Convert{
             mainFrame.setVisible(true);
 
             File directory = new File(dir);
-            filter f = new filter();
-            File[] dir_list = directory.listFiles(f);
+            Filter f = new Filter();
+            File[] init_list = directory.listFiles(f);
+            File[] dir_list = Sort.driver(init_list, delim);
 
             if(dir_list.length == 0){
                 throw new NoSuchFieldException("Error: No pictures in this directory\r\n");

@@ -1,37 +1,44 @@
 import java.io.File;
-import java.util.List;
-import java.util.ArrayList;
 
 public class Sort{
-    static File[] Sort(File[] init){
 
-        if (init.length <= 1) {
-            return init;
-        }
+    private static String delimiter;
 
-        File[] first = new File[init.length/2];
-        File[] second = new File[init.length - first.length];
-        System.arraycopy(init, 0, first, 0, first.length );
-        System.arraycopy(init, first.length, second, 0, second.length);
+    static File[] driver(File[] init, String delim) {
+        delimiter = delim;
+        return Sort(init);
+   }
 
-        Sort(first);
-        Sort(second);
+   static File[] Sort(File[] init){
 
-        merge(first, second, init);
-        return init;
-    }
+       if (init.length <= 1) {
+           return init;
+       }
 
-    private static void merge(File[] first, File[] second, File[] result)
+       File[] first = new File[init.length / 2];
+       File[] second = new File[init.length - first.length];
+       System.arraycopy(init, 0, first, 0, first.length);
+       System.arraycopy(init, first.length, second, 0, second.length);
+
+       Sort(first);
+       Sort(second);
+
+       merge(first, second, init, delimiter);
+       return init;
+   }
+
+    private static void merge(File[] first, File[] second, File[] result, String delim)
     {
-
         int iFirst = 0;
         int iSecond = 0;
         int iMerged = 0;
 
         while (iFirst < first.length && iSecond < second.length)
         {
+            System.out.println(first[iFirst]);
+            int first_num = getNum(first[iFirst]), second_num = getNum(second[iSecond]);
 
-            if (first[iFirst].split("") < 0)
+            if (first_num < second_num)
             {
                 result[iMerged] = first[iFirst];
                 iFirst++;
@@ -47,5 +54,9 @@ public class Sort{
         System.arraycopy(first, iFirst, result, iMerged, first.length - iFirst);
         System.arraycopy(second, iSecond, result, iMerged, second.length - iSecond);
     }
-}
+
+    private static Integer getNum(File file){
+        String str = file.getName();
+       return Integer.parseInt(str.replaceAll("[^0-9]", ""));
+    }
 }
