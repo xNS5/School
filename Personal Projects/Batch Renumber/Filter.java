@@ -1,15 +1,15 @@
-import java.io.*;
-import java.lang.String;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.io.FileFilter;
 
-public class filter implements FileFilter {
+public class Filter implements FileFilter {
 
-   public boolean accept(File file) {
+    public boolean accept(File file) {
         if (file.getName().equals(".DS_Store")) {
             file.delete();
-        } else if(file.isFile()) {
+        } else if (file.isFile()) {
             try {
                 String fileName = file.getName();
                 HashMap<String, Boolean> hmap = new HashMap<>();

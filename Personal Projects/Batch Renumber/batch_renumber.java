@@ -1,12 +1,8 @@
 import javax.swing.*;
-import javax.swing.GroupLayout;
 import java.awt.*;
-import java.util.Scanner;
 import java.io.File;
+import java.util.Scanner;
 
-//MAIN TODO: Complete Sort.java.
-//TODO: Complete Convert.java.
-//TODO: Bug tweaks
 
 public class batch_renumber {
 
@@ -107,7 +103,7 @@ public class batch_renumber {
                 new Err("Error: Number must be at least zero\r\n");
             } else {
                 System.out.println("Taco!");
-               // new Convert(jf1.getText(), jf2.getText(), delim, Integer.parseInt(jf3.getText()));
+                // new Convert(jf1.getText(), jf2.getText(), delim, Integer.parseInt(jf3.getText()));
             }
         });
 

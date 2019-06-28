@@ -1,19 +1,16 @@
-import java.lang.*;
-import java.io.*;
-import java.util.*;
 import javax.swing.*;
 import java.awt.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.Files;
+import java.io.File;
+import java.io.IOException;
 
 //Class for converting files
-public class Convert{
+public class Convert {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         convert("/users/michaelkennedy/Pictures/Photography/Roll_1", "img", "_", 0);
     }
-    static void convert (String dir, String name, String delim, int count) {
+
+    static void convert(String dir, String name, String delim, int count) {
         try {
             Container mainFrame = new Container("Converter");
             JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -54,19 +51,19 @@ public class Convert{
             File[] init_list = directory.listFiles(f);
             File[] dir_list = Sort.driver(init_list, delim);
 
-            if(dir_list.length == 0){
+            if (dir_list.length == 0) {
                 throw new NoSuchFieldException("Error: No pictures in this directory\r\n");
             }
 
             for (int i = 0; i < dir_list.length; i++) {
-               File oldFile = dir_list[i];
+                File oldFile = dir_list[i];
                 String oldFile_path = oldFile.getAbsolutePath();
-               String extension = oldFile.getName().substring(oldFile.getName().indexOf("."));
+                String extension = oldFile.getName().substring(oldFile.getName().indexOf("."));
                 String oldFile_name = oldFile.getName(), newFile_name = (name + delim + count + extension);
-               File newFile = new File(dir + "/" + newFile_name);
+                File newFile = new File(dir + "/" + newFile_name);
 
                 jt.append(oldFile_name + "       Status: " + (oldFile.renameTo(newFile) == true ? " Completed\r\n" : " Failed\r\n"));
-               count++;
+                count++;
             }
 
             b1.addActionListener(e -> {
