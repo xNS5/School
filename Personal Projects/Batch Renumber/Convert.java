@@ -7,17 +7,18 @@ import java.io.IOException;
 public class Convert {
 
     public static void main(String[] args) {
-        convert("/users/michaelkennedy/Pictures/Photography/Roll_1", "img", "_", 0);
+        convert("/users/michaelkennedy/Pictures/Photography/Roll_2", "img", "_", 0);
     }
 
     static void convert(String dir, String name, String delim, int count) {
         try {
+
             Container mainFrame = new Container("Converter");
-            JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            JPanel panel = new JPanel();
+            JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)), panel = new JPanel();
             JTextArea jt = new JTextArea(20, 20);
             JScrollPane scrollPane = new JScrollPane(jt);
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
             JButton b1 = new JButton("Done"), b2 = new JButton("Open");
             JLabel label = new JLabel("Conversion Progress");
 
@@ -29,6 +30,8 @@ public class Convert {
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
 
+
+            //Setting up layout, similar to Editor layout except with a few different buttons.
             layout.setHorizontalGroup(layout.createSequentialGroup()
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                             .addComponent(label).addComponent(scrollPane))
@@ -48,22 +51,18 @@ public class Convert {
 
             File directory = new File(dir);
             Filter f = new Filter();
-            File[] init_list = directory.listFiles(f);
-            File[] dir_list = Sort.driver(init_list, delim);
+            File[] dir_list = Sort.driver(directory.listFiles(f), delim);
 
             if (dir_list.length == 0) {
                 throw new NoSuchFieldException("Error: No pictures in this directory\r\n");
             }
 
-            for (int i = 0; i < dir_list.length; i++) {
+            for (int i = count; i < dir_list.length; i++) {
                 File oldFile = dir_list[i];
-                String oldFile_path = oldFile.getAbsolutePath();
                 String extension = oldFile.getName().substring(oldFile.getName().indexOf("."));
-                String oldFile_name = oldFile.getName(), newFile_name = (name + delim + count + extension);
+                String oldFile_name = oldFile.getName(), newFile_name = (name + delim + i + extension);
                 File newFile = new File(dir + "/" + newFile_name);
-
                 jt.append(oldFile_name + "       Status: " + (oldFile.renameTo(newFile) == true ? " Completed\r\n" : " Failed\r\n"));
-                count++;
             }
 
             b1.addActionListener(e -> {

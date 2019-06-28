@@ -1,8 +1,8 @@
-import javax.swing.JFileChooser;
+import javax.swing.*;
 
 public class Open {
     //Open dialogue with jFileChooser
-     static String Open(String dir) {
+    static String Open(String dir) {
         JFileChooser jfc = new JFileChooser(dir);
         jfc.setDialogTitle("Choose a directory");
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
