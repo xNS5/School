@@ -4,6 +4,7 @@ class Err {
     //Error popup with a custom message.
     Err(String err) {
         final Container frame = new Container("Error");
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         JButton close = new JButton("Back");
         JButton exit = new JButton("Exit");

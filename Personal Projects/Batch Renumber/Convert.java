@@ -14,7 +14,7 @@ public class Convert {
 //    }
     /*static void*/ Convert(String dir, String name, String delim, int count) {
         try {
-            Container mainFrame = new Container("Converter");
+            final Container mainFrame = new Container("Converter");
             mainFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)), panel = new JPanel();
             JTextArea jt = new JTextArea(20, 20);
@@ -25,6 +25,7 @@ public class Convert {
             JLabel label = new JLabel("Conversion Progress");
 
             mainFrame.setSize(350, 400);
+            mainFrame.setLocationRelativeTo(null);
             mainFrame.add(controlPanel);
             mainFrame.setResizable(false);
             GroupLayout layout = new GroupLayout(panel);

@@ -6,9 +6,10 @@ import java.util.Scanner;
 class Dir {
     static void dir() {
         try {
+            final Container cont = new Container("Default Directory");
+            cont.setLocationRelativeTo(null);
             String init_path = System.getProperty("user.home") + "/br_config/init";
             Scanner sc = new Scanner(new File(init_path));
-            Container cont = new Container("Default Directory");
             cont.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             JPanel panel = new JPanel();
             JLabel label = new JLabel("Current Default: ");

@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Renumber {
@@ -10,9 +11,12 @@ public class Renumber {
 
     public static void main(String[] args) {
 
+        new Init();
+
         // Creating the container for the main window
         final Container cont = new Container("Batch Renumber");
         cont.setSize(900, 150);
+        cont.setLocationRelativeTo(null);
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER)), empty = new JPanel(); // This is sort of a placeholder to make it easier to place things in the groupLayout
         GroupLayout layout = new GroupLayout(panel);
         cont.setResizable(false);
