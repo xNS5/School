@@ -3,7 +3,6 @@ import java.awt.*;
 import java.io.File;
 import java.util.Scanner;
 
-
 public class batch_renumber {
 
     private static String default_dir_path = System.getProperty("user.dir") + "/br_config/init";
@@ -84,14 +83,13 @@ public class batch_renumber {
                             path = "~/";
                         }
 
-                        jf1.setText(Open.Open(path));
+                        jf1.setText(Open.open(path));
                     } catch (Exception v) {
                         v.printStackTrace();
                         new Err("Batch Renumber: " + v.toString());
 
                     }
                 }
-
         );
 
         button2.addActionListener(e -> {
@@ -99,11 +97,10 @@ public class batch_renumber {
                 new Err("Error: No file detected\r\n");
             } else if ((jf2.getText().trim().length() == 0) || (jf3.getText().trim().length() == 0)) {
                 new Err("Error: Please fill in both new name and number fields\r\n");
-            } else if (Integer.parseInt(jf3.getText()) < 0) {
+            } else if (Integer.parseInt(jf3.getText().replaceAll("[^0-9]", "")) >= 0) {
                 new Err("Error: Number must be at least zero\r\n");
             } else {
-                System.out.println("Taco!");
-                // new Convert(jf1.getText(), jf2.getText(), delim, Integer.parseInt(jf3.getText()));
+                new Convert(jf1.getText(), jf2.getText(), delim, Integer.parseInt(jf3.getText()));
             }
         });
 

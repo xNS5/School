@@ -1,12 +1,10 @@
 import java.io.FileWriter;
 
-public class Dir {
-    private static String new_path;
-
+class Dir {
     static void dir() {
         String init_path = System.getProperty("user.dir") + "/br_config/init";
         try {
-            new_path = Open.Open("~/");
+            String new_path = Open.open(System.getProperty("user.home"));
             if (!new_path.equals("")) {
                 System.out.println(new_path);
                 FileWriter fw = new FileWriter(init_path);

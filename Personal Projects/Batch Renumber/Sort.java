@@ -1,17 +1,7 @@
 import java.io.File;
 
-public class Sort {
-
-    private static String delimiter;
-
-    //Driver for Sorting algorithm. I didn't need to pass delim everywhere, so I set it as a class variable.
-    static File[] driver(File[] init, String delim) {
-        delimiter = delim;
-        return Sort(init);
-    }
-
-    //Sort algorithm.
-    static File[] Sort(File[] init) {
+class Sort {
+    static File[] mSort(File[] init) {
         if (init.length <= 1) {
             return init;
         }
@@ -20,14 +10,14 @@ public class Sort {
         System.arraycopy(init, 0, first, 0, first.length);
         System.arraycopy(init, first.length, second, 0, second.length);
 
-        Sort(first);
-        Sort(second);
-        merge(first, second, init, delimiter);
+        mSort(first);
+        mSort(second);
+        merge(first, second, init);
         return init;
     }
 
     //Merge function.
-    private static void merge(File[] first, File[] second, File[] result, String delim) {
+    private static void merge(File[] first, File[] second, File[] result) {
         int iFirst = 0;
         int iSecond = 0;
         int iMerged = 0;
@@ -44,7 +34,6 @@ public class Sort {
             }
             iMerged++;
         }
-
         System.arraycopy(first, iFirst, result, iMerged, first.length - iFirst);
         System.arraycopy(second, iSecond, result, iMerged, second.length - iSecond);
     }

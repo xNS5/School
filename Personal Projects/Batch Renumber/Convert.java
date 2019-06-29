@@ -1,16 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
+import java.nio.file.*;
 import java.io.File;
 import java.io.IOException;
 
 //Class for converting files
 public class Convert {
-
-    public static void main(String[] args) {
-        convert("/users/michaelkennedy/Pictures/Photography/Roll_2", "img", "_", 0);
-    }
-
-    static void convert(String dir, String name, String delim, int count) {
+    //    public static void main(String[] args){
+//        convert("/Users/michaelkennedy/Pictures/Photography/Roll_2/", "img", "_", 0);
+//    }
+    /*static void*/ Convert(String dir, String name, String delim, int count) {
         try {
 
             Container mainFrame = new Container("Converter");
@@ -25,7 +24,6 @@ public class Convert {
             mainFrame.setSize(350, 400);
             mainFrame.add(controlPanel);
             mainFrame.setResizable(false);
-
             GroupLayout layout = new GroupLayout(panel);
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
@@ -51,7 +49,7 @@ public class Convert {
 
             File directory = new File(dir);
             Filter f = new Filter();
-            File[] dir_list = Sort.driver(directory.listFiles(f), delim);
+            File[] dir_list = Sort.mSort(directory.listFiles(f));
 
             if (dir_list.length == 0) {
                 throw new NoSuchFieldException("Error: No pictures in this directory\r\n");
@@ -61,8 +59,10 @@ public class Convert {
                 File oldFile = dir_list[i];
                 String extension = oldFile.getName().substring(oldFile.getName().indexOf("."));
                 String oldFile_name = oldFile.getName(), newFile_name = (name + delim + i + extension);
-                File newFile = new File(dir + "/" + newFile_name);
-                jt.append(oldFile_name + "       Status: " + (oldFile.renameTo(newFile) == true ? " Completed\r\n" : " Failed\r\n"));
+                Path oldFile_path = Paths.get(oldFile.getAbsolutePath());
+                Files.move(oldFile_path, oldFile_path.resolveSibling(newFile_name));
+                jt.append(oldFile_name + " --> " + newFile_name);
+                jt.append(System.getProperty("line.separator"));
             }
 
             b1.addActionListener(e -> {

@@ -5,11 +5,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Filter implements FileFilter {
-
     public boolean accept(File file) {
-        if (file.getName().equals(".DS_Store")) {
-            file.delete();
-        } else if (file.isFile()) {
+        if (file.isFile() && !file.getName().equals(".DS_Store")) {
             try {
                 String fileName = file.getName();
                 HashMap<String, Boolean> hmap = new HashMap<>();

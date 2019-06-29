@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 
-public class Editor extends JFrame {
+class Editor extends JFrame {
     private static String dir =  System.getProperty("user.dir") + "/br_config/filter";
     private static JTextArea jt;
     private static Container mainFrame;
@@ -39,7 +39,7 @@ public class Editor extends JFrame {
 
             //Adding info from filter file to a string builder.
             while (sc.hasNext()) {
-                sb.append(sc.next() + "\r\n");
+                sb.append(sc.next()).append(System.getProperty("line.separator"));
             }
 
             jt.setText(sb.toString());
@@ -63,9 +63,7 @@ public class Editor extends JFrame {
             controlPanel.add(panel);
             mainFrame.setVisible(true);
 
-            b1.addActionListener(e -> {
-                save();
-            });
+            b1.addActionListener(e -> save());
             b2.addActionListener(e-> {
                 mainFrame.setVisible(false);
                 mainFrame.dispose();

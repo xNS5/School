@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Container extends JFrame {
+class Container extends JFrame {
     //Creating the container for the different frames.
     Container(String title) {
         super(title);

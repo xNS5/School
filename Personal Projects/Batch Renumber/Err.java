@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-public class Err {
+class Err {
     //Error popup with a custom message.
     Err(String err) {
         final Container frame = new Container("Error");
