@@ -1,5 +1,8 @@
 import java.io.File;
 
+
+//This is a class that implements Merge Sort to sort files according to the numbers in their names. 
+
 class Sort {
     static File[] mSort(File[] init) {
         if (init.length <= 1) {

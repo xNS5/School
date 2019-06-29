@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.io.File;
 
+//This opens a JFileChooser to get the paths of files.
+
 class Open {
     //Open dialogue with jFileChooser
     static String open(String dir) {

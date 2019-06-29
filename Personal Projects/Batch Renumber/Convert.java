@@ -1,17 +1,21 @@
 import javax.swing.*;
 import java.awt.*;
-import java.nio.file.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 
 //Class for converting files
 public class Convert {
-    //    public static void main(String[] args){
-//        Convert("/Users/michaelkennedy/Pictures/Photography/Roll_2/", "img", "_", 0);
+    //        public static void main(String[] args){
+//        Convert("/Users/michaelkennedy/Pictures/Photography/Roll_2/", "img", "-", 0);
 //    }
     /*static void*/ Convert(String dir, String name, String delim, int count) {
         try {
             Container mainFrame = new Container("Converter");
+            mainFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)), panel = new JPanel();
             JTextArea jt = new JTextArea(20, 20);
             JScrollPane scrollPane = new JScrollPane(jt);

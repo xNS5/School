@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Renumber {
     private static class Vars {
-        private String path, delim = "";
+        String path, delim = "";
     }
 
     public static void main(String[] args) {
@@ -17,16 +17,24 @@ public class Renumber {
         GroupLayout layout = new GroupLayout(panel);
         cont.setResizable(false);
 
+        //Setting up the drop-down menu
         JMenuBar menuBar = new JMenuBar();
         menuBar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         JMenu menu = new JMenu("Settings"), delimiters = new JMenu("Delimiters");
         JMenuItem filter = new JMenuItem("Edit Filter"), default_dir = new JMenuItem("Change Default Directory");
-        JCheckBox delimiter1 = new JCheckBox("Delimiter: \" \" "), delimiter2 = new JCheckBox("Delimiter: . ");
-        delimiter2.setSelected(true);
+        JCheckBox delimiter1 = new JCheckBox("Delimiter: _"), delimiter2 = new JCheckBox("Delimiter: .");
+        JCheckBox delimiter3 = new JCheckBox("Custom:");
+        delimiter1.setSelected(true);
+        JTextField jf_c = new JTextField();
+        jf_c.setColumns(2);
 
+        //Adding the delimiters to the sub-menu
         delimiters.add(delimiter1);
         delimiters.add(delimiter2);
+        delimiters.add(delimiter3);
+        delimiters.add(jf_c);
 
+        //Adding buttons
         menu.add(filter);
         menu.add(default_dir);
         menu.addSeparator();
@@ -37,10 +45,13 @@ public class Renumber {
 
         //Creating new JButtons
         JButton button1 = new JButton("Choose Folder"), button2 = new JButton("Convert");
+
         //Creating new JLabels
         JLabel imp = new JLabel("Import Directory"), name = new JLabel("New Name"), num = new JLabel("#");
 
-        //I fucking hate group layout. So much of a pain.
+/*
+Layout design. This was a pain in the ass.
+*/
         layout.setHorizontalGroup(layout.createSequentialGroup()
                 .addComponent(menuBar)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
@@ -73,7 +84,12 @@ public class Renumber {
         Vars v = new Vars();
 
 
-        //ActionListeners with lambda expressions.
+        /*
+         *  Okay I just realized that IntelliJ is really cool. Holy shit so many neat tools.
+         *   Anyway, these are actionListeners that do stuff when buttons are pushed.
+         * */
+
+        // Choose folder, reads from the init file in br_config
         button1.addActionListener(e -> {
                     try {
                         Scanner sc = new Scanner(new File(System.getProperty("user.home") + "/br_config/init"));
@@ -95,6 +111,7 @@ public class Renumber {
                 }
         );
 
+        //Convert button. Pretty self explanatory.
         button2.addActionListener(e -> {
             if (jf1.getText().trim().length() == 0) {
                 new Err("Error: No file detected\r\n");
@@ -102,20 +119,35 @@ public class Renumber {
                 new Err("Error: Please fill in both new name and number fields\r\n");
             } else if (Integer.parseInt(jf3.getText().replaceAll("[^0-9]", "")) < 0) {
                 new Err("Error: Number must be at least zero\r\n");
+            } else if (jf_c.getText().length() != 1) {
+                new Err("Error: Delimiter must be 1 character long");
             } else {
+                if (delimiter3.isSelected()) {
+                    v.delim = jf_c.getText();
+                }
+
                 new Convert(jf1.getText(), jf2.getText(), v.delim, Integer.parseInt(jf3.getText()));
             }
         });
 
+        //These are the delimiter buttons. When one is checked, all others uncheck.
         delimiter1.addActionListener(e -> {
-            v.delim = " ";
             delimiter2.setSelected(false);
+            delimiter3.setSelected(false);
+            v.delim = "_";
         });
         delimiter2.addActionListener(e -> {
-            v.delim = ".";
+
             delimiter1.setSelected(false);
+            delimiter3.setSelected(false);
+            v.delim = ".";
+        });
+        delimiter3.addActionListener(e -> {
+            delimiter1.setSelected(false);
+            delimiter2.setSelected(false);
         });
 
+        //Filter and default_dir actionListener
         filter.addActionListener(e -> new Editor());
         default_dir.addActionListener(e -> Dir.dir());
 

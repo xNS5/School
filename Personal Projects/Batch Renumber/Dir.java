@@ -1,7 +1,7 @@
 import javax.swing.*;
+import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
-import java.io.File;
 
 class Dir {
     static void dir() {

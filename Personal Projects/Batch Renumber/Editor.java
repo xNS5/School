@@ -11,7 +11,7 @@ class Editor extends JFrame {
     private static JTextArea jt;
     private static Container mainFrame;
 
-     Editor() {
+    Editor() {
         try {
             //File, Scanner and a StringBuilder
             File filter_file = new File(dir);
@@ -65,14 +65,14 @@ class Editor extends JFrame {
             mainFrame.setVisible(true);
 
             b1.addActionListener(e -> save());
-            b2.addActionListener(e-> {
+            b2.addActionListener(e -> {
                 mainFrame.setVisible(false);
                 mainFrame.dispose();
             });
 
         } catch (Exception e) {
             e.printStackTrace();
-           new Err("Editor: " + e.toString());
+            new Err("Editor: " + e.toString());
         }
     }
 
