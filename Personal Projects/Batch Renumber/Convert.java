@@ -7,11 +7,10 @@ import java.io.IOException;
 //Class for converting files
 public class Convert {
     //    public static void main(String[] args){
-//        convert("/Users/michaelkennedy/Pictures/Photography/Roll_2/", "img", "_", 0);
+//        Convert("/Users/michaelkennedy/Pictures/Photography/Roll_2/", "img", "_", 0);
 //    }
     /*static void*/ Convert(String dir, String name, String delim, int count) {
         try {
-
             Container mainFrame = new Container("Converter");
             JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)), panel = new JPanel();
             JTextArea jt = new JTextArea(20, 20);
@@ -56,8 +55,9 @@ public class Convert {
             }
 
             for (int i = count; i < dir_list.length; i++) {
+
                 File oldFile = dir_list[i];
-                String extension = oldFile.getName().substring(oldFile.getName().indexOf("."));
+                String extension = oldFile.getName().substring(oldFile.getName().lastIndexOf("."));
                 String oldFile_name = oldFile.getName(), newFile_name = (name + delim + i + extension);
                 Path oldFile_path = Paths.get(oldFile.getAbsolutePath());
                 Files.move(oldFile_path, oldFile_path.resolveSibling(newFile_name));

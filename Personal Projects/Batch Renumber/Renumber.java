@@ -3,12 +3,13 @@ import java.awt.*;
 import java.io.File;
 import java.util.Scanner;
 
-public class batch_renumber {
-
-    private static String default_dir_path = System.getProperty("user.dir") + "/br_config/init";
-    private static String path, delim;
+public class Renumber {
+    private static class Vars {
+        private String path, delim = "";
+    }
 
     public static void main(String[] args) {
+
         // Creating the container for the main window
         final Container cont = new Container("Batch Renumber");
         cont.setSize(900, 150);
@@ -20,8 +21,8 @@ public class batch_renumber {
         menuBar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         JMenu menu = new JMenu("Settings"), delimiters = new JMenu("Delimiters");
         JMenuItem filter = new JMenuItem("Edit Filter"), default_dir = new JMenuItem("Change Default Directory");
-        JCheckBox delimiter1 = new JCheckBox("Delimiter: _ "), delimiter2 = new JCheckBox("Delimiter: . ");
-        delimiter1.setSelected(true);
+        JCheckBox delimiter1 = new JCheckBox("Delimiter: \" \" "), delimiter2 = new JCheckBox("Delimiter: . ");
+        delimiter2.setSelected(true);
 
         delimiters.add(delimiter1);
         delimiters.add(delimiter2);
@@ -69,25 +70,27 @@ public class batch_renumber {
         cont.add(panel);
         cont.setVisible(true);
 
+        Vars v = new Vars();
+
+
         //ActionListeners with lambda expressions.
         button1.addActionListener(e -> {
                     try {
-                        Scanner sc = new Scanner(new File(default_dir_path));
+                        Scanner sc = new Scanner(new File(System.getProperty("user.home") + "/br_config/init"));
                         if (sc.hasNextLine()) {
                             String temp_str = sc.next();
                             File temp_file = new File(temp_str);
                             if (temp_file.isDirectory()) {
-                                path = temp_str;
+                                v.path = temp_str;
                             }
                         } else {
-                            path = "~/";
+                            v.path = "~/";
                         }
 
-                        jf1.setText(Open.open(path));
-                    } catch (Exception v) {
-                        v.printStackTrace();
-                        new Err("Batch Renumber: " + v.toString());
-
+                        jf1.setText(Open.open(v.path));
+                    } catch (Exception n) {
+                        n.printStackTrace();
+                        new Err("Batch Renumber: " + n.toString());
                     }
                 }
         );
@@ -97,24 +100,25 @@ public class batch_renumber {
                 new Err("Error: No file detected\r\n");
             } else if ((jf2.getText().trim().length() == 0) || (jf3.getText().trim().length() == 0)) {
                 new Err("Error: Please fill in both new name and number fields\r\n");
-            } else if (Integer.parseInt(jf3.getText().replaceAll("[^0-9]", "")) >= 0) {
+            } else if (Integer.parseInt(jf3.getText().replaceAll("[^0-9]", "")) < 0) {
                 new Err("Error: Number must be at least zero\r\n");
             } else {
-                new Convert(jf1.getText(), jf2.getText(), delim, Integer.parseInt(jf3.getText()));
+                new Convert(jf1.getText(), jf2.getText(), v.delim, Integer.parseInt(jf3.getText()));
             }
+        });
+
+        delimiter1.addActionListener(e -> {
+            v.delim = " ";
+            delimiter2.setSelected(false);
+        });
+        delimiter2.addActionListener(e -> {
+            v.delim = ".";
+            delimiter1.setSelected(false);
         });
 
         filter.addActionListener(e -> new Editor());
         default_dir.addActionListener(e -> Dir.dir());
 
-        delimiter1.addActionListener(e -> {
-            delim = "_";
-            delimiter2.setSelected(false);
-        });
-        delimiter2.addActionListener(e -> {
-            delim = ".";
-            delimiter1.setSelected(false);
-        });
     }
 
 }

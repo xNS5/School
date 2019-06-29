@@ -14,8 +14,7 @@ public class Filter implements FileFilter {
                 while (sc.hasNextLine()) {
                     hmap.put(sc.nextLine(), true);
                 }
-
-                return hmap.containsKey(fileName.substring(fileName.indexOf(".")));
+                return hmap.containsKey(fileName.substring(fileName.lastIndexOf(".")));
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

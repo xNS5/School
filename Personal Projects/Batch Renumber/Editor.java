@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 
 class Editor extends JFrame {
-    private static String dir =  System.getProperty("user.dir") + "/br_config/filter";
+    private static String dir = System.getProperty("user.home") + "/br_config/filter";
     private static JTextArea jt;
     private static Container mainFrame;
 
@@ -33,6 +33,7 @@ class Editor extends JFrame {
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
 
+            mainFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             mainFrame.setSize(350, 400);
             mainFrame.add(controlPanel);
             mainFrame.setResizable(false);
