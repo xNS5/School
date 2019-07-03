@@ -1,5 +1,0 @@
-1. UI for Batch Renumbering program
-2. Some kind of mobile app
-3. Something with web development
-4. A system information program in some language
-5. An android app that allows me to create a widget for my class schedule
