@@ -1,0 +1,6 @@
+For this project I want to design a program that sends me desktop notifications
+if there's a chance in price for a product on amazon. I want to design this
+in swift, and use some sort of database to keep track of price history. 
+
+Currently downloading XCode. I plan on doing research into how to create
+and set up a database, and how to integrate database calls into a swift program
