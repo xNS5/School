@@ -1,4 +1,4 @@
-#Batch Renumber
+# Batch Renumber
 I wrote this program initially to just renumber in batch photos I scanned i
 from 35mm negatives.
 I later implemented this program with a GUI using Java Swing. So far it's 
@@ -7,7 +7,7 @@ pretty basic, but it has all the functionalities I need.
 As it stands, it's a little messy but I'll get around to cleaning it up 
 eventually.
 
-#HOW TO USE
+# How to Use
 If the program doesn't find a br_config folder in your root directory, it
 will create one. In this config folder, there are 2 files: filter and init.
 Init contains the default directory that Renumber navigates to. If init 
