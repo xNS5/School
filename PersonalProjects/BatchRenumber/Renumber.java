@@ -3,13 +3,13 @@ import java.awt.*;
 import java.io.File;
 import java.util.Scanner;
 
+class Vars {
+    String path, delim = "";
+}
+
 public class Renumber {
-    private static class Vars {
-        String path, delim = "";
-    }
 
     public static void main(String[] args) {
-
         new Init();
 
         // Creating the container for the main window
@@ -22,13 +22,12 @@ public class Renumber {
 
         //Setting up the drop-down menu
         JMenuBar menuBar = new JMenuBar();
-        menuBar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         JMenu menu = new JMenu("Settings"), delimiters = new JMenu("Delimiters");
         JMenuItem filter = new JMenuItem("Edit Filter"), default_dir = new JMenuItem("Change Default Directory");
-        JCheckBox delimiter1 = new JCheckBox("Delimiter: _"), delimiter2 = new JCheckBox("Delimiter: .");
-        JCheckBox delimiter3 = new JCheckBox("Custom:");
+        JCheckBox delimiter1 = new JCheckBox("Delimiter: _"), delimiter2 = new JCheckBox("Delimiter: ."), delimiter3 = new JCheckBox("Custom:");
+        JTextField jf1 = new JTextField(40), jf2 = new JTextField(30), jf3 = new JTextField(2), jf_c = new JTextField();
+        menuBar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         delimiter1.setSelected(true);
-        JTextField jf_c = new JTextField();
         jf_c.setColumns(2);
 
         //Adding the delimiters to the sub-menu
@@ -44,7 +43,6 @@ public class Renumber {
         menu.add(delimiters);
         menuBar.add(menu);
 
-        JTextField jf1 = new JTextField(40), jf2 = new JTextField(30), jf3 = new JTextField(2);
 
         //Creating new JButtons
         JButton button1 = new JButton("Choose Folder"), button2 = new JButton("Convert");

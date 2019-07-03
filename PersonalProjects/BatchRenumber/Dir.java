@@ -7,14 +7,16 @@ class Dir {
     static void dir() {
         try {
             final Container cont = new Container("Default Directory");
-            cont.setLocationRelativeTo(null);
             String init_path = System.getProperty("user.home") + "/br_config/init";
             Scanner sc = new Scanner(new File(init_path));
-            cont.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             JPanel panel = new JPanel();
             JLabel label = new JLabel("Current Default: ");
             JTextField jt = new JTextField(40);
             JButton button1 = new JButton("Change"), button2 = new JButton("Save");
+
+            cont.setLocationRelativeTo(null);
+            cont.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
             if (sc.hasNext()) {
                 jt.setText(sc.next());
             }

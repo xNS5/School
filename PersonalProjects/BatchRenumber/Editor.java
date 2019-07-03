@@ -21,15 +21,12 @@ class Editor extends JFrame {
             //Creating a JFrame container, setting default close operation
             //Also creating a JPanel called ControlPanel, another container
             mainFrame = new Container("Editor");
-            JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-
-            //Adding buttons and stuff
-            JPanel panel = new JPanel();
             jt = new JTextArea(20, 20);
-            JButton b1 = new JButton("Save");
-            JButton b2 = new JButton("Close");
+            JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)), panel = new JPanel();
+            JButton b1 = new JButton("Save"), b2 = new JButton("Close");
             JLabel label = new JLabel("File Extension Editor");
             GroupLayout layout = new GroupLayout(panel);
+
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
 
@@ -45,6 +42,7 @@ class Editor extends JFrame {
 
             jt.setText(sb.toString());
 
+//======================================================================================================================
             //Here's the funky part, this chunk of code is how the different parts get aligned properly.
             //Honestly I just messed around with it until it worked properly.
             layout.setHorizontalGroup(layout.createSequentialGroup()
@@ -59,6 +57,7 @@ class Editor extends JFrame {
                             .addComponent(jt)
                             .addGroup(layout.createSequentialGroup()
                                     .addComponent(b1).addComponent(b2))));
+//======================================================================================================================
 
             panel.setLayout(layout);
             controlPanel.add(panel);

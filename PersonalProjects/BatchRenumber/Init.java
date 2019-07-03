@@ -5,20 +5,17 @@ class Init {
 
     Init() {
         try {
-            String br_path = System.getProperty("user.home") + "/br_config/";
-            String init_path = System.getProperty("user.home") + "/br_config/init";
-            String filter_path = System.getProperty("user.home") + "/br_config/filter";
-
-            if (!new File(br_path).isDirectory()) {
-                new File(br_path).mkdir();
-                new File(br_path + "/init").createNewFile();
-                new File(br_path + "/filter").createNewFile();
-            } else if (!new File(init_path).exists()) {
-                new File(br_path + "/init").createNewFile();
-            } else if (!new File(filter_path).exists()) {
-                new File(br_path + "/filter").createNewFile();
+            File home = new File(System.getProperty("user.home"));
+            File br_path = new File(home + "/br_config/"), init_path = new File(home + "/br_config/init"), filter_path = new File(home + "/br_config/filter");
+            if (!br_path.isDirectory()) {
+                br_path.mkdir();
+                init_path.createNewFile();
+                filter_path.createNewFile();
+            } else if (!init_path.exists()) {
+                init_path.createNewFile();
+            } else if (!filter_path.exists()) {
+                filter_path.createNewFile();
             }
-
         } catch (IOException i) {
             new Err("Error creating init files");
         }

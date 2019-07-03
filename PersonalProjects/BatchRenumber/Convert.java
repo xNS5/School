@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -81,7 +80,7 @@ public class Convert {
     private static void rename(File[] dir, int i, int count){
         try {
 
-            if(i == dir.length){
+            if (i == dir.length) {
                 return;
             }
 
@@ -92,7 +91,7 @@ public class Convert {
             jt.append(oldFile_name + " --> " + newFile_name);
             jt.append(System.getProperty("line.separator"));
 
-            rename(dir, i+=1, count+=1);
+            rename(dir, i += 1, count += 1);
 
         } catch (Exception e) {
             e.printStackTrace();
