@@ -7,4 +7,11 @@ This is going to have a UI of sorts.
 Main app that shows current product watching, current price, other possible
 information. Able to add it. Data potentially stored in the cloud. 
 
+Table info:
+
+1. Product ASIN (amazon ID number)
+2. Product Cost
+3. Product Name
+4. Product link
+
 
