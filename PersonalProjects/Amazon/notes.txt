@@ -1,6 +1,10 @@
 For this project I want to design a program that sends me desktop notifications
 if there's a chance in price for a product on amazon. I want to design this
-in swift, and use some sort of database to keep track of price history. 
+in swift, and use some sort of database to keep track of price history.
+
+On second thought, I might use Python instead of Swift. It looks like that
+getting swift to connect to a mySQL database will be a pain, 
+so it might be a better idea to use Python.
 
 This is going to have a UI of sorts. 
 
