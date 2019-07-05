@@ -7,65 +7,67 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8F4B1CE222CD695C00643533 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B1CE122CD695C00643533 /* AppDelegate.swift */; };
-		8F4B1CE422CD695C00643533 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B1CE322CD695C00643533 /* ViewController.swift */; };
-		8F4B1CE722CD695C00643533 /* AmazonScraper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B1CE522CD695C00643533 /* AmazonScraper.xcdatamodeld */; };
-		8F4B1CE922CD695E00643533 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F4B1CE822CD695E00643533 /* Assets.xcassets */; };
-		8F4B1CEC22CD695E00643533 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F4B1CEA22CD695E00643533 /* Main.storyboard */; };
-		8F4B1CF822CD695E00643533 /* AmazonScraperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B1CF722CD695E00643533 /* AmazonScraperTests.swift */; };
-		8F4B1D0322CD695E00643533 /* AmazonScraperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B1D0222CD695E00643533 /* AmazonScraperUITests.swift */; };
+		8F8D54E522CF0C6700C62BBF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F8D54E422CF0C6700C62BBF /* AppDelegate.m */; };
+		8F8D54E822CF0C6700C62BBF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F8D54E722CF0C6700C62BBF /* ViewController.m */; };
+		8F8D54EA22CF0C6800C62BBF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F8D54E922CF0C6800C62BBF /* Assets.xcassets */; };
+		8F8D54ED22CF0C6800C62BBF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F8D54EB22CF0C6800C62BBF /* Main.storyboard */; };
+		8F8D54F022CF0C6800C62BBF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F8D54EF22CF0C6800C62BBF /* main.m */; };
+		8F8D54FB22CF0C6800C62BBF /* AmazonScraperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F8D54FA22CF0C6800C62BBF /* AmazonScraperTests.m */; };
+		8F8D550622CF0C6800C62BBF /* AmazonScraperUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F8D550522CF0C6800C62BBF /* AmazonScraperUITests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		8F4B1CF422CD695E00643533 /* PBXContainerItemProxy */ = {
+		8F8D54F722CF0C6800C62BBF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 8F4B1CD622CD695C00643533 /* Project object */;
+			containerPortal = 8F8D54D822CF0C6700C62BBF /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8F4B1CDD22CD695C00643533;
+			remoteGlobalIDString = 8F8D54DF22CF0C6700C62BBF;
 			remoteInfo = AmazonScraper;
 		};
-		8F4B1CFF22CD695E00643533 /* PBXContainerItemProxy */ = {
+		8F8D550222CF0C6800C62BBF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 8F4B1CD622CD695C00643533 /* Project object */;
+			containerPortal = 8F8D54D822CF0C6700C62BBF /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8F4B1CDD22CD695C00643533;
+			remoteGlobalIDString = 8F8D54DF22CF0C6700C62BBF;
 			remoteInfo = AmazonScraper;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		8F4B1CDE22CD695C00643533 /* AmazonScraper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AmazonScraper.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8F4B1CE122CD695C00643533 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8F4B1CE322CD695C00643533 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		8F4B1CE622CD695C00643533 /* AmazonScraper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AmazonScraper.xcdatamodel; sourceTree = "<group>"; };
-		8F4B1CE822CD695E00643533 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8F4B1CEB22CD695E00643533 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		8F4B1CED22CD695E00643533 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8F4B1CEE22CD695E00643533 /* AmazonScraper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AmazonScraper.entitlements; sourceTree = "<group>"; };
-		8F4B1CF322CD695E00643533 /* AmazonScraperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AmazonScraperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		8F4B1CF722CD695E00643533 /* AmazonScraperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmazonScraperTests.swift; sourceTree = "<group>"; };
-		8F4B1CF922CD695E00643533 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8F4B1CFE22CD695E00643533 /* AmazonScraperUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AmazonScraperUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		8F4B1D0222CD695E00643533 /* AmazonScraperUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmazonScraperUITests.swift; sourceTree = "<group>"; };
-		8F4B1D0422CD695E00643533 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8F8D54E022CF0C6700C62BBF /* AmazonScraper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AmazonScraper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8F8D54E322CF0C6700C62BBF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		8F8D54E422CF0C6700C62BBF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		8F8D54E622CF0C6700C62BBF /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		8F8D54E722CF0C6700C62BBF /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		8F8D54E922CF0C6800C62BBF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8F8D54EC22CF0C6800C62BBF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8F8D54EE22CF0C6800C62BBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8F8D54EF22CF0C6800C62BBF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		8F8D54F122CF0C6800C62BBF /* AmazonScraper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AmazonScraper.entitlements; sourceTree = "<group>"; };
+		8F8D54F622CF0C6800C62BBF /* AmazonScraperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AmazonScraperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8F8D54FA22CF0C6800C62BBF /* AmazonScraperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AmazonScraperTests.m; sourceTree = "<group>"; };
+		8F8D54FC22CF0C6800C62BBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8F8D550122CF0C6800C62BBF /* AmazonScraperUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AmazonScraperUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8F8D550522CF0C6800C62BBF /* AmazonScraperUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AmazonScraperUITests.m; sourceTree = "<group>"; };
+		8F8D550722CF0C6800C62BBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		8F4B1CDB22CD695C00643533 /* Frameworks */ = {
+		8F8D54DD22CF0C6700C62BBF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8F4B1CF022CD695E00643533 /* Frameworks */ = {
+		8F8D54F322CF0C6800C62BBF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8F4B1CFB22CD695E00643533 /* Frameworks */ = {
+		8F8D54FE22CF0C6800C62BBF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -75,54 +77,56 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8F4B1CD522CD695C00643533 = {
+		8F8D54D722CF0C6700C62BBF = {
 			isa = PBXGroup;
 			children = (
-				8F4B1CE022CD695C00643533 /* AmazonScraper */,
-				8F4B1CF622CD695E00643533 /* AmazonScraperTests */,
-				8F4B1D0122CD695E00643533 /* AmazonScraperUITests */,
-				8F4B1CDF22CD695C00643533 /* Products */,
+				8F8D54E222CF0C6700C62BBF /* AmazonScraper */,
+				8F8D54F922CF0C6800C62BBF /* AmazonScraperTests */,
+				8F8D550422CF0C6800C62BBF /* AmazonScraperUITests */,
+				8F8D54E122CF0C6700C62BBF /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		8F4B1CDF22CD695C00643533 /* Products */ = {
+		8F8D54E122CF0C6700C62BBF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8F4B1CDE22CD695C00643533 /* AmazonScraper.app */,
-				8F4B1CF322CD695E00643533 /* AmazonScraperTests.xctest */,
-				8F4B1CFE22CD695E00643533 /* AmazonScraperUITests.xctest */,
+				8F8D54E022CF0C6700C62BBF /* AmazonScraper.app */,
+				8F8D54F622CF0C6800C62BBF /* AmazonScraperTests.xctest */,
+				8F8D550122CF0C6800C62BBF /* AmazonScraperUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8F4B1CE022CD695C00643533 /* AmazonScraper */ = {
+		8F8D54E222CF0C6700C62BBF /* AmazonScraper */ = {
 			isa = PBXGroup;
 			children = (
-				8F4B1CE122CD695C00643533 /* AppDelegate.swift */,
-				8F4B1CE322CD695C00643533 /* ViewController.swift */,
-				8F4B1CE822CD695E00643533 /* Assets.xcassets */,
-				8F4B1CEA22CD695E00643533 /* Main.storyboard */,
-				8F4B1CED22CD695E00643533 /* Info.plist */,
-				8F4B1CEE22CD695E00643533 /* AmazonScraper.entitlements */,
-				8F4B1CE522CD695C00643533 /* AmazonScraper.xcdatamodeld */,
+				8F8D54E322CF0C6700C62BBF /* AppDelegate.h */,
+				8F8D54E422CF0C6700C62BBF /* AppDelegate.m */,
+				8F8D54E622CF0C6700C62BBF /* ViewController.h */,
+				8F8D54E722CF0C6700C62BBF /* ViewController.m */,
+				8F8D54E922CF0C6800C62BBF /* Assets.xcassets */,
+				8F8D54EB22CF0C6800C62BBF /* Main.storyboard */,
+				8F8D54EE22CF0C6800C62BBF /* Info.plist */,
+				8F8D54EF22CF0C6800C62BBF /* main.m */,
+				8F8D54F122CF0C6800C62BBF /* AmazonScraper.entitlements */,
 			);
 			path = AmazonScraper;
 			sourceTree = "<group>";
 		};
-		8F4B1CF622CD695E00643533 /* AmazonScraperTests */ = {
+		8F8D54F922CF0C6800C62BBF /* AmazonScraperTests */ = {
 			isa = PBXGroup;
 			children = (
-				8F4B1CF722CD695E00643533 /* AmazonScraperTests.swift */,
-				8F4B1CF922CD695E00643533 /* Info.plist */,
+				8F8D54FA22CF0C6800C62BBF /* AmazonScraperTests.m */,
+				8F8D54FC22CF0C6800C62BBF /* Info.plist */,
 			);
 			path = AmazonScraperTests;
 			sourceTree = "<group>";
 		};
-		8F4B1D0122CD695E00643533 /* AmazonScraperUITests */ = {
+		8F8D550422CF0C6800C62BBF /* AmazonScraperUITests */ = {
 			isa = PBXGroup;
 			children = (
-				8F4B1D0222CD695E00643533 /* AmazonScraperUITests.swift */,
-				8F4B1D0422CD695E00643533 /* Info.plist */,
+				8F8D550522CF0C6800C62BBF /* AmazonScraperUITests.m */,
+				8F8D550722CF0C6800C62BBF /* Info.plist */,
 			);
 			path = AmazonScraperUITests;
 			sourceTree = "<group>";
@@ -130,13 +134,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8F4B1CDD22CD695C00643533 /* AmazonScraper */ = {
+		8F8D54DF22CF0C6700C62BBF /* AmazonScraper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8F4B1D0722CD695E00643533 /* Build configuration list for PBXNativeTarget "AmazonScraper" */;
+			buildConfigurationList = 8F8D550A22CF0C6800C62BBF /* Build configuration list for PBXNativeTarget "AmazonScraper" */;
 			buildPhases = (
-				8F4B1CDA22CD695C00643533 /* Sources */,
-				8F4B1CDB22CD695C00643533 /* Frameworks */,
-				8F4B1CDC22CD695C00643533 /* Resources */,
+				8F8D54DC22CF0C6700C62BBF /* Sources */,
+				8F8D54DD22CF0C6700C62BBF /* Frameworks */,
+				8F8D54DE22CF0C6700C62BBF /* Resources */,
 			);
 			buildRules = (
 			);
@@ -144,69 +148,68 @@
 			);
 			name = AmazonScraper;
 			productName = AmazonScraper;
-			productReference = 8F4B1CDE22CD695C00643533 /* AmazonScraper.app */;
+			productReference = 8F8D54E022CF0C6700C62BBF /* AmazonScraper.app */;
 			productType = "com.apple.product-type.application";
 		};
-		8F4B1CF222CD695E00643533 /* AmazonScraperTests */ = {
+		8F8D54F522CF0C6800C62BBF /* AmazonScraperTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8F4B1D0A22CD695E00643533 /* Build configuration list for PBXNativeTarget "AmazonScraperTests" */;
+			buildConfigurationList = 8F8D550D22CF0C6800C62BBF /* Build configuration list for PBXNativeTarget "AmazonScraperTests" */;
 			buildPhases = (
-				8F4B1CEF22CD695E00643533 /* Sources */,
-				8F4B1CF022CD695E00643533 /* Frameworks */,
-				8F4B1CF122CD695E00643533 /* Resources */,
+				8F8D54F222CF0C6800C62BBF /* Sources */,
+				8F8D54F322CF0C6800C62BBF /* Frameworks */,
+				8F8D54F422CF0C6800C62BBF /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				8F4B1CF522CD695E00643533 /* PBXTargetDependency */,
+				8F8D54F822CF0C6800C62BBF /* PBXTargetDependency */,
 			);
 			name = AmazonScraperTests;
 			productName = AmazonScraperTests;
-			productReference = 8F4B1CF322CD695E00643533 /* AmazonScraperTests.xctest */;
+			productReference = 8F8D54F622CF0C6800C62BBF /* AmazonScraperTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		8F4B1CFD22CD695E00643533 /* AmazonScraperUITests */ = {
+		8F8D550022CF0C6800C62BBF /* AmazonScraperUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8F4B1D0D22CD695E00643533 /* Build configuration list for PBXNativeTarget "AmazonScraperUITests" */;
+			buildConfigurationList = 8F8D551022CF0C6800C62BBF /* Build configuration list for PBXNativeTarget "AmazonScraperUITests" */;
 			buildPhases = (
-				8F4B1CFA22CD695E00643533 /* Sources */,
-				8F4B1CFB22CD695E00643533 /* Frameworks */,
-				8F4B1CFC22CD695E00643533 /* Resources */,
+				8F8D54FD22CF0C6800C62BBF /* Sources */,
+				8F8D54FE22CF0C6800C62BBF /* Frameworks */,
+				8F8D54FF22CF0C6800C62BBF /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				8F4B1D0022CD695E00643533 /* PBXTargetDependency */,
+				8F8D550322CF0C6800C62BBF /* PBXTargetDependency */,
 			);
 			name = AmazonScraperUITests;
 			productName = AmazonScraperUITests;
-			productReference = 8F4B1CFE22CD695E00643533 /* AmazonScraperUITests.xctest */;
+			productReference = 8F8D550122CF0C6800C62BBF /* AmazonScraperUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		8F4B1CD622CD695C00643533 /* Project object */ = {
+		8F8D54D822CF0C6700C62BBF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1020;
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Michael Kennedy";
 				TargetAttributes = {
-					8F4B1CDD22CD695C00643533 = {
+					8F8D54DF22CF0C6700C62BBF = {
 						CreatedOnToolsVersion = 10.2.1;
 					};
-					8F4B1CF222CD695E00643533 = {
+					8F8D54F522CF0C6800C62BBF = {
 						CreatedOnToolsVersion = 10.2.1;
-						TestTargetID = 8F4B1CDD22CD695C00643533;
+						TestTargetID = 8F8D54DF22CF0C6700C62BBF;
 					};
-					8F4B1CFD22CD695E00643533 = {
+					8F8D550022CF0C6800C62BBF = {
 						CreatedOnToolsVersion = 10.2.1;
-						TestTargetID = 8F4B1CDD22CD695C00643533;
+						TestTargetID = 8F8D54DF22CF0C6700C62BBF;
 					};
 				};
 			};
-			buildConfigurationList = 8F4B1CD922CD695C00643533 /* Build configuration list for PBXProject "AmazonScraper" */;
+			buildConfigurationList = 8F8D54DB22CF0C6700C62BBF /* Build configuration list for PBXProject "AmazonScraper" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -214,36 +217,36 @@
 				en,
 				Base,
 			);
-			mainGroup = 8F4B1CD522CD695C00643533;
-			productRefGroup = 8F4B1CDF22CD695C00643533 /* Products */;
+			mainGroup = 8F8D54D722CF0C6700C62BBF;
+			productRefGroup = 8F8D54E122CF0C6700C62BBF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8F4B1CDD22CD695C00643533 /* AmazonScraper */,
-				8F4B1CF222CD695E00643533 /* AmazonScraperTests */,
-				8F4B1CFD22CD695E00643533 /* AmazonScraperUITests */,
+				8F8D54DF22CF0C6700C62BBF /* AmazonScraper */,
+				8F8D54F522CF0C6800C62BBF /* AmazonScraperTests */,
+				8F8D550022CF0C6800C62BBF /* AmazonScraperUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		8F4B1CDC22CD695C00643533 /* Resources */ = {
+		8F8D54DE22CF0C6700C62BBF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8F4B1CE922CD695E00643533 /* Assets.xcassets in Resources */,
-				8F4B1CEC22CD695E00643533 /* Main.storyboard in Resources */,
+				8F8D54EA22CF0C6800C62BBF /* Assets.xcassets in Resources */,
+				8F8D54ED22CF0C6800C62BBF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8F4B1CF122CD695E00643533 /* Resources */ = {
+		8F8D54F422CF0C6800C62BBF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8F4B1CFC22CD695E00643533 /* Resources */ = {
+		8F8D54FF22CF0C6800C62BBF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -253,52 +256,52 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		8F4B1CDA22CD695C00643533 /* Sources */ = {
+		8F8D54DC22CF0C6700C62BBF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8F4B1CE422CD695C00643533 /* ViewController.swift in Sources */,
-				8F4B1CE722CD695C00643533 /* AmazonScraper.xcdatamodeld in Sources */,
-				8F4B1CE222CD695C00643533 /* AppDelegate.swift in Sources */,
+				8F8D54E822CF0C6700C62BBF /* ViewController.m in Sources */,
+				8F8D54F022CF0C6800C62BBF /* main.m in Sources */,
+				8F8D54E522CF0C6700C62BBF /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8F4B1CEF22CD695E00643533 /* Sources */ = {
+		8F8D54F222CF0C6800C62BBF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8F4B1CF822CD695E00643533 /* AmazonScraperTests.swift in Sources */,
+				8F8D54FB22CF0C6800C62BBF /* AmazonScraperTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8F4B1CFA22CD695E00643533 /* Sources */ = {
+		8F8D54FD22CF0C6800C62BBF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8F4B1D0322CD695E00643533 /* AmazonScraperUITests.swift in Sources */,
+				8F8D550622CF0C6800C62BBF /* AmazonScraperUITests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		8F4B1CF522CD695E00643533 /* PBXTargetDependency */ = {
+		8F8D54F822CF0C6800C62BBF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8F4B1CDD22CD695C00643533 /* AmazonScraper */;
-			targetProxy = 8F4B1CF422CD695E00643533 /* PBXContainerItemProxy */;
+			target = 8F8D54DF22CF0C6700C62BBF /* AmazonScraper */;
+			targetProxy = 8F8D54F722CF0C6800C62BBF /* PBXContainerItemProxy */;
 		};
-		8F4B1D0022CD695E00643533 /* PBXTargetDependency */ = {
+		8F8D550322CF0C6800C62BBF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8F4B1CDD22CD695C00643533 /* AmazonScraper */;
-			targetProxy = 8F4B1CFF22CD695E00643533 /* PBXContainerItemProxy */;
+			target = 8F8D54DF22CF0C6700C62BBF /* AmazonScraper */;
+			targetProxy = 8F8D550222CF0C6800C62BBF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		8F4B1CEA22CD695E00643533 /* Main.storyboard */ = {
+		8F8D54EB22CF0C6800C62BBF /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				8F4B1CEB22CD695E00643533 /* Base */,
+				8F8D54EC22CF0C6800C62BBF /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -306,7 +309,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		8F4B1D0522CD695E00643533 /* Debug */ = {
+		8F8D550822CF0C6800C62BBF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -362,12 +365,10 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		8F4B1D0622CD695E00643533 /* Release */ = {
+		8F8D550922CF0C6800C62BBF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -416,12 +417,10 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
 		};
-		8F4B1D0822CD695E00643533 /* Debug */ = {
+		8F8D550B22CF0C6800C62BBF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -433,14 +432,12 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = AtlasDev.AmazonScraper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		8F4B1D0922CD695E00643533 /* Release */ = {
+		8F8D550C22CF0C6800C62BBF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -452,17 +449,14 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = AtlasDev.AmazonScraper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
-		8F4B1D0B22CD695E00643533 /* Debug */ = {
+		8F8D550E22CF0C6800C62BBF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -474,15 +468,13 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = AtlasDev.AmazonScraperTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AmazonScraper.app/Contents/MacOS/AmazonScraper";
 			};
 			name = Debug;
 		};
-		8F4B1D0C22CD695E00643533 /* Release */ = {
+		8F8D550F22CF0C6800C62BBF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -494,15 +486,13 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = AtlasDev.AmazonScraperTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AmazonScraper.app/Contents/MacOS/AmazonScraper";
 			};
 			name = Release;
 		};
-		8F4B1D0E22CD695E00643533 /* Debug */ = {
+		8F8D551122CF0C6800C62BBF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = AmazonScraperUITests/Info.plist;
@@ -513,15 +503,13 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = AtlasDev.AmazonScraperUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = AmazonScraper;
 			};
 			name = Debug;
 		};
-		8F4B1D0F22CD695E00643533 /* Release */ = {
+		8F8D551222CF0C6800C62BBF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = AmazonScraperUITests/Info.plist;
@@ -532,7 +520,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = AtlasDev.AmazonScraperUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = AmazonScraper;
 			};
 			name = Release;
@@ -540,56 +527,43 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		8F4B1CD922CD695C00643533 /* Build configuration list for PBXProject "AmazonScraper" */ = {
+		8F8D54DB22CF0C6700C62BBF /* Build configuration list for PBXProject "AmazonScraper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8F4B1D0522CD695E00643533 /* Debug */,
-				8F4B1D0622CD695E00643533 /* Release */,
+				8F8D550822CF0C6800C62BBF /* Debug */,
+				8F8D550922CF0C6800C62BBF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8F4B1D0722CD695E00643533 /* Build configuration list for PBXNativeTarget "AmazonScraper" */ = {
+		8F8D550A22CF0C6800C62BBF /* Build configuration list for PBXNativeTarget "AmazonScraper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8F4B1D0822CD695E00643533 /* Debug */,
-				8F4B1D0922CD695E00643533 /* Release */,
+				8F8D550B22CF0C6800C62BBF /* Debug */,
+				8F8D550C22CF0C6800C62BBF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8F4B1D0A22CD695E00643533 /* Build configuration list for PBXNativeTarget "AmazonScraperTests" */ = {
+		8F8D550D22CF0C6800C62BBF /* Build configuration list for PBXNativeTarget "AmazonScraperTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8F4B1D0B22CD695E00643533 /* Debug */,
-				8F4B1D0C22CD695E00643533 /* Release */,
+				8F8D550E22CF0C6800C62BBF /* Debug */,
+				8F8D550F22CF0C6800C62BBF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8F4B1D0D22CD695E00643533 /* Build configuration list for PBXNativeTarget "AmazonScraperUITests" */ = {
+		8F8D551022CF0C6800C62BBF /* Build configuration list for PBXNativeTarget "AmazonScraperUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8F4B1D0E22CD695E00643533 /* Debug */,
-				8F4B1D0F22CD695E00643533 /* Release */,
+				8F8D551122CF0C6800C62BBF /* Debug */,
+				8F8D551222CF0C6800C62BBF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		8F4B1CE522CD695C00643533 /* AmazonScraper.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				8F4B1CE622CD695C00643533 /* AmazonScraper.xcdatamodel */,
-			);
-			currentVersion = 8F4B1CE622CD695C00643533 /* AmazonScraper.xcdatamodel */;
-			path = AmazonScraper.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
-	rootObject = 8F4B1CD622CD695C00643533 /* Project object */;
+	rootObject = 8F8D54D822CF0C6700C62BBF /* Project object */;
 }
