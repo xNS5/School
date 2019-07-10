@@ -198,6 +198,11 @@
 				TargetAttributes = {
 					8F8D54DF22CF0C6700C62BBF = {
 						CreatedOnToolsVersion = 10.2.1;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
 					};
 					8F8D54F522CF0C6800C62BBF = {
 						CreatedOnToolsVersion = 10.2.1;
@@ -432,6 +437,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = AtlasDev.AmazonScraper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -449,6 +455,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = AtlasDev.AmazonScraper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
