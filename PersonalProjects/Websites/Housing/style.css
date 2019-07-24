@@ -1,50 +1,88 @@
-h1{
+h1{ 
+    float: center;
     text-align: center;
     color: black;
-    background-color: rgba(255,255,255,0.5);
-    border-style: solid;
     font-family: Custom;
-    border-width: 1px;
-    padding: 25px;
-    font-size: 40px;
-    margin: 50px;
+    background-color: rgba(255,255,255,0.7);
+    font-size: 50px;
     padding: 10px;
+    margin-top: 50px;
 }
 
-h2{
-    text-align: center;
-    color: black;
-    background-color:rgba(255,255,255,0.5);
-    font-family: Custom;
-    border-width: .5px;
-    padding: 25px;
-    font-size: 28px;
-    margin: 50px;
-    padding: 10px;
-    
+.footer{
+   position:fixed;
+   margin-top: auto;
+   bottom:0;
+   width:100%;
+   height:80px; 
+}
+
+.footer ul li{
+    display:inline;
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
 }
 
 .main-hero-image{
     background: url("Pictures/perry-kibler-55eOz9BtaUg-unsplash.jpg") no-repeat center fixed;
     background-color: #cccccc;
-    height: 1000px;
     background-size: cover;  
-    position:top;
+    position:center;
 }
 
-img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 75%;
+.ph1{
+    margin-top:auto;
+    text-align:center;
+    color:black;
+    border-bottom: 1px solid black;
+    font-family:Custom; 
+    font-size:25px;
 }
 
+.ph2{
+    color:black;
+    font-family: Custom;
+    font-size:10px;
+}
 
+.paragraph{
+  text-align: left;
+  background-color:rgba(255,255,255,0.7);
+  font-family: Custom; 
+  margin-right:auto;
+  margin-left:auto;
+  width: 550px;
+  height: 350px;
+  padding: 10px;
+}
+
+#header{
+    align-items: top;
+    margin-right:auto;
+    margin-left:auto;
+    height: 60%; 
+    width: 70%;
+}
+
+#paragraph{
+   align-items: top;
+   margin-right:auto;
+   margin-left:auto;
+   height: auto; 
+   width: 50%; 
+}
+
+#icon{
+    padding-top: 15px;
+    padding-left: 40px;
+    padding-right:100px;
+}
 
 /* 
 Nav bar style
 */
-ul {
+.nav ul {
+  position: fixed;
   list-style-type: none;
   overflow: auto;
   position: auto;
@@ -55,26 +93,74 @@ ul {
   width: 100%;
 }
 
-li {
+.nav ul li {
   float: left;
 }
     
-li a {
+.nav li a {
   display: block;
   color: black;
   padding: 8px 8px;
   text-decoration: none;
+  display: inline-block;
+  line-height: 1em;   
 }
     
-li a.text{
+.nav li a.text{
     font-family: Custom;
     font-size: 18px;
     color: black;
 }
   
-li a:hover:not(.active) {
+.nav li a:hover:not(.active) {
   background-color: #555;
   background-color: rgba(255,255,255,0.9);
+}
+
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: Black;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: rgba(255,255,255,0.9);
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
 }
 
 /*
