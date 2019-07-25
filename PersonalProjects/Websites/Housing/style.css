@@ -3,26 +3,17 @@ h1{
     text-align: center;
     color: black;
     font-family: Custom;
-    background-color: rgba(255,255,255,0.7);
     font-size: 50px;
-    padding: 10px;
-    margin-top: 50px;
+    margin-top: 60px;
 }
 
-.footer{
-   position:fixed;
-   margin-top: auto;
-   bottom:0;
-   width:100%;
-   height:80px; 
+h1 span{
+    position:relative; 
+    background-color: rgba(255,255,255,0.7);
+    padding-right: 50px;
+    padding-left: 50px;
 }
-
-.footer ul li{
-    display:inline;
-    -webkit-filter: invert(100%);
-    filter: invert(100%);
-}
-
+ 
 .main-hero-image{
     background: url("Pictures/perry-kibler-55eOz9BtaUg-unsplash.jpg") no-repeat center fixed;
     background-color: #cccccc;
@@ -84,9 +75,9 @@ Nav bar style
 .nav ul {
   position: fixed;
   list-style-type: none;
-  overflow: auto;
-  position: auto;
+  overflow: hidden;
   background-color: rgba(255,255,255,0.8);
+  line-height: 1em;  
   margin: 0;
   padding: 0;
   top: 0;
@@ -100,10 +91,9 @@ Nav bar style
 .nav li a {
   display: block;
   color: black;
-  padding: 8px 8px;
   text-decoration: none;
-  display: inline-block;
-  line-height: 1em;   
+  padding: 10px 10px;
+  line-height: 1.5em;   
 }
     
 .nav li a.text{
@@ -115,6 +105,10 @@ Nav bar style
 .nav li a:hover:not(.active) {
   background-color: #555;
   background-color: rgba(255,255,255,0.9);
+}
+
+.nav li a img{
+    position: bottom;
 }
 
 .dropdown {
