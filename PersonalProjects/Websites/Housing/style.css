@@ -131,11 +131,12 @@ Nav bar style
 
 .dropdown-content a{
   color: black;
+  text-align: center;
   background-color: rgba(255,255,255,0.8);
   text-decoration: none;
   display: block;
   padding: inherit;
-  width: 100%;
+  width: 92%;
 }
 
 .dropdown-content a:hover {

@@ -2,7 +2,7 @@
 <head>
 <link rel="stylesheet" href="style.css">
 <script src="//code.jquery.com/jquery.min.js"></script>
-<title>Bellingham Student Housing - Home</title>
+<title>Home</title>
 </head>
 
 <html class="main-hero-image"> 
@@ -13,6 +13,16 @@
     </div>
 
     <h1><span>Bellingham Student Housing Project</span></h1> 
+    
+    <div class="paragraph", id="paragraph">
+        <div>
+        <h2>Title Goes Here</h2>
+        </div>
+        <text id="welcome">
+            <script> $.get("Documents/welcome.doc", function(toString) {$("#welcome").replaceWith(toString); }); </script>
+        </text>
+    </div>
+    
     
 
 </html>
