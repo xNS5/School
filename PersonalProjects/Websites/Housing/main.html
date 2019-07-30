@@ -5,7 +5,12 @@
 <title>Home</title>
 </head>
 
-<html class="main-hero-image"> 
+
+<!-- 
+main-hero image is the main background image.
+Nav is the class for the navigation style, and the navbar id is where the navbar gets replaced by the jquery script.
+-->
+<html class="main-hero-image">
     <div class="nav">
         <div id="navbar">
             <script>$.get("navbar.html", function(data){$("#navbar").replaceWith(data);});</script> 
@@ -14,13 +19,19 @@
 
     <h1><span>Bellingham Student Housing Project</span></h1> 
     
-    <div class="paragraph", id="paragraph">
-        <div>
-        <h2>Title Goes Here</h2>
+<!--
+Paragraph is the class with some kind of background for a text box
+-->
+    
+    <div class="container">
+        <h2 id="underline">Welcome to the Student Housing Project</h2>
+        <div class="paragraph">
+            <text>
+                <div id="welcome">
+                <script> $.get("Documents/welcome.doc", function(toString) {$("#welcome").replaceWith(toString); }); </script>
+                </div>
+            </text>
         </div>
-        <text id="welcome">
-            <script> $.get("Documents/welcome.doc", function(toString) {$("#welcome").replaceWith(toString); }); </script>
-        </text>
     </div>
     
     

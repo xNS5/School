@@ -7,58 +7,70 @@ h1{
     margin-top: 65px;
 }
 
-h2{
-   text-align:center; 
-   margin-top:auto;
-   color:black;
-   font-family:Custom; 
-   border-bottom: 1px solid black;
-   font-size:25px;
-}
-
 h1 span{
     position:relative; 
-    background-color: rgba(255,255,255,0.7);
+    background-color: rgba(255,255,255,0.85);
+    padding-right: 25px;
+    padding-left: 25px;
+    padding-bottom: 5px;
+}
+
+h2{
+   text-align: center;
+   color: black;
+   font-family: Custom; 
+   font-size: 28px;
+   margin-top: 0;
+   margin-bottom: 10px;
+}
+
+div span{
+    background-color: rgba(255,255,255,0.85);
     padding-right: 25px;
     padding-left: 25px;
 }
+
 text{
     color:black;
     font-family: Custom;
-    font-size:10px;
+    font-size: 18px;
 }
+
+.caret{
+  margin-left: 10px;
+  display:block;
+  float: right; 
+}
+
 .main-hero-image{
     background: url("Pictures/perry-kibler-55eOz9BtaUg-unsplash.jpg") no-repeat center fixed;
-    background-color: #cccccc;
     background-size: cover;  
     position:center;
 }
 
-.paragraph{
-  text-align: left;
-  background-color:rgba(255,255,255,0.7);
-  font-family: Custom; 
+.container{
   margin-right:auto;
   margin-left:auto;
-  width: 550px;
-  height: 350px;
-  padding: 10px;
+  background-color:rgba(255,255,255,0.85);
+  height: auto;
+  width: 50%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 20px;
+  padding-left: 20px;
 }
 
-#header{
-    align-items: top;
-    margin-right:auto;
-    margin-left:auto;
-    height: 60%; 
-    width: 70%;
+.container paragraph{
+  text-align: left;
+  padding-top: 0;
+  margin-right: auto;
+  margin-left: auto;
 }
 
-#paragraph{
-   align-items: top;
-   margin-right:auto;
-   margin-left:auto;
-   height: auto; 
-   width: 50%; 
+#underline{
+    border-bottom: 1px solid black;
+    margin-right: 60px;
+    margin-left: 60px;
 }
 
 /* 
@@ -67,8 +79,8 @@ Nav bar style
 .nav ul {
   position: absolute;
   list-style-type: none;
-  background-color: rgba(255,255,255,0.8);
-  line-height: 1.5em;  
+  background-color: rgba(255,255,255,0.85);
+  line-height: 1em;  
   margin: 0;
   padding: 0;
   top: 0;
@@ -132,11 +144,12 @@ Nav bar style
 .dropdown-content a{
   color: black;
   text-align: center;
-  background-color: rgba(255,255,255,0.8);
   text-decoration: none;
   display: block;
   padding: inherit;
-  width: 92%;
+  border-bottom: 1px solid grey;
+  background-color: rgba(255,255,255,0.85);
+  width: 140px;
 }
 
 .dropdown-content a:hover {
@@ -149,6 +162,16 @@ Nav bar style
 
 .dropdown:hover .dropbtn {
     background-color: rgba(255,255,255,0.9);
+}
+
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
 }
 
 /*

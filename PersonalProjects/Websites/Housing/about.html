@@ -14,13 +14,15 @@
 
     <h1><span>About The Project</span></h1> 
     
-    <div class="paragraph", id="paragraph">
-        <div>
-        <p class="ph1">Title Goes Here</p>
+    <div class="container">
+        <h2 id="underline">Welcome to the Student Housing Project</h2>
+        <div class="paragraph">
+            <text>
+                <div id="welcome">
+                <script> $.get("Documents/welcome.doc", function(toString) {$("#welcome").replaceWith(toString); }); </script>
+                </div>
+            </text>
         </div>
-        <p class="ph2", id="welcome">
-            <script> $.get("Documents/welcome.doc", function(toString) {$("#welcome").replaceWith(toString); }); </script>
-        </p>
     </div>
     
 </html>
