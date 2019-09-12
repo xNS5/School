@@ -1,10 +1,18 @@
 #!/bin/bash
 echo "Beginning QuickTile Initialization"
-echo realpath
+
+# Things to note: 
+# Adding the quicktiles in with "" on the ends of the string will result in an error
+# My path for my alias is ~/Github/CS/scripts/tiles/tiles.sh
+
 
 path="$(dirname "$(which "$0")")"
 tiles=`cat $path/tiles.txt`
-line_number=`adb devices | wc -l` 
+
+
+function getLines(){
+  return `adb devices | wc -l`;
+}
 
 if [ "$1" == "-h" ]; then
  echo "Usage: ./tiles [-h help]"
@@ -16,31 +24,35 @@ if [ ${#tiles} -eq 0 ]; then
    echo "The Tiles file does not seem to exist."
    read -p "Do you want to create the file? (Y || N) " ans
    shopt -s nocasematch
-   case "$ans" in 
-      "Y" )
-	if [ $line_number -eq 3 ]; then
+   getLines
+	if [$ans -eq "Y"] && [ $?-eq 3 ]; then
          adb shell "settings get secure sysui_qs_tiles" > $path/tiles.txt
-	else
+         echo "Created text file. Please re-start this program to load quicktiles"
+         exit 0
+	elif [$ans -eq "N"] || [ $ans -eq "Y"] && [ $? -ne 3]; then
 	echo "Device is not connected"
-      *) exit 0;;
-   esac
+       exit 0
+   fi
 fi
+
 
 
 while :
    do
-   if [ $line_number -eq 3 ]; then
+   getLines
+   if [ $? -eq 3 ]; then
       echo "Device Found"
       echo "Device ID: "`adb devices | grep -w "device" | awk '{print $1;}'`
+      echo "Device Model: "`adb shell getprop | grep "ro.product.model" | sed 's/^.*: //'`
+      echo "Device Carrier: " `adb shell getprop | grep "nfc.fw.dfl_areacode" | sed 's/^.*: //'`
       break
-   elif [ $line_number -gt 3 ]; then
+   elif [ $? -gt 3 ]; then
       echo "Multiple Devices Detected. Please disconnect one"
-      echo $line_number
    else
       echo "No Devices Found. Please ensure that your device is connected"
 
    fi
-   sleep 10s
+   sleep 5s
 done
 
 adb shell "settings put secure sysui_qs_tiles \"$tiles\""
