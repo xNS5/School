@@ -49,7 +49,7 @@ while :
    elif [ $? -gt 3 ]; then
       echo "Multiple Devices Detected. Please disconnect one"
    else
-      echo "No Devices Found. Please ensure that your device is connected"
+      echo "No Devices Found. Please ensure that your device is connected."
 
    fi
    sleep 5s
