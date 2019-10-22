@@ -17,3 +17,7 @@ This program utilized ADB to push/pull files from an android file system to macO
 2.3 Have split pane file manager for both computer and device. Add feature to move panes back and forth (l -> r, or r -> l)
 2.4 Either select file(s) then add button that pushes/pulls file/directory from device/computer. (> and < for push/pull)
 2.4.1 Why not both lmao. It's really just file manipulation with a GUI
+
+Note to self: 
+
+adb shell settings get global device_name To get device name
