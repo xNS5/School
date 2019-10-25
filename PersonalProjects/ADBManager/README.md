@@ -21,3 +21,4 @@ This program utilized ADB to push/pull files from an android file system to macO
 Note to self: 
 
 adb shell settings get global device_name To get device name
+Add -s flag then the phone's ID to do things to it
