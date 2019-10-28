@@ -10,7 +10,7 @@ public class Filter implements FileFilter {
             try {
                 String fileName = file.getName();
                 HashMap<String, Boolean> hmap = new HashMap<>();
-                Scanner sc = new Scanner(new File(System.getProperty("user.home") + "/br_config/filter"));
+                Scanner sc = new Scanner(new File("br_config/filter"));
                 while (sc.hasNextLine()) {
                     hmap.put(sc.nextLine(), true);
                 }

@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 
 class Editor extends JFrame {
-    private static String dir = System.getProperty("user.home") + "/br_config/filter";
+    private static String dir = "br_config/filter";
     private static JTextArea jt;
     private static Container mainFrame;
 
