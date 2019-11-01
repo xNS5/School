@@ -90,10 +90,10 @@ Layout design. This was a pain in the ass.
          *   Anyway, these are actionListeners that do stuff when buttons are pushed.
          * */
 
-        // Choose folder, reads from the init file in br_config
+        // Choose folder, reads from the init.txt file in br_config
         button1.addActionListener(e -> {
                     try {
-                        Scanner sc = new Scanner(new File(System.getProperty("user.home") + "/br_config/init"));
+                        Scanner sc = new Scanner(new File(System.getProperty("user.home") + "/br_config/init.txt"));
                         if (sc.hasNextLine()) {
                             String temp_str = sc.next();
                             File temp_file = new File(temp_str);

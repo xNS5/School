@@ -6,7 +6,7 @@ class Init {
     Init() {
         try {
             File home = new File(System.getProperty("user.home"));
-            File br_path = new File(home + "/br_config/"), init_path = new File(home + "/br_config/init"), filter_path = new File(home + "/br_config/filter");
+            File br_path = new File(home + "/br_config/"), init_path = new File(home + "/br_config/init.txt"), filter_path = new File(home + "/br_config/filter.txt");
             if (!br_path.isDirectory()) {
                 br_path.mkdir();
                 init_path.createNewFile();
@@ -17,7 +17,7 @@ class Init {
                 filter_path.createNewFile();
             }
         } catch (IOException i) {
-            new Err("Error creating init files");
+            new Err("Error creating init.txt files");
         }
     }
 }

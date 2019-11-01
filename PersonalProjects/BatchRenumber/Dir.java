@@ -7,7 +7,7 @@ class Dir {
     static void dir() {
         try {
             final Container cont = new Container("Default Directory");
-            String init_path = "br_config/init";
+            String init_path = "br_config/init.txt";
             Scanner sc = new Scanner(new File(init_path));
             JPanel panel = new JPanel();
             JLabel label = new JLabel("Current Default: ");
