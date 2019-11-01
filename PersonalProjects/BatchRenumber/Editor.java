@@ -13,14 +13,9 @@ class Editor extends JFrame {
     Editor() {
         try {
             //File, Scanner and a StringBuilder
-
-            InputStream is = this.getClass().getClassLoader().getResourceAsStream(dir);
-            BufferedReader bf = new BufferedReader(new InputStreamReader(is));
-//           File filter_file = new File(dir);
-//            Scanner sc = new Scanner(filter_file);
+           File filter_file = new File(dir);
+            Scanner sc = new Scanner(filter_file);
             StringBuilder sb = new StringBuilder();
-
-            sb.append(bf.lines().collect(Collectors.joining(System.getProperty("line.separator"))));
 
             //Creating a JFrame container, setting default close operation
             //Also creating a JPanel called ControlPanel, another container
@@ -40,11 +35,9 @@ class Editor extends JFrame {
             mainFrame.setResizable(false);
 
             //Adding info from filter.txt file to a string builder.
-
-
-//            while(sc.hasNextLine()){
-//                sb.append(sc.next()).append(System.getProperty("line.separator"));
-//            }
+            while(sc.hasNextLine()){
+                sb.append(sc.next()).append(System.getProperty("line.separator"));
+            }
 
             jt.setText(sb.toString());
 

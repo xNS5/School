@@ -17,10 +17,10 @@ public class Filter implements FileFilter {
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                new Err("Extension: " + e.toString());
+                new Err("Filter: " + e.toString());
             } catch (IOException e){
                 e.printStackTrace();
-                new Err("Extension" + e.toString());
+                new Err("Filter: " + e.toString());
             }
         }
         return false;

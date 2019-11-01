@@ -10,8 +10,6 @@ class Vars {
 public class Renumber {
 
     public static void main(String[] args) {
-        //new Init();
-
         // Creating the container for the main window
         final Container cont = new Container("Batch Renumber");
         cont.setSize(900, 150);
