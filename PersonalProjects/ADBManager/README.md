@@ -22,3 +22,7 @@ Note to self:
 
 adb shell settings get global device_name To get device name
 Add -s flag then the phone's ID to do things to it
+
+Initial design was to use bash, but maybe java can be better. Or python depending on 
+how easy it is to design a UI of some sort
+Use `adb shell ls -r /[directory]` to list files in the directory
