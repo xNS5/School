@@ -1,0 +1,13 @@
+Michael Kennedy
+
+IPC stands for "Inter process communication". Using the Kernel I can request that it
+allocate memory specifically for inter-process communication. The processes can also communicate by having 
+a file that's accessable to both of the processes. They can read, write, and open to said file.
+
+In this assignment, I use the server file to create a shared memory object which can be accessed by the 
+client. Using a timer, I could design a program that will pull data from a server at a set interval. Or, in turn, 
+have the client store data in the shared memory object which gets read by the server. After a certain number of clocks, 
+the function that pulls data from the shared memory object or store it in the shared memory object. After it gets pulled
+from the shared memory object, the process would get put to sleep for a certain number of clocks, then gets woken up after
+a certain number of clock cycles to either push or pull data from the shared memory object. This would allow two processes
+to be synced up with the same data.
