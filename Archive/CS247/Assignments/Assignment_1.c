@@ -35,10 +35,8 @@
 #define MAX_THREAD_COUNT 9
 
 typedef struct{
-	int threadCount;
+	int threadCount, threadPolicy, threadPri;
 	pthread_t threadId;
-	int threadPolicy;
-	int threadPri;
 	long processTime;
 	int64_t timeStamp[MAX_TASK_COUNT+1];
 	time_t startTime;
@@ -110,7 +108,7 @@ void DisplayThreadSchdAttributes( pthread_t threadID, int policy, int priority )
 
 void DisplayThreadArgs(ThreadArgs*	myThreadArg)
 {
-int i,y;
+    int i,y;
 
 if( myThreadArg )
 {
