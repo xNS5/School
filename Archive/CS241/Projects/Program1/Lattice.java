@@ -26,11 +26,11 @@ import java.lang.*;
 
 public class Lattice {
    private String utteranceID;       // A unique ID for the sentence
-   private int startIdx, endIdx;     // Indices of the special start and end tokens
-   private int numNodes, numEdges;   // The number of nodes and edges, respectively
+   private int startIdx, endIdx,numNodes, numEdges;     // Indices of the special start and end tokens
+                                       // The number of nodes and edges, respectively
    private Edge[][] adjMatrix;       // Adjacency matrix representing the lattice
-   // Two dimensional array of Edge objects
-   //  adjMatrix[i][j] == null means no edge (i,j)
+                                    // Two dimensional array of Edge objects
+                                    //  adjMatrix[i][j] == null means no edge (i,j)
    private double[] nodeTimes;       // Stores the timestamp for each node
 
 
@@ -67,8 +67,7 @@ public class Lattice {
       {
          String[] id_info = new String[5];
          Scanner sc = new Scanner(new File(latticeFileName));
-         int counter = 0;
-         int i = 0;
+         int counter = 0, i = 0;
          String line;
 
          while(true)
@@ -76,7 +75,6 @@ public class Lattice {
             line = sc.nextLine();
             if(counter < 5)
             {
-
                String[] split = line.split(" ");
                id_info[i] = split[1];
                utteranceID = id_info[0];
@@ -187,7 +185,7 @@ public class Lattice {
             if(adjMatrix[a][b] != null)
             {
                Edge edge = adjMatrix[a][b];
-               sb.append("edge "+ a+ " " + b + " " + edge.getLabel() + " " + edge.getAmScore() + " " + edge.getLmScore() + "\n");
+               sb.append("edge "+ a+ " " + b + " " + edge.getLabel() + " " + edge.getAmScore() + " " + edge.getLmScore() + "\r\n");
             }
          }
       }
@@ -265,8 +263,8 @@ public class Lattice {
    //      has no incoming edges from nodes in the i+1'th or later elements
    public int[] topologicalSort() {
       int[] inDegrees = new int[numNodes];
-      Stack<Integer> zeroIn = new Stack<Integer>();
-      List<Integer> temp = new ArrayList<Integer>();
+      Stack<Integer> zeroIn = new Stack<>();
+      List<Integer> temp = new ArrayList<>();
       int[] result = new int[numNodes];
 
       for(int i = 0; i < numNodes; i++)
@@ -374,14 +372,13 @@ public class Lattice {
    //      (# of non -silence- words in lattice) / (# seconds from start to end index)
    //      Note that multiwords (e.g. to_the) count as a single non-silence word
    public double getLatticeDensity() {
-      double nonSilence = 0.0;
-      double seconds = 0.0;
+      double nonSilence = 0.0, seconds = 0.0;
 
       for(int i = 0; i < numNodes; i++)
       {
          for(int j = 0; j < numNodes; j++)
          {
-            if((adjMatrix[i][j] != null) && (adjMatrix[i][j].getLabel() != "-silence-") && (adjMatrix[i][j].getLabel() != "@reject"))
+            if((adjMatrix[i][j] != null) && !(adjMatrix[i][j].getLabel().equals("-silence-")) && !(adjMatrix[i][j].getLabel().equals("@reject"))
             {
                nonSilence +=1;
             }
