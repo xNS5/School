@@ -1,7 +1,7 @@
 # Classes:
 
 | Class | Name | Language |
-
+|---|---|---|
 | CSCI 241 | Data Structures I | Java |
 
 | CSCI 247 | Computer Systems I | C |
