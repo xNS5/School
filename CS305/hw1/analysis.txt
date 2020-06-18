@@ -1,0 +1,36 @@
+Analysis:
+
+Insertion Sort:
+
+Even for an array of 100,000, the insertion sort algorithm. With the way
+I implemented it, best case it should run O(N) and worst case it should 
+run O(N^2).
+
+Because of the way I'm creating my arrays of integers, I found that it was
+mostly sorted by the time I got around to tallying the number of swaps.
+I thought by doing total possible number of swaps minus the number of mixed indexes, 
+I could approximate the number of swaps it would take to partially sort the array.
+As my arrays were mostly if not completely sorted, the resulting number was negative.
+I'm not sure if my approach was a correct approach, so I just outputted the number
+of swaps it took to sort the array. I used a second insertion sort function instead of 
+incuding the number of swaps in the sorted array.
+
+
+IS 10 100, swaps is 0 because the array is already sorted.
+IS 10 0, swaps is 45 because the array is inverted.
+IS 10 80 had 6, 5, 0, 2, 0 swaps.
+IS 1000 80 had 6215254, 6168254, 6524328, 6354121, swaps. 
+
+I noticed as I decreased the percent sorted, the number of swaps went up. Which makes sense given
+that a 0% sorted array takes (n * (n - 1))/2 swaps to sort. 
+
+Linear Search:
+
+Linear Search is by far faster than Insertion sort, however I still wasn't
+able to notice any runtime difference. 
+
+LS=90 100 100 outputted mainly "not found" which I find interesting given the overall range is wider. 
+LS=9 10 100 outputted anywhere between 0, 9, 4, and 1 for entries searched.
+LS=100 1000 55 outputted consistently anywhere in the 50's range.
+
+Full disclosure, some of the outputs for the search were +1 off. 
