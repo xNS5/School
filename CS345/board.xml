@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<board name="default">
+    <set name="Trailers" number="0" x="991" y="248" h="194" w="201">
+        <neighbors>
+            <neighbor>Main Street</neighbor>
+            <neighbor>Saloon</neighbor>
+            <neighbor>Hotel</neighbor>
+        </neighbors>
+    </set>
+    <set name="Main Street" number="1" x="969" y="28" h="115" w="205">
+        <neighbors>
+            <neighbor>Trailers</neighbor>
+            <neighbor>Saloon</neighbor>
+            <neighbor>Jail</neighbor>
+        </neighbors>
+        <takes>
+            <take number="3" x="912" y="23" h="47" w="47"/>
+            <take number="2" x="858" y="23" h="47" w="47"/>
+            <take number="1" x="804" y="23" h="47" w="47"/>
+        </takes>
+        <extras>
+            <extra name="Railroad Worker" rank="1" x="637" y="22" h="46" w="46">
+                <line>I'm a steel-drivin' man!</line>
+            </extra>
+            <extra name="Falls off Roof" rank="2" x="720" y="22" h="46" w="46">
+                <line>Aaaaiiiigggghh!</line>
+            </extra>
+            <extra name="Woman in Black Dress" rank="2" x="637" y="105" h="46" w="46">
+                <line>Well, I'll be!</line>
+            </extra>
+            <extra name="Mayor McGinty" rank="4" x="720" y="105" h="46" w="46">
+                <line>People of Deadwood!</line>
+            </extra>
+        </extras>
+    </set>
+    <set name="Saloon" number="2" x="632" y="280" h="115" w="205">
+        <neighbors>
+            <neighbor>Trailers</neighbor>
+            <neighbor>Main Street</neighbor>
+            <neighbor>General Store</neighbor>
+            <neighbor>Bank</neighbor>
+        </neighbors>
+        <takes>
+            <take number="2" x="626" y="216" h="47" w="47"/>
+            <take number="1" x="679" y="216" h="47" w="47"/>
+        </takes>
+        <extras>
+            <extra name="Reluctant Farmer" rank="1" x="877" y="352" h="46" w="46">
+                <line>I ain't so sure about that!</line>
+            </extra>
+            <extra name="Woman in Red Dress" rank="2" x="877" y="276" h="46" w="46">
+                <line>Come up and see me!</line>
+            </extra>
+        </extras>
+    </set>
+    <set name="Jail" number="3" x="281" y="27" h="115" w="205">
+        <neighbors>
+            <neighbor>General Store</neighbor>
+            <neighbor>Train Station</neighbor>
+            <neighbor>Main Street</neighbor>
+        </neighbors>
+        <takes>
+            <take number="1" x="442" y="156" h="47" w="47"/>
+        </takes>
+        <extras>
+            <extra name="Prisoner in Cell" rank="2" x="519" y="25" h="46" w="46">
+                <line>Zzzzzzz... Whiskey!</line>
+            </extra>
+            <extra name="Teller in Irons" rank="3" x="519" y="105" h="46" w="46">
+                <line>Ah kilt the wrong man!</line>
+            </extra>
+        </extras>
+    </set>
+    <set name="Train Station" number="4" x="21" y="69" h="115" w="205">
+        <neighbors>
+            <neighbor>Jail</neighbor>
+            <neighbor>General Store</neighbor>
+            <neighbor>Casting Office</neighbor>
+        </neighbors>
+        <takes>
+            <take number="3" x="36" y="11" h="47" w="47"/>
+            <take number="2" x="89" y="11" h="47" w="47"/>
+            <take number="1" x="141" y="11" h="47" w="47"/>
+        </takes>
+        <extras>
+            <extra name="Crusty Prospector" rank="1" x="114" y="227" h="46" w="46">
+                <line>Aww, peaches!</line>
+            </extra>
+            <extra name="Dragged By Train" rank="1" x="51" y="268" h="46" w="46">
+                <line>Omgeezers!</line>
+            </extra>
+            <extra name="Peacher with Bag" rank="2" x="114" y="320" h="46" w="46">
+                <line>The Lord will provide.</line>
+            </extra>
+            <extra name="Cyrus the Gunfighter" rank="4" x="49" y="356" h="46" w="46">
+                <line>Git to fightin’ or git away!</line>
+            </extra>
+        </extras>
+    </set>
+    <set name="General Store" number="5" x="370" y="282" h="115" w="205">
+        <neighbors>
+            <neighbor>Jail</neighbor>
+            <neighbor>Train Station</neighbor>
+            <neighbor>Ranch</neighbor>
+            <neighbor>Saloon</neighbor>
+        </neighbors>
+        <takes>
+            <take number="2" x="313" y="277" h="47" w="47"/>
+            <take number="1" x="313" y="330" h="47" w="47"/>
+        </takes>
+        <extras>
+            <extra name="Man in Overalls" rank="1" x="236" y="276" h="46" w="46">
+                <line>Looks like a storm’s comin’ in.</line>
+            </extra>
+            <extra name="Mister Keach" rank="3" x="236" y="358" h="46" w="46">
+                <line>Howdy, Stranger</line>
+            </extra>
+        </extras>
+    </set>
+    <set name="Ranch" number="6" x="252" y="478" h="115" w="205">
+        <neighbors>
+            <neighbor>Casting Office</neighbor>
+            <neighbor>Secret Hideout</neighbor>
+            <neighbor>General Store</neighbor>
+            <neighbor>Bank</neighbor>
+        </neighbors>
+        <takes>
+            <take number="2" x="472" y="473" h="47" w="47"/>
+            <take number="1" x="525" y="473" h="47" w="47"/>
+        </takes>
+        <extras>
+            <extra name="Shot in Leg" rank="1" x="412" y="608" h="46" w="46">
+                <line>Ow! Me leg!</line>
+            </extra>
+            <extra name="Saucy Fred" rank="2" x="488" y="608" h="46" w="46">
+                <line>That's what she said</line>
+            </extra>
+            <extra name="Man under Horse" rank="3" x="488" y="608" h="46" w="46">
+                <line>A little help here!</line>
+            </extra>
+        </extras>
+    </set>
+    <set name="Casting Office" number="7" x="9" y="459" h="208" w="209">
+        <neighbors>
+            <neighbor>Ranch</neighbor>
+            <neighbor>Secret Hideout</neighbor>
+            <neighbor>Train Station</neighbor>
+        </neighbors>
+        <upgrades>
+            <upgrade rank="2" dollars="4" credits="5"/>
+            <upgrade rank="3" dollars="10" credits="10"/>
+            <upgrade rank="4" dollars="18" credits="15"/>
+            <upgrade rank="5" dollars="28" credits="20"/>
+            <upgrade rank="6" dollars="40" credits="25"/>
+        </upgrades>
+    </set>
+    <set name="Secret Hideout" number="8" x="27" y="732" h="115" w="205">
+        <neighbors>
+            <neighbor>Casting Office</neighbor>
+            <neighbor>Ranch</neighbor>
+            <neighbor>Church</neighbor>
+        </neighbors>
+        <takes>
+            <take number="3" x="244" y="764" h="47" w="47"/>
+            <take number="2" x="299" y="764" h="47" w="47"/>
+            <take number="1" x="354" y="764" h="47" w="47"/>
+        </takes>
+        <extras>
+            <extra name="Clumsy Pit Fighter" rank="1" x="435" y="719" h="46" w="46">
+                <line>Hit me!</line>
+            </extra>
+            <extra name="Thug with Knife" rank="2" x="521" y="719" h="46" w="46">
+                <line>Meet Suzy, my murderin' knife.</line>
+            </extra>
+            <extra name="Dangerous Tom" rank="3" x="435" y="808" h="46" w="46">
+                <line>There's two ways we can do this...</line>
+            </extra>
+            <extra name="Penny who is lost" rank="4" x="521" y="808" h="46" w="46">
+                <line>Oh, woe! For I am lost!</line>
+            </extra>
+        </extras>
+    </set>
+    <set name="Church" number="9" x="623" y="734" h="115" w="205">
+        <neighbors>
+            <neighbor>Bank</neighbor>
+            <neighbor>Hotel</neighbor>
+            <neighbor>Secret Hideout</neighbor>
+        </neighbors>
+        <takes>
+            <take number="2" x="623" y="675" h="47" w="47"/>
+            <take number="1" x="682" y="675" h="47" w="47"/>
+        </takes>
+        <extras>
+            <extra name="Dead Man" rank="1" x="857" y="730" h="46" w="46">
+                <line>...</line>
+            </extra>
+            <extra name="Crying Woman" rank="2" x="858" y="809" h="46" w="46">
+                <line>Oh the humanity!</line>
+            </extra>
+        </extras>
+    </set>
+    <set name="Hotel" number="10" x="969" y="740" h="115" w="205">
+        <neighbors>
+            <neighbor>Bank</neighbor>
+            <neighbor>Church</neighbor>
+            <neighbor>Trailers</neighbor>
+        </neighbors>
+        <takes>
+            <take number="3" x="1005" y="683" h="47" w="47"/>
+            <take number="2" x="1058" y="683" h="47" w="47"/>
+            <take number="1" x="1111" y="683" h="47" w="47"/>
+        </takes>
+        <extras>
+            <extra name="Faro Player" rank="1" x="1044" y="509" h="46" w="46">
+                <line>Hit me!</line>
+            </extra>
+            <extra name="Sleeping Drunkard" rank="1" x="1111" y="469" h="46" w="46">
+                <line>Zzzzzzz... Whiskey!</line>
+            </extra>
+            <extra name="Falls from Balcony" rank="2" x="1111" y="557" h="46" w="46">
+                <line>Arrrgghh!!</line>
+            </extra>
+            <extra name="Australian Bartender" rank="3" x="1046" y="596" h="46" w="46">
+                <line>What'll it be, mate?</line>
+            </extra>
+        </extras>
+    </set>
+    <set name="Bank" number="11" x="623" y="475" h="115" w="205">
+        <neighbors>
+            <neighbor>Hotel</neighbor>
+            <neighbor>Church</neighbor>
+            <neighbor>Ranch</neighbor>
+            <neighbor>Saloon</neighbor>
+        </neighbors>
+        <takes>
+            <take number="1" x="840" y="549" h="47" w="47"/>
+        </takes>
+        <extras>
+            <extra name="Suspicious Gentleman" rank="2" x="911" y="554" h="46" w="46">
+                <line>Can you be more specific?</line>
+            </extra>
+            <extra name="Flustered Teller" rank="3" x="911" y="470" h="46" w="46">
+                <line>Would you like a large bill, sir?</line>
+            </extra>
+        </extras>
+    </set>
+</board>
