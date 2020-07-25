@@ -1,7 +1,7 @@
 # Classes:
 
 | Class | Name | Language | Projects |
-|---|---|---|
+|---|---|---|---|
 | CSCI 241 | Data Structures I | Java | Lattice Word Prediction, Phylogenic tree generation |
 | CSCI 247 | Computer Systems I | C | Linux Task Schedule Exercise, Multithreading exercise, IPC exercise |
 | CSCI 301 | Functional Programming I | Scheme | Prime Number generator, LL1 grammar parser |
