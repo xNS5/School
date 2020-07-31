@@ -4,7 +4,7 @@ This program is a "second pass" decoding program which takes a lattice as an inp
 a point in time in a sentence and each edge representing a word that might have been uttered between two end points. 
 Each path represents a possible hypothesis for the uttered sentence. Each edge is weighted with two scores: an acoustic model score, and
 a language model score (**amScore** and **lmScore**). The two scores are combined by taking a weighted sum by the language model scale
-(**lmScale**). The combined score for an edge *e* is: `<combinedScore(e) = amScore(e) + lmScale * lmScore(e)>`
+(**lmScale**). The combined score for an edge *e* is: `combinedScore(e) = amScore(e) + lmScale * lmScore(e)`
 
 The program uses a Bellman-Ford algorithm to find the shortest path from the start node to the end node. Each edge is given a negative 
 log probability, so the lower the cost of getting from one node to the next the better. The shortest path will be the best path, making
@@ -14,9 +14,9 @@ the path with the lowest score has the highest probability of being the phrase o
 
 # How to Run
 
-Windows: java.exe Program1 someLatticeListFile.txt 8.0 someOutputDirectory
+Windows: `java.exe Program1 someLatticeListFile.txt 8.0 someOutputDirectory`
 
-MacOS/Linux: java Program1 someLatticeListFile.txt 8.0 someOutputDirectory
+MacOS/Linux: `java Program1 someLatticeListFile.txt 8.0 someOutputDirectory`
 
 where 8.0 in the above examples are the lmScale value.
 
