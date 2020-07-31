@@ -41,3 +41,26 @@ This assignment was a pair programming assignment, and we were tasked with imple
 - printSortedHits - prints all times in sorted order when a given toek appears.
 
 ---
+
+# Potential Improvements
+
+1. Finding a way to improve the Lattice method. One approach that I saw while implementing this method was to simply create multiple
+`for` loops to iterate through the data multiple times. The input files start and end the same; the first 5 lines contain the following values:
+ _ ID
+ _ Start value
+ _ End value
+ _ Number of Nodes
+ _ Number of Edges
+
+ After the first 5 lines, there are "node" values and "edge" values. We opted to instead use one loop and a counter instead of using 3 `for` loops.
+
+ I believe that this is one of the better ways to parse this data, however there are some minor improvements that can be made to reduce the amount of memory used.
+
+ 2. I call topologicalSort() a number of times within separate methods, perhaps creating a class variable to store the topologically sorted nodes would speed up the average running time, as well as reduce space allocation.
+
+ 3. Finding a way to improve the adjacency matrix. It's currently in the form of a 2D matrix, which takes O(n^2) time to iterate
+ through the array. Intead, I could create a vertex class which among other things could contain edge costs. This way, all that one
+ would have to do is iterate through each node instead of checking indexes that contain no edges in the original 2D matrix.
+
+ An unfortunate side effect of this is the countAllPaths method most likely will have to be reworked to be a recursive method as opposed to an iterative one.
+ A recursive solution has the potential to require more time to execute and not improve the running time in any significant way.
