@@ -70,7 +70,7 @@ public class Lattice {
          int counter = 0, i = 0;
          String line;
 
-         while(true)
+         while(sc.hasNextLine())
          {
             line = sc.nextLine();
             if(counter < 5)
@@ -106,10 +106,6 @@ public class Lattice {
                int amScore = Integer.parseInt(split[4]);
                int lmScore = Integer.parseInt(split[5]);
                adjMatrix[n][x] = new Edge(label, amScore, lmScore);
-            }
-            if(!sc.hasNextLine())
-            {
-               break;
             }
             counter++;
          }
