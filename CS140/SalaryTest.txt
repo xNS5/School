@@ -1,0 +1,5 @@
+1)  I chose to test both of the example inputs and outputs on the lab document ( 38 hours, which resulted in $456 dollars, 45 hours which resulted in 570 dollars) These seemed like the easiest way to test whether my inputs would produce the expected outputs.
+
+2) In the end it did. I wanted to have a little fun, so I added some unnecessary code which took me a little longer to work out. 
+
+3) No, I didn't have to change my program. 

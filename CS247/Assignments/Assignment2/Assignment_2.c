@@ -161,31 +161,7 @@ int CreateAndArmTimer(int unsigned period, ThreadArgs* info)
      ret4 = timer_settime(info->timer_id, 0, &timerSpec, NULL);
      return 0;
    }
-   // if(ret || ret2 || ret3 || ret4)
-   // {
-   //    printf("Errors:\r\n");
-   //    printf("========================\n");
-   //    if(ret)
-   //    {
-   //      handle_error_print(ret, "Sig Empty Set");
-   //    }
-   //    if(ret2)
-   //    {
-   //       handle_error_print(ret2, "Sig Add Set");
-   //    }
-   //    if(ret3)
-   //    {
-   //      handle_error_print(ret3, "Timer Create");
-   //    }
-   //    if(ret4)
-   //    {
-   //      handle_error_print(ret4, "Set Timer");
-   //    }
-   //    printf("========================\r\n");
-   //
-   //    return -1;
-   // }
-   return -1;
+  return -1;
 }
 
 /*****************************************************************************************/
