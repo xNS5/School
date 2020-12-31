@@ -1,0 +1,23 @@
+Activity Journal
+
+Name: Michael Kennedy
+
+================================================================
+Start 7:00 PM
+Estimated Time	00:30
+Plan: Copy prime.c to prime_standard.c and adjust the variable names, definitions, then function names.
+(Order of implementation, testing approach, etc.)
+
+Complete 7:37 PM
+Actual Time	00:37
+Observations: After I renamed variables, I changed the way variables were assigned to reduce overall memory allocation (e.g. on line 42
+I changed primes[1] = 1; primes[2] = 1; to primes[1] = 1, primes[2] = 1; and on line 43 I initialized i within the for loop instead of outside of it.
+I tested the program and realized that in prime.c the original author had hardcoded 50 to the value of the upper bound. I commented it out to allow
+the user input to be tested.
+
+I found out later that the program would segfault after inputting a higher number, and I think it's because it tried to access unallocated memory in primes[]. I changed
+the primes[] size to the size of the upper bound and it seemed to remedy that issue.
+(Lessons learned, problems encountered, obstacles overcome, etc.)
+
+
+================================================================

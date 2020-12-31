@@ -1,0 +1,18 @@
+Activity Journal
+
+Name: Michael Kennedy
+
+================================================================
+Start
+Estimated Time 2:00
+Plan: (Order of implementation, testing approach, etc.)
+
+
+
+
+Complete
+Actual Time	4:00
+Observations: (Lessons learned, problems encountered, obstacles overcome, etc.)
+
+
+================================================================

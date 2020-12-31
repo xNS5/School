@@ -1,0 +1,39 @@
+Activity Journal
+
+Name: Michael Kennedy
+
+================================================================
+Start
+Estimated Time 3:00
+Plan: I'm going to start at the first function and work my way down until all are completed.
+(Order of implementation, testing approach, etc.)
+
+I don't foresee this program being incredibly complicated. I read each character byte by byte, add 100 to the ascii value of that char
+and write it to the encrypted file.
+Steps:
+1. Write a statement that ensures the user only enters "-e" and "-d"
+2. Read in the file's contents
+3. Add 100 to the value of each input char
+4. Write the file to the contents to the output .txt file
+5. Repeat steps 1-4 for "-d", but instead subtract 100 at step 3.
+
+
+Complete
+Actual Time	4:00
+Observations: (Lessons learned, problems encountered, obstacles overcome, etc.)
+
+The most challenging part of this program was reading in input from the file. After that, completing both -e and -d
+was a breeze. All I had to do was repeat the steps I took in -e for -d.
+
+Another part that gave me a little bit of trouble was opening/creating the output file. It took longer than expected
+to discover that I wasn't setting the file's permissions correctly, so I just set the permissions to 0700.
+
+When I was cleaning up and optimizing, I found a few places that I could cut down on duplicate code, and restructured accordingly.
+For example, I wanted to make sure that the user only inputted 3 arguments: ./[compiled program] [argument flag] [filename].
+I check for whether argc is 3, and whether -e and -d are inputted.
+
+I added a feature that conditionally chooses the delimiter using a regular expression. In the original version of the program,
+decrypting the _enc.txt file would have resulted in a file with _enc_dec.txt as the extension.
+
+
+================================================================

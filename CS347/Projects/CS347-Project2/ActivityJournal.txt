@@ -1,0 +1,35 @@
+Activity Journal
+
+Name:
+Josh Myers-Dean, Michael Kennedy
+
+=============================
+Start
+Estimated Time : 06 00
+Plan:
+ -Read up on threads and convolutions (both)
+ -Implement readImage (Josh)
+ -Implement apply_filters (Michael)
+ -Implement threadfn (both)
+ -Implement write_image (Josh)
+ -Debug and test (both)
+
+==============================
+Complete
+Actual Time 3:00
+Observations:
+
+Michael:
+
+I worked on apply_filters which generated threads. It was relatively quick work as
+I have worked with threads and multi-threaded applications in C before. The description
+of threadfn was a tad confusing, however I was able to  implement the loops after re-watching
+the lecture video describing how to apply the filter. Josh completed threadfn by implementing
+the image convolution. After that was done, I finished up the program by implementing a mutex
+and the timer.
+
+Josh:
+
+I worked on reading and writing the image, which gave me some grief until I realized I needed
+to consume the rest of a line until a new line character happened. Write image was fairly straight forward and I made sure to include ample error handling. I helped with apply_filters a bit as well as threadfn. This was my first experience with multithreading and I have to say that it is not as bad as I thought it would be. Very very informative project.
+

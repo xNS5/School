@@ -1,0 +1,25 @@
+Activity Journal
+Name: Michael Kennedy
+
+================================================================
+Start
+Estimated Time  1:00 hr
+Plan:(Order of implementation, testing approach, etc.)
+I think I can get through one part at a time, first characters, then words, then lines.
+There are 3 cases that I can think of:
+
+1. The character is A-Z a-z and numbers/symbols which are used in the text file.
+2. The character is a `space` character, which can come before or after a word.
+3. The character is a `newline` character, which doesn't necessarily have to come after a word.
+
+Complete
+Actual Time ??:??
+Observations:(Lessons learned, problems encountered, obstacles overcome, etc.)
+
+I initially tried using a [condition] ? [true] : [false] structure, however I couldn't get it to work properly.
+I opted to switch to using normal `if` statements instead. I had the idea to compare the ASCII value of the characters instead
+of comparing chars which I seem to recall from 247 that it's faster.
+I initially also thought that I should keep a count of how long the line is; if it's greater than 0, I can assume there's a word on that line.
+I realized after a bit that I would be keeping track of an unnecessary variable that could grow very large, and switched to using the predefined TRUE and FALSE variables.
+
+================================================================

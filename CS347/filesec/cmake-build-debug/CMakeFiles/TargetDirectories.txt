@@ -1,0 +1,3 @@
+/Users/michaelkennedy/Gitlab/CS347/filesec/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/michaelkennedy/Gitlab/CS347/filesec/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/michaelkennedy/Gitlab/CS347/filesec/cmake-build-debug/CMakeFiles/filesec.dir

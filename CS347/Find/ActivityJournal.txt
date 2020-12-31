@@ -1,0 +1,30 @@
+Activity Journal
+
+Name: Michael Kennedy
+
+================================================================
+Start
+Estimated Time	1:00
+Plan: I'm going to start at the first function and work my way down until all are completed.
+(Order of implementation, testing approach, etc.)
+
+Complete
+Actual Time	??:??
+Observations:
+I don't really know how long it took me in total because I chipped away at it incrementally.
+
+I'm not as good at pointers as I thought I was. The pointer functions were surprisingly challenging, and I wasn't able
+to use GDB to see what was going wrong and where. The last function was especially challenging for two reasons:
+
+1. I was thinking of it more like a leetcode-style problem where I'd have to find the longest substring, but that wasn't the case here.
+
+2. I got a little confused about the difference between `char* foo` and `char *foo`. A quick google search fixed that confusion.
+
+I addressed the tests one at a time, and I was able to come up with solutions pretty quickly after taking a step back to think.
+
+In the find_any_* and substring functions I opted to re-use the find_ch_* functions to assist. Using them definitely cut down on redundant code!
+
+(Lessons learned, problems encountered, obstacles overcome, etc.)
+
+
+================================================================

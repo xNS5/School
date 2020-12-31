@@ -1,0 +1,37 @@
+Activity Journal
+
+Name:
+
+================================================================
+Start
+Estimated Time	5:00
+Plan:
+(Order of implementation, testing approach, etc.)
+1. Given that I did argparse in the first assignment, I don't foresee parsing the arguments as overly challenging.
+2. I'm going to assign both left and right hand sides of the pipe to their respective char* variables
+   2.1 I'm going to test this by printing both the right and left hand side variables
+3. Implement pipe and fork. I didn't work on those parts of the project so I'm going to have to read up on how to use them
+
+
+Complete
+Actual Time	7:00
+Observations:
+(Lessons learned, problems encountered, obstacles overcome, etc.)
+
+1. Even though I did argparse, I yet again underestimated how much parsing arguments could affect my overall program and how
+much time it would take up. Part of this came from my misunderstanding of what the different variables were supposed to do.
+I wasn't able to get it working, then I realized I wasn't passing my arguments correctly. Ultimately, I found that it
+was easiest to split at the pipe character, then in an inner loop split at " ". I potentially could have used a single
+loop and split at the spaces, however one specific case wouldn't work; Namely "[arg]|[arg]" with no spaces around the pipe.
+2. Instead of saving to the char* variables for lhs/rhs, I opted to save arguments to the arrays and pass the 0th index
+of the array as the command name.
+3. Fork was surprisingly easy and took less time than parsing the arguments.
+
+Testing also took up a significant amount of time, which led to me re-writing my argument parsing block of code.
+
+This current version of my program only works with commands that have spaces around individual arguments.
+For example, passing awk '{print $1}' as the rhs argument splits the `print` statement at the space, not at the single quotes.
+I could add a condition to split at single or double quote characters, however it wasn't explicitly required in the spec so I
+didn't think it was necessary.
+
+================================================================

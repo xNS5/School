@@ -1,0 +1,33 @@
+Activity Journal
+
+Name:
+
+================================================================
+Start
+Estimated Time	2:00
+Plan:
+(Order of implementation, testing approach, etc.)
+I'm going to start from the top and work my way down.
+
+1. I'm going to verify that the input is correct (number of arguments, file exists)
+2. Retrieve file details
+3. Get file type
+4. Get last time accessed, formatted to spec.
+5. Lastly, I'm going to read the file permissions.
+
+The last part potentially will give me some issues implementing, but I think I have an
+idea how to approach it. I'll get to that once I complete steps 1-4.
+
+Complete
+Actual Time	3:00
+Observations:
+(Lessons learned, problems encountered, obstacles overcome, etc.)
+This assignment was fairly easy. The only part where I struggled was getting the last access time to work, but
+that only happened in the first place because I accidentally used argv[2] as the input instead of argv[1].
+
+After that, reading the file permissions was easy because I realized I could just use bitwise and to determine whether or not
+the file was readable, writable, or executable in user, group, and other.
+
+All in all, this assignment would have taken me less time had I gotten the right index in the beginning.
+
+================================================================
