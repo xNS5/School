@@ -1,6 +1,6 @@
 # Classes:
 
-| Class | Name | Language | Projects |
+| Class     | Name | Language | Projects |
 |------|----|----|----|
 | CSCI 241 | Data Structures I | Java | Lattice Word Prediction, Phylogenic Tree Generation |
 | CSCI 247 | Computer Systems I | C | Linux Task Schedule Exercise, Multithreading exercise, IPC exercise |
