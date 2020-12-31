@@ -1,10 +1,13 @@
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
+
+/*
+* Set
+*
+* Has all information necessary for a player to act on a set, e.g. whether a set is active, number of shots on a specific scene, etc.
+* */
 public class Set{
     private Scene sceneCard;
     private String setName;
@@ -12,13 +15,13 @@ public class Set{
     private int shots;
     private int shotCounter;
     private int setNumber;
-    private int[] location;
+    private final int[] location;
     private JLabel cardback;
-    private ArrayList<int[]> takeLocations;
-    private ArrayList<Role> extras;
-    private ArrayList<String> neighbors;
+    private final ArrayList<int[]> takeLocations;
+    private final ArrayList<Role> extras;
+    private final ArrayList<String> neighbors;
     private ArrayList<Player> players;
-    private ArrayList<JLabel> takeComponenets;
+    private final ArrayList<JLabel> takeComponenets;
 
 
     public Set() {
@@ -76,7 +79,7 @@ public class Set{
         return this.takeComponenets.get(i);
     }
 
-    public JLabel getCardback(){
+    public JLabel getCardBack(){
         return this.cardback;
     }
 

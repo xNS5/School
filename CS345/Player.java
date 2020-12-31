@@ -1,6 +1,10 @@
 import javax.swing.*;
-import java.awt.*;
 
+/*
+* Player
+*
+* Player model with associated get and set functions.
+* */
 public class Player {
     private int dollars;
     private int credits;
@@ -9,9 +13,9 @@ public class Player {
     private int score;
     private int rehearsalChips;
     private String location;
-    private String name;
+    private final String name;
     private Work status;
-    private PlayerColor color;
+    private final PlayerColor color;
     private Role role;
     private JLabel die;
 
@@ -57,10 +61,6 @@ public class Player {
         return this.name;
     }
 
-    public String getLocation(){
-        return this.location;
-    }
-
     public Work getStatus() {
         return this.status;
     }
@@ -82,10 +82,6 @@ public class Player {
     }
 
     public void setRank(int rank) { this.rank = rank; }
-
-    public void setPlayerColor(PlayerColor color){
-        this.color = color;
-    }
 
     public void setDie(JLabel die){
         this.die = die;

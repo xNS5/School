@@ -12,12 +12,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+
+
+/*
+* Hal
+*
+* The game manager of the game. Maintains data on the current day, generates die values,
+* parses game and card info from the .xml files.
+* */
 public class Hal {
     private static Hal instance = null;
     private int days;
     private int currentDay;
-    private ArrayList<Scene> scenes;
-    private ArrayList<Set> sets;
+    private final ArrayList<Scene> scenes;
+    private final ArrayList<Set> sets;
 
     /*
     * Constructor
@@ -189,7 +197,7 @@ public class Hal {
                         Element upgrade = (Element) upgradeList.item(j);
                         us.castingUpgrade(Integer.parseInt(upgrade.getAttribute("rank")), Integer.parseInt(upgrade.getAttribute("dollars")), Integer.parseInt(upgrade.getAttribute("credits")));
                     }
-                } else if (!setName.equals("Trailers") && !setName.equals("Casting Office")) {
+                } else if (!setName.equals("Trailers")) {
                     ImageIcon cardBack = new ImageIcon("./cards/cardback.jpg");
                     JLabel card = new JLabel();
                     card.setIcon(cardBack);
@@ -274,7 +282,6 @@ public class Hal {
     private Role roleHelper(Element roleElement, int state){
         Role character = new Role(roleElement.getAttribute("name"));
         character.setRank(Integer.parseInt(roleElement.getAttribute("rank")));
-        character.setLine(roleElement.getElementsByTagName("line").item(0).getTextContent());
         if(state == 0) {
             character.setLocation(Integer.parseInt(roleElement.getAttribute("x")) + 25, Integer.parseInt(roleElement.getAttribute("y")) + 50);
         } else {

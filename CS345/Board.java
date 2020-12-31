@@ -4,10 +4,18 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.*;
 
+
+/*
+* Board
+*
+* This is the Board model of the game. Maintains a list of players, controls player movement, switches player at the end of a turn,
+* assigns roles, adds currency, etc.
+* */
+
 public class Board{
     private static Board instance = null;
     private Player current;
-    private Queue<Player> playerQueue;
+    private final Queue<Player> playerQueue;
     private ArrayList<Set> sets;
     private final HashMap<String, Integer> setLocations;
     private int numScenes;
@@ -151,7 +159,7 @@ public class Board{
     }
 
     // Scene bonus only applies the top rolled numbers because the rules written in the game description were confusing.
-    private void act() throws IOException, InterruptedException, ParserConfigurationException, SAXException {
+    private void act() throws IOException, ParserConfigurationException, SAXException {
         BoardUI boardUI = BoardUI.getInstance();
         Set currSet = sets.get(this.current.getSetNo());
         Scene currScene = currSet.getScene();

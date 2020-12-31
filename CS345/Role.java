@@ -1,13 +1,17 @@
+/*
+* Role
+*
+* Contains all pertinent information to a 'role' a player might take.
+* */
+
 public class Role {
     private String roleName;
-    private String roleLine;
     private int rank;
-    private int[] location;
-    private boolean taken = false;
+    private final int[] location;
+    private boolean taken;
 
     public Role(String name) {
         this.roleName = name;
-        this.roleLine = "";
         this.rank = 0;
         this.taken= false;
         this.location = new int[2];
@@ -15,10 +19,6 @@ public class Role {
 
     public String getName() {
         return this.roleName;
-    }
-
-    public String getLine() {
-        return this.roleLine;
     }
 
     public boolean isTaken(){
@@ -35,10 +35,6 @@ public class Role {
 
     public int getRank() {
         return this.rank;
-    }
-
-    public void setLine(String line) {
-        this.roleLine = line;
     }
 
     public void setRank(int rank) {

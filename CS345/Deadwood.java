@@ -3,8 +3,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Deadwood {
+/*
+* Deadwood
+*
+* The entry point of the game, prompts players for their names and chosen colors. Once chosen,
+* the game will start.
+* */
 
+public class Deadwood {
     public static void main(String[] args) {
         try {
             int numPlayers = 0;
@@ -49,6 +55,7 @@ public class Deadwood {
                 }
                 PlayerColor color = PlayerColor.valueOf(colorStr.toUpperCase());
                 players.add(new Player(name, 1, 0, 0, color, Work.NULL));
+                players.get(0).updateDollars(200);
             }
 
             driver.prepGame();

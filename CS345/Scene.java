@@ -1,8 +1,14 @@
 import javax.swing.*;
 import java.util.ArrayList;
 
+
+/*
+ * Scene
+ *
+ * Contains information that might be pertinent to a scene in a game.
+ */
 public class Scene {
-    private ArrayList<Role> roles;
+    private final ArrayList<Role> roles;
     private int budget;
     private String caption;
     private String title;

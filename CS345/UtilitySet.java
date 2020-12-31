@@ -1,11 +1,20 @@
+import javax.swing.*;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
+
+/*
+* UtilitySet
+*
+* Contains the "Casting Office" set and functions associated with changing ranks + die in game.
+* */
 public class UtilitySet{
     private static ArrayList<ArrayList<Integer>> castingOffice;
     private static UtilitySet instance = null;
 
     private UtilitySet() {
-        this.castingOffice = new ArrayList<>();
+        castingOffice = new ArrayList<>();
     }
 
     public static UtilitySet getInstance(){
@@ -34,12 +43,27 @@ public class UtilitySet{
         return ret;
     }
 
-    public String upgradesToString(){
+    public String upgradesToString() {
         StringBuilder sb = new StringBuilder();
-        for(ArrayList<Integer> upgrades : castingOffice){
+        for (ArrayList<Integer> upgrades : castingOffice) {
             sb.append(upgrades.toString()).append("\n");
         }
         return sb.toString();
+    }
+
+    public void dieUpgrade() throws IOException {
+        Board board = Board.getInstance();
+        Player current = board.getCurrent();
+        String prefix_pre = current.getColor().name().toLowerCase(Locale.ROOT);
+        String prefix = String.valueOf(prefix_pre.charAt(0));
+        int rank = current.getRank();
+        ImageIcon die = new ImageIcon(String.format("./dice/%s%d.png", prefix, rank));
+        JLabel dieLabel = new JLabel();
+        dieLabel.setIcon(die);
+        dieLabel.setBounds(current.getDie().getBounds());
+        BoardUI.getInstance().removeComponent(current.getDie());
+        current.setDie(dieLabel);
+        BoardUI.getInstance().placePlayerDie(current, 0);
     }
 
     public static ArrayList<ArrayList<Integer>> getUpgrades(){

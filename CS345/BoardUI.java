@@ -4,7 +4,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.table.*;
+import javax.swing.text.StyleContext;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -12,6 +14,7 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -157,10 +160,10 @@ public class BoardUI extends JFrame {
         imagePane.add(dice, 2, 0);
         if (!currSet.getName().equals("Trailers") && !currSet.getName().equals("Casting Office")) {
             currSet.updateVisitedStatus();
-            removeComponent(currSet.getCardback());
+            removeComponent(currSet.getCardBack());
             Board.getInstance().replaceSet(currSet);
         }
-        repaint();
+        this.repaint();
     }
 
     // Setting cardbacks on each set
@@ -169,7 +172,7 @@ public class BoardUI extends JFrame {
         for (int i = 0; i < sets.size(); i++) {
             if (!sets.get(i).getName().equals("Trailers") && !sets.get(i).getName().equals("Casting Office")) {
                 Set currSet = sets.get(i);
-                imagePane.add(currSet.getCardback(), 2, 1);
+                imagePane.add(currSet.getCardBack(), 2, 1);
             }
         }
         repaint();
@@ -206,7 +209,7 @@ public class BoardUI extends JFrame {
                         this.removeComponent(player.getDie());
                     }
                 }
-                this.removeComponent(set.getCardback());
+                this.removeComponent(set.getCardBack());
                 this.removeComponent(set.getScene().getCardLabel());
             } else if (set.isActive() && set.isVisited() && !set.getName().equals("Trailers") && !set.getName().equals("Casting Office")) {
                 for (JLabel take : takes) {
@@ -428,6 +431,11 @@ public class BoardUI extends JFrame {
                             updateStatusMessage(String.format("Upgraded %s to Rank %d!", b.getCurrent().getName(), rank));
                             b.setRank(rank);
                             b.payCredits(creditCost);
+                            try {
+                                UtilitySet.getInstance().dieUpgrade();
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
                             upgradePanel.dispose();
                         }
                         setPlayerInfo(b.getCurrent());
@@ -449,6 +457,11 @@ public class BoardUI extends JFrame {
                             updateStatusMessage(String.format("Upgraded %s to Rank %d!", b.getCurrent().getName(), rank));
                             b.setRank(rank);
                             b.payDollars(dollarCost);
+                            try {
+                                UtilitySet.getInstance().dieUpgrade();
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
                             upgradePanel.dispose();
                         }
                         setPlayerInfo(b.getCurrent());
@@ -495,9 +508,7 @@ public class BoardUI extends JFrame {
         }
 
         @Override
-        public void mouseReleased(MouseEvent e) {
-            System.out.println(Board.getInstance().getCurrent().printPlayer());
-        }
+        public void mouseReleased(MouseEvent e) {}
 
         @Override
         public void mouseEntered(MouseEvent e) {
@@ -878,7 +889,10 @@ public class BoardUI extends JFrame {
                 resultName = currentFont.getName();
             }
         }
-        return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
     /**
