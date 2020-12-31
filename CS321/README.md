@@ -40,28 +40,51 @@ to surviving the hell known as the labyrinth!
 ### Game Description
 
 Genre​:
+
 ● Action
+
 ● Adventure
+
 ● Strategy
+
 Game Elements:
+
 ● Sword/Shield, Axe, spear, and Crossbow combat
+
 ● Dodging
+
 ● Exploring
+
 Game Content:
+
 ● Thriller
+
 ● Action
+
 Theme:
+
 ● Myth
+
 ● Medieval
+
 ● Fantasy
+
 Game Sequence:
+
 ● Linear Central Story
+
 ● Side Objectives
+
 Players:
+
 ● Single-player
+
 Player Immersion:
+
 ● Customization
+
 ● Exploration
+
 ● Challenging Combat
 
 
